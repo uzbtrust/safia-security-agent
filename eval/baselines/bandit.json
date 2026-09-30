@@ -1,0 +1,24 @@
+{
+  "tool": "bandit",
+  "target": "gym_apps/shop",
+  "results": [
+    {
+      "cwe": "CWE-89",
+      "title": "SQL injection in product search",
+      "detected": true,
+      "false_positive_on_clean": false
+    },
+    {
+      "cwe": "CWE-639",
+      "title": "IDOR: any logged-in user can read any order",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "cwe": "CWE-22",
+      "title": "Path traversal in file download",
+      "detected": false,
+      "false_positive_on_clean": false
+    }
+  ]
+}
