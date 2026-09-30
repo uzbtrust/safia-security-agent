@@ -1,0 +1,56 @@
+# Local model registry (LOCAL chat). Facts only.
+# - download_gb: sum of layer sizes in the Ollama registry manifest, queried 2026-10-01.
+# - digest, quant, params and measured are filled in from `ollama show` and the smoke test
+#   after a model is actually pulled. null means "not measured yet", never a guess.
+# - Models are pulled one at a time (docs/HARDWARE.md, "Storage policy"); `status` says what
+#   is on disk right now.
+
+server:
+  base_url: http://127.0.0.1:11434/v1   # OpenAI-compatible endpoint used by llm/openai_compat.py
+  native_url: http://127.0.0.1:11434    # Ollama native API: timings, `ollama ps`
+  num_ctx: 8192                         # server-wide default, see configs/local/ollama.env
+  env_file: configs/local/ollama.env
+
+models:
+  - id: qwen25-coder-7b
+    ollama_tag: qwen2.5-coder:7b
+    role: baseline
+    download_gb: 4.68
+    status: not-pulled
+    digest: null
+    quant: null
+    params: null
+    measured: null
+
+  - id: qwen3-8b
+    ollama_tag: qwen3:8b
+    role: bake-off candidate (E1); supports a thinking mode, so decide per run and record it
+    download_gb: 5.23
+    status: not-pulled
+    digest: null
+    measured: null
+
+  - id: gemma4
+    ollama_tag: gemma4:latest
+    role: bake-off candidate (E1); named in docs/PLAN.md, not evaluated yet
+    download_gb: 6.58
+    status: not-pulled
+    digest: null
+    measured: null
+
+  - id: qwen25-coder-14b
+    ollama_tag: qwen2.5-coder:14b
+    role: H5 size comparison against the 7B of the same family; marginal fit, pull only after the other models are removed
+    download_gb: 8.99
+    status: not-pulled
+    digest: null
+    measured: null
+
+# H5 quantization pair: qwen2.5-coder:7b (default Q4 tag) against a Q8_0 tag of the same model.
+# Look up the exact tag and its size in the registry before pulling; it is not listed here on purpose.
+
+excluded:
+  - {ollama_tag: "gpt-oss:20b", download_gb: 13.79, reason: "weights alone exceed the 11.8 GiB Metal budget"}
+  - {ollama_tag: "devstral:latest", download_gb: 14.33, reason: "exceeds the Metal budget and disk headroom"}
+  - {ollama_tag: "qwen3-coder:30b", download_gb: 18.56, reason: "exceeds the Metal budget and disk headroom"}
+  - {ollama_tag: "qwen3-coder-next:latest", download_gb: 51.74, reason: "far beyond this machine"}
