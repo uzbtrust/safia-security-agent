@@ -293,16 +293,13 @@ Orqada qolsak, shu tartibda voz kechamiz: LoRA → uz/ru → patch taklifi → x
 
 ## 8. Ish taqsimoti, repo va topshirish
 
-### Kim nima qiladi
+### Kim nima qiladi — ikki chat
 
-| Men (Claude) | Siz |
-|---|---|
-| Repo skeleti, kod, unit testlar (mock LLM), CakeShop, eval harness, hujjat skeletlari, CI | Jihoz/Ollama, real run'lar (modelli), Docker lablari, natijalarni ko'rish va adjudikatsiya, demo yozuvi |
-| Natijalarni tahlil qilish, xatolarni tasniflash, kodni tuzatish | Har bir qarorni tushunish; yakuniy matnlarni o'z so'zingizda tahrirlash; email |
+Qaror (2026-10-01): **ikki chat** — *CLOUD* (Claude Code on the web; foydalanuvchining $100 credit'i shu yerda ketadi) va *LOCAL* (foydalanuvchi kompyuterida Claude Code). Qisqa qoida: **cloud yozadi va tahlil qiladi; local ishga tushiradi va isbotlaydi.** Bo'lish qoidasi, fayl egaligi, hamkorlik tartibi va vazifa taxtasi — [`TASKS.md`](TASKS.md); umumiy yo'riqnoma — [`CLAUDE.md`](../CLAUDE.md).
 
-**Tavsiya:** 0-bosqichdan keyin repo'ni o'z kompyuteringizga clone qilib, Claude Code'ni o'sha yerda ishga tushiring — shunda men Ollama/Docker'ni bevosita ishlataman va iteratsiya ancha tezlashadi. Cloud sessiya — skelet, kod, test, hujjat uchun yaxshi; ML iteratsiyasi uchun yomon (model yuklab bo'lmaydi). Bu yerda PyPI ochiq, demak Semgrep/Bandit, tree-sitter va CakeShop testlari (Flask test client) ishlaydi.
-
-Aylanma: branch → pull → run → natijalarni commit → push → men tahlil qilaman.
+| CLOUD | LOCAL | SIZ |
+|---|---|---|
+| Kod, unit testlar (mock LLM), CakeShop, eval harness + C0 baseline, hujjatlar, review, natijalar tahlili, blind test yozish | Ollama va real modellar, prompt sozlash, eval run'lari, Docker, KB build, bake-off, demo yozuvi | O'qish, qarorlar, FP adjudikatsiya, yakuniy matnni o'z so'zingizda tahrirlash, email |
 
 ### Repo tuzilmasi
 
@@ -378,7 +375,7 @@ Best regards,
 
 1. **Jihoz:** OS / CPU / RAM / GPU (masalan "MacBook M2 16 GB" yoki "RTX 3060 12 GB")? → model sinfi, LoRA mumkinligi, eval hajmi.
 2. **Vaqt:** kuniga necha soat? Yaqin 2 haftada imtihon/ish bormi? → Tier hajmi.
-3. **Ish muhiti:** Claude Code'ni o'z kompyuteringizda ishga tushira olasizmi (8-bo'limdagi tavsiya)?
+3. ~~**Ish muhiti:** Claude Code'ni o'z kompyuteringizda ishga tushira olasizmi?~~ → hal bo'ldi: ikki chat (8-bo'lim, `TASKS.md`).
 4. **Repo:** public yoki private? (private bo'lsa — Fahriddin'ga access beramiz.)
 5. **Yo'nalish:** Python-first, CakeShop + RealVuln, LoRA — ixtiyoriy/oxirida. Rozimisiz?
 
@@ -401,3 +398,4 @@ Best regards,
 ## 11. Jurnal (nima o'zgardi va nega)
 
 - **2026-10-01** — Reja v1. Muhit tekshirildi: 4 CPU / 16 GB / GPU yo'q / Docker daemon yo'q; PyPI ochiq; HuggingFace, Ollama registry va arXiv bloklangan. Shu sababli modelli run'lar va Docker lablari foydalanuvchi mashinasida rejalashtirildi.
+- **2026-10-01** — Ish bo'linishi: CLOUD ($100 credit) + LOCAL. Yaratildi: `CLAUDE.md`, `docs/TASKS.md`, `docs/handoff/`, `.gitignore`. Cloud'da tekshirildi: Bandit, Semgrep (lokal qoidalar bilan offline), tree-sitter o'rnatiladi va ishlaydi; public GitHub repo'lar (masalan RealVuln) read-only clone qilinadi. Natija: C0 baseline va RealVuln tekshiruvi cloud'ga o'tdi.

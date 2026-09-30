@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+
+# Local / runtime
+.env
+.cache/
+eval/cache/
+*.log
+
+# Models and big artifacts — never commit
+*.gguf
+*.safetensors
+models/
+.ollama/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
