@@ -3,22 +3,35 @@
 > CLOUD tahrirlaydi, LOCAL o'qiydi va o'z xabarlarini `docs/handoff/local.md` ga yozadi.
 > Holat: `[ ]` ochiq · `[~]` jarayonda · `[x]` tayyor. Yangilandi: 2026-10-01. Eski (v1) taxta git tarixida.
 
-## G'oya (3 jumla)
-Ikki lokal agent o'z kodimiz ustida bir-biriga qarshi o'ynaydi. **Red** toza ilovaga kichik zaiflik kiritadi va exploit-test yozadi; **hakam** (LLM emas, kod) zaiflikni faqat exploit haqiqatan ishlasa qabul qiladi; **Blue** (bizning security agent) o'zgargan ilovadan zaiflikni topadi. Blue topa olmagan holatlardan o'rganadi va natijada begona benchmark'da yaxshilanadimi, tekshiramiz.
+## Mahsulot nima (xatdagi vazifa)
+**Mahsulot — Blue:** `safia-sec scan <har qanday papka>` — lokal AI security agent. U kod bazasini ko'rib zaifliklar va xavfli qarorlarni topadi, dalil (fayl:qator) va tushuntirish beradi, tuzatish taklif qiladi. **Gym (Red + hakam) — Blue'ni o'qitish va baholash mexanizmi:** Red toza ilovaga zaiflik kiritadi va exploit yozadi; hakam (LLM emas, kod) zaiflikni faqat exploit haqiqatan ishlasa qabul qiladi; Blue shularni topishga o'rganadi. Asosiy savol: o'z-o'zi bilan o'rganish begona benchmark'da yordam beradimi?
+**To'siq qoida:** README'ning birinchi jumlasi agent haqida bo'ladi, gym haqida emas. Blue yupqa qolib ketmasin.
 
-## Oddiy ro'yxat (6 qadam)
+## Qadamlar
 
-| # | Qadam | Kim | Holat |
-|---|---|---|---|
-| 1 | Toza ilova + hakam + 3 CWE shablon (SQLi, IDOR, path traversal) + testlar + Bandit baseline | CLOUD | [x] |
-| 2 | **Go/no-go:** lokal model Red bo'la oladimi? (`scripts/red_generate.py`) — yaroqlilik % | LOCAL | [ ] ← **hozir shu** |
-| 3 | Blue v0: nomzod (Bandit) → LLM → dalil; hakam bergan ground truth bilan skorlash | CLOUD kod, LOCAL run | [ ] |
-| 4 | O'rganish: Blue xato qilgan namunalar → few-shot xotira; oldin/keyin jadval (LoRA — ixtiyoriy) | CLOUD kod, LOCAL run | [ ] |
-| 5 | Transfer: begona benchmark'da (RealVuln/Juice Shop qismi) oldin/keyin | LOCAL (+ CLOUD adapter) | [ ] |
-| 6 | README, EXPERIMENTS (muvaffaqiyatsizlar bilan), demo, email | SIZ + CLOUD | [ ] |
+| # | Qadam | Kim | Muddat | Holat |
+|---|---|---|---|---|
+| 1 | Toza ilova + hakam + 3 CWE shablon + testlar + Bandit baseline | CLOUD | tayyor | [x] |
+| 2 | **Go/no-go:** lokal model Red bo'la oladimi? (`scripts/red_generate.py`) | LOCAL | 1–3-okt | [ ] ← **hozir shu** |
+| 3 | **Blue v0 (mahsulot):** `scan` CLI + hisobot (qarang: «Blue tayyor sharti») | CLOUD kod, LOCAL run | 3–5-okt | [ ] |
+| 4 | O'rganish: Blue xatolari → few-shot xotira; oldin/keyin jadval (LoRA ixtiyoriy; 8-okt qaror) | CLOUD kod, LOCAL run | 6–8-okt | [ ] |
+| 5 | Transfer: begona lokal zaif ilova/benchmark'da (RealVuln yoki Juice Shop qismi) oldin/keyin; kodni muzlatish 11-okt kechqurun | LOCAL (+ CLOUD adapter) | 9–11-okt | [ ] |
+| 6 | Yakuniy baholash: muzlatilgan kod, test to'plamida **bir marta** | LOCAL | 12-okt | [ ] |
+| 7 | README (agent birinchi), EXPERIMENTS (muvaffaqiyatsizlar bilan), demo, email | SIZ + CLOUD | 13–14-okt | [ ] |
 
-**Kesish chizig'i:** LoRA → 5-qadamda ko'p model → ilova soni. Hech qachon kesilmaydi: 1–3-qadamlar va halol jadval.
+Muddat 15-okt, topshirish maqsadi 14-okt.
+
+### Blue tayyor sharti (3-qadam, majburiy)
+1. `safia-sec scan <papka>` istalgan Python papkada ishlaydi (o'zimiz yaratmagan kodda ham).
+2. Har bir topilma: fayl:qator, zaiflik turi (CWE), **dalil** (kod iqtibosi, hakam/fayl bilan tekshiriladi), tushuntirish, tuzatish taklifi. Dalilsiz topilma hisobotga chiqmaydi.
+3. Klassik zaifliklarga qo'shimcha «xavfli qarorlar» ham ko'rinadi (hardcoded secret, zaif hash, debug yoqilgan va h.k.).
+4. Hisobot JSON + Markdown (SARIF — vaqt qolsa).
+5. Ruxsat: faqat o'qiydi; faylga yozmaydi, tarmoqqa chiqmaydi, shell yo'q.
+6. Skorlash: hakam bergan ground truth bilan (precision/recall) va Bandit baseline bilan taqqoslash.
+
+**Kesish chizig'i:** LoRA → Red'ning o'rganishi (Blue'ga qarshi) → ko'p model → ilovalar soni. **Hech qachon kesilmaydi:** 1–3-qadamlar, transfer testi, halol jadval.
 **Go/no-go qoidasi (3-okt):** 3 CWE dan kamida 2 tasida ≥ 10 ta *har xil* qabul qilingan zaiflik chiqmasa, Red'ni shablon + LLM variatsiyasi bilan almashtiramiz (LLM faqat shablon ichini o'zgartiradi).
+**Tamoyillar:** (a) hakam faqat «zaiflik ishlaydi» ni isbotlaydi, realistiklikni emas — shuning uchun transfer testi; (b) «buzolmadi» ≠ «xavfsiz»: faqat qabul qilinganlar ishonchli musbat; (c) agentlar data orqali o'rganadi, bir-biriga gapirmaydi; (d) dev'da sozlaymiz, test'da bir marta o'lchaymiz.
 
 ## Budjet
 Cho'ntakdan maksimal ~$20 (faqat ixtiyoriy GPU ijarasi, LoRA uchun). Cloud credit alohida; Ollama va ochiq modellar bepul.
