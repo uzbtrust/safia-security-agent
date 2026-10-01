@@ -20,7 +20,7 @@ Measured on 2026-10-01 unless a line says *estimate* or *pending*. There are no 
 
 ## Disk budget
 
-- Volume: 228 GiB. Free space moved from **15.3 GB** (about 02:40) to **23.7 GB** (03:04), both `diskutil` container free space. The swap files (about 4 GB) went away once memory pressure dropped, and the used space of the data volume also fell by 5 GiB (cause unknown). The number is not stable: plan with the lower one and re-check right before every pull.
+- Volume: 228 GiB. Free space moved from **15.3 GB** (about 02:40) to **23.7 GB** (03:04), both `diskutil` container free space. The swap files (about 4 GB) went away once memory pressure dropped, and the used space of the data volume also fell by 5 GiB (cause unknown). The number is not stable: plan with the lower one and re-check right before every pull. Later readings: 38.7 GB at 13:09, and 34.0 GB after `qwen2.5-coder:7b` (4.68 GB) was pulled.
 - Swap files live on this volume, so free disk is also runtime headroom. Keep at least 5 GB free.
 
 ## Serving configuration
@@ -42,7 +42,7 @@ Download sizes come from the Ollama registry manifests (sum of layers). The verd
 
 | Tag | Download | Verdict |
 |---|---|---|
-| `qwen2.5-coder:7b` | 4.68 GB | fits comfortably |
+| `qwen2.5-coder:7b` | 4.68 GB | fits: 5.34 GB resident, all on the GPU at 8192 context (measured, see below) |
 | `qwen3:8b` | 5.23 GB | fits comfortably |
 | `gemma4:latest` | 6.58 GB | fits; not evaluated yet |
 | `qwen2.5-coder:14b` | 8.99 GB | marginal: weights plus KV cache at 8192 tokens take most of the Metal budget; test before relying on it |
@@ -69,6 +69,19 @@ KV cache, calculated from the published architecture and not measured: about 57 
 - Use AC power for timing and eval runs. The Air has no fan, so sustained load throttles and tok/s depends on the thermal state. Note the power source in each `summary.md`.
 - Long runs: lid open, AC power, `caffeinate -i <command>`.
 
-## Not measured yet
+## Measured: qwen2.5-coder:7b (Q4_K_M, 7.6B)
 
-Prefill and decode tok/s, cold-load time, resident memory per model (`ollama ps`), JSON-schema behavior through `/v1`, determinism, and what happens to prompts longer than the context window. These need a model on disk (T0.3 smoke test, pending).
+From `configs/local/smoke_test.py`. Raw data and the three red samples are in `eval/results/20261001-smoke-ollama-qwen2.5-coder_7b/`. AC power, num_ctx 8192, git `cf0495d`. At the start 53% of memory was free and swap was 1.2 of 2.0 GB used.
+
+| | |
+|---|---|
+| Cold load | 23.5 s (first load after the pull) |
+| Decode | 20.2 tok/s median (18.5 to 20.8, n=3) |
+| Prefill | 199 tok/s at 2040 tokens, 168 tok/s at 8192 tokens |
+| Resident | 5.34 GB, all of it on the GPU |
+| Disk | 4.68 GB; free space went from 38.7 to 34.0 GB |
+| Structured output | native `format` and `/v1` `response_format` (json_schema) both followed the schema (3 of 3 each) |
+| Longer than the context | Ollama truncates silently: the client gets no error, the server log has a WARN (`truncating input prompt limit=8192 prompt=10865`), and `/v1` `usage.prompt_tokens` comes back as exactly 8192 |
+| Determinism | at T=0 seeds 1 to 3 gave identical output; at T=0.8 they differ and a repeated seed reproduces |
+
+Small samples: n=3 per structured-output check, one prompt for determinism. Direction, not proof. Still not measured: other models, sustained load under thermal throttling, and the 14B.
