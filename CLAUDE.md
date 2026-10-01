@@ -9,7 +9,7 @@ Repo: Safia (AI Team) ML Engineer case study — **lokal AI security agent**. Re
 - Haqiqat manbai: model haqidagi har qanday da'vo **local run**dan keladi. Cloud'da yozilgan va real modelda sinalmagan kod `needs-local-verify` deb belgilanadi.
 
 ## Fayl egaligi (konfliktsiz ishlash uchun)
-- CLOUD: `src/**` (prompts/ dan tashqari), `targets/**`, `tests/**`, `scripts/**`, `docs/**` (`handoff/local.md` va `HARDWARE.md` dan tashqari), `.github/**`, `Makefile`, `pyproject.toml`, `.gitignore`.
+- CLOUD: `src/**` (prompts/ dan tashqari), `gym_apps/**`, `targets/**`, `tests/**`, `scripts/**`, `docs/**` (`handoff/local.md` va `HARDWARE.md` dan tashqari), `.github/**`, `Makefile`, `pyproject.toml`, `.gitignore`.
 - LOCAL: `src/safia_sec/prompts/**`, `configs/local/**`, `eval/results/**`, `eval/replays/**`, `docs/handoff/local.md`, `docs/HARDWARE.md`.
 - Boshqaning fayliga kichik tuzatish (≤ 20 qator) kerak bo'lsa — mumkin: commit xabarida `[cross]` yoz va handoff'ga qayd qil. Kattasini handoff'da so'ra.
 - Branch'lar: CLOUD → `claude/wizardly-curie-34voig`; LOCAL → `local/dev`. Bir-biridan `git fetch` + `git merge` qiladi; `main`ga yakuniy merge'ni foydalanuvchi qiladi.

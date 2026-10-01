@@ -12,6 +12,20 @@
 
 ---
 
+## 0. v2 (2026-10-01): «Red vs Blue» — 1–8-bo'limdagi ziddiyatli joylardan ustun
+
+**G'oya.** Ikki lokal agent o'z kodimiz ustida o'ynaydi: *Red* toza ilovaga kichik zaiflik kiritadi va exploit-test yozadi; *hakam* (LLM emas, kod) zaiflikni faqat exploit haqiqatan ishlasa qabul qiladi (original'da yiqiladi, patch'da o'tadi, funksional testlar buzilmaydi); *Blue* (security agent) o'zgargan ilovadan zaiflikni topadi. Blue xato qilgan holatlar xotiraga/fine-tune'ga o'tadi. Asosiy savol: **o'z-o'zi bilan o'ynab o'rganish begona benchmark'da yordam beradimi?** Javob «yo'q» bo'lsa ham halol natija.
+
+**Nega bu.** Belgilangan ma'lumot kam, ochiq benchmark'lar kontaminatsiyalangan, topilmani tekshirish qiyin — uchalasiga bitta javob: o'zimiz yaratgan, kod bilan isbotlangan zaifliklar (AIxCC'dagi PoV g'oyasi, kichik miqyosda).
+
+**Nima o'zgardi.** Asosiy yo'nalish endi shu. 5–6-bo'limlardagi C0–C7 matritsasi va katta target ro'yxati soddalashtirildi: gym ilovalari (`gym_apps/`) + transfer testi (RealVuln yoki Juice Shop qismi). LoRA — ixtiyoriy. Tasdiqlash narvoni (L0–L3), dev/test intizomi va halollik qoidalari o'zgarmadi. Vazifalar — `TASKS.md` (v2). Budjet: cho'ntakdan ≤ ~$20 (ixtiyoriy GPU), cloud credit alohida.
+
+**Xavfsizlik qarori.** Model yozgan exploit/patch kodi ishga tushadi. Shuning uchun u faqat hakam orqali: alohida process, tarmoqsiz namespace (`unshare -rn`), CPU/xotira/fayl limitlari, timeout, AST tekshiruvi (qo'shimcha himoya, chegara emas). Docker — keyingi qadam (local).
+
+**Holat (cloud, tekshirilgan):** hakam 14/14 test o'tdi (3 ta shablon qabul, 11 ta yaroqsiz urinish kutilgan sababda rad); Bandit baseline: 3 dan 1 (faqat SQLi), toza ilovada FP yo'q.
+
+---
+
 ## 1. Qisqacha
 
 **Nima quramiz.** `safia-sec scan <repo>` — kod bazasini xavfsizlik nuqtai nazaridan tahlil qilib, zaifliklar va xavfli qarorlarni topadigan hamda ularni *dalil bilan* tushuntiradigan **lokal** AI agent.
