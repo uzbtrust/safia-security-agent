@@ -23,14 +23,21 @@ Ikki lokal agent o'z kodimiz ustida bir-biriga qarshi o'ynaydi. **Red** toza ilo
 ## Budjet
 Cho'ntakdan maksimal ~$20 (faqat ixtiyoriy GPU ijarasi, LoRA uchun). Cloud credit alohida; Ollama va ochiq modellar bepul.
 
+## Jihoz (foydalanuvchi mashinasi, 2026-10-01)
+RAM 16 GB, disk 256 GB, bo'sh joy ~52 GB, GPU: noma'lum (LOCAL chat `docs/HARDWARE.md` ga aniq yozadi). Qarorlar:
+- Asosiy model: **7–8B (Q4)**, ~5 GB. Birinchi: `qwen2.5-coder:7b`. 13B+ ishlatilmaydi (16 GB RAM'da sekin).
+- Taqqoslash uchun 1–2 ta qo'shimcha model (har biri ≤ ~6 GB) va bitta kichik (1–3B) — E1 bake-off uchun. Jami modellar ≤ ~20 GB.
+- Disk byudjeti: modellar ≤ 20 GB, Docker (Docker Desktop bo'lsa 10–20 GB — keyinroq, 3.2 qadamda), repo/venv < 1 GB. Bo'sh joy 15 GB dan tushsa, ishni to'xtatib xabar bering.
+- Tashqi SSD shart emas. Ishlayotganda og'ir dasturlarni (brauzer) yoping.
+
 ## 2-qadam: LOCAL uchun aniq ko'rsatma
 ```bash
 git fetch origin && git merge origin/claude/wizardly-curie-34voig
 python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
 pytest -q                      # 14 ta test o'tishi kerak (hakam ishlayapti)
 python scripts/bandit_baseline.py   # baseline: Bandit 3 dan 1 tasini topadi
-ollama pull <model>            # jihozga mos 1-2 ta model
-python scripts/red_generate.py --model <model> --n 10
+ollama pull qwen2.5-coder:7b   # birinchi model (~5 GB); nom topilmasa, `ollama search`/kutubxonadan o'xshash 7-8B coder model
+python scripts/red_generate.py --model qwen2.5-coder:7b --n 10
 ```
 Natija `eval/results/<sana>-red-<model>/` ga yoziladi (`result.json` + `summary.md`). Uni commit + push qiling va handoff'ga 3–5 qator yozing: nechta qabul qilindi, eng ko'p rad sababi, sizga nima g'alati tuyuldi.
 
