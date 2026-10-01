@@ -29,6 +29,7 @@ def main() -> None:
     ap.add_argument("--schema", action="store_true", help="with --red: strict json_schema instead of json_object")
     ap.add_argument("--require-params", action="store_true", help="route only to providers that support every parameter")
     ap.add_argument("--sort", choices=["price", "throughput", "latency"], help="OpenRouter provider ordering")
+    ap.add_argument("--only", help="route only to this upstream provider slug (no fallbacks)")
     a = ap.parse_args()
     key = os.environ.get("OPENROUTER_API_KEY")
     if not key:
@@ -51,6 +52,8 @@ def main() -> None:
     if a.require_params or a.sort:
         body["provider"] = {**({"require_parameters": True} if a.require_params else {}),
                             **({"sort": a.sort} if a.sort else {})}
+    if a.only:
+        body["provider"] = {**body.get("provider", {}), "order": [a.only], "allow_fallbacks": False}
     if a.reasoning:
         body["reasoning"] = {"enabled": False} if a.reasoning == "off" else {"effort": a.reasoning}
     req = urllib.request.Request(URL, json.dumps(body).encode(), {

