@@ -7,6 +7,7 @@ Writes eval/results/<date>-blue-probe-comparison/summary.md. Run it with the pro
 from __future__ import annotations
 
 import json
+import statistics
 import sys
 from datetime import date
 from pathlib import Path
@@ -18,6 +19,12 @@ from blue_probe import wilson  # noqa: E402
 
 def num(v, nd: int = 1) -> str:
     return f"{v:.{nd}f}" if isinstance(v, (int, float)) and v else "-"
+
+
+def cold_prefill(runs) -> float | None:
+    """Prefill speed from the first run of each case; later runs of the same prompt hit the prompt cache and report thousands of tok/s."""
+    vals = [x["prefill_tok_s"] for x in runs if x.get("prefill_tok_s") and x.get("run") == 0]
+    return statistics.median(vals) if vals else None
 
 
 def main() -> None:
@@ -41,10 +48,13 @@ def main() -> None:
                  f"{a['json_valid']}/{a['generations']} | {ev} |")
         res_mem = a.get("resident") or {}
         power = (r["env"]["power"] or "?").replace("Now drawing from ", "").strip("'")
-        c.append(f"| {r['model']['tag']} | {r['env'].get('ollama', '-')} | {num(a['decode_tok_s_median'])} | {num(a.get('prefill_tok_s_median'))} | {num(a.get('load_s_first'))} | "
+        c.append(f"| {r['model']['tag']} | {r['env'].get('ollama', '-')} | {num(a['decode_tok_s_median'])} | {num(cold_prefill(runs))} | {num(a.get('load_s_first'))} | "
                  f"{num(a['wall_s_median'])} | {num(res_mem.get('size_gb'), 2)} GB | {power} | {r['config']['think']} |")
     q.append(f"| Bandit (baseline) | {b_hit}/3 | - | - | - | {b_fp}/3 | - | - |")
 
+    proto = [f"- {r['model']['tag']}: " + (f"protocol v2, schema guard <= {r['config']['schema_guard']['max_findings']} findings and "
+             f"{r['config']['schema_guard']['max_text_chars']} chars per text field" if r["config"].get("schema_guard") else "protocol v1, no length guard")
+             for r in res]
     best = max(res, key=lambda r: r["aggregate"]["recall_strict"])
     calm = min(res, key=lambda r: (r["aggregate"]["fp_clean_runs"], r["aggregate"]["findings_on_clean_mean"]))
     cfg = res[0]["config"]
@@ -52,7 +62,7 @@ def main() -> None:
              f"Same prompts and scoring for every model: T={cfg['temperature']}, seeds {cfg['seeds']}, num_ctx {cfg['num_ctx']}, "
              f"+-{cfg['tolerance_lines']} lines, 4 cases (clean + 3 injected), nothing executed. Bandit is the static baseline (strict recall = CWE found at the region).",
              "Rows for runs made before load/prefill timing was added show '-' there. Quality columns are comparable.", "",
-             *q, "", *c, "",
+             *q, "", *c, "", *proto, "",
              f"- Highest strict recall: {best['model']['tag']} ({best['aggregate']['recall_strict']}/{best['aggregate']['vuln_runs']}).",
              f"- Fewest false signals on the clean app: {calm['model']['tag']} ({calm['aggregate']['fp_clean_runs']}/{calm['aggregate']['clean_runs']} runs).",
              f"- Samples are tiny ({res[0]['aggregate']['vuln_runs']} injected runs per model): a direction, not proof. The injected region is the only ground truth,",
