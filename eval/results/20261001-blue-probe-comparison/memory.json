@@ -1,0 +1,7 @@
+{
+  "method": "vm_stat 'Pages wired down' and memory_pressure after loading each model with a 4-token generation, num_ctx 8192, apps closed, AC power, Ollama 0.35.0",
+  "no_model": {"wired_gb": 2.27, "system_free_pct": 81},
+  "qwen3.5:9b": {"wired_gb": 9.08, "added_gb": 6.81, "compressed_gb": 2.71, "system_free_pct": 28, "swap_used_mb": 1566.5, "ollama_ps_gb": 5.8},
+  "gemma4:12b": {"wired_gb": 13.03, "added_gb": 10.76, "compressed_gb": 2.04, "system_free_pct": 8, "swap_used_mb": 1633.5, "ollama_ps_gb": 1.1},
+  "note": "For gemma4:12b the size reported by `ollama ps` (1.1-1.4 GB) is not the real footprint."
+}

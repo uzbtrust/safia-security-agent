@@ -1,0 +1,453 @@
+{
+  "model": {
+    "tag": "qwen3.5:9b",
+    "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7",
+    "size_bytes": 6594474711,
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "9.7B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "vision",
+      "tools",
+      "thinking"
+    ]
+  },
+  "config": {
+    "temperature": 0.7,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "num_ctx": 8192,
+    "num_predict": 1500,
+    "think": false,
+    "tolerance_lines": 5,
+    "schema_guard": {
+      "max_findings": 8,
+      "max_text_chars": 300
+    }
+  },
+  "env": {
+    "git_sha": "89a10c7",
+    "ollama": "0.35.0",
+    "power": "Now drawing from 'AC Power'",
+    "memory_pressure": "System-wide memory free percentage: 26%",
+    "swap": "total = 2048.00M  used = 1646.50M  free = 401.50M  (encrypted)"
+  },
+  "aggregate": {
+    "recall_strict": 5,
+    "recall_loc_only": 6,
+    "recall_cwe_only": 5,
+    "vuln_runs": 9,
+    "fp_clean_runs": 3,
+    "clean_runs": 3,
+    "findings_on_clean_mean": 2.33,
+    "json_valid": 12,
+    "generations": 12,
+    "evidence_ok": 21,
+    "findings_total": 22,
+    "decode_tok_s_median": 16.7,
+    "wall_s_median": 16.45,
+    "prefill_tok_s_median": 154.2,
+    "load_s_first": 5.06,
+    "resident": {
+      "size_gb": 5.77,
+      "vram_gb": 5.77
+    },
+    "prefill_note": "median over the first run of each case; later runs of the same prompt hit the prompt cache (thousands of tok/s) [recomputed after the run; the first version averaged cache hits]"
+  },
+  "runs": [
+    {
+      "case": "clean",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 37.5,
+      "prompt_tokens": 982,
+      "gen_tokens": 454,
+      "decode_tok_s": 16.9,
+      "done_reason": "stop",
+      "load_s": 5.06,
+      "prefill_tok_s": 179.3,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),\n          ).fetchall()",
+          "explanation": "The parameter `q` is concatenated directly into an f-string before being passed to the SQL query. Although a placeholder `?` is used, the value of `q` is not sanitized or validated against special characters that could break out of the string literal in an f-string context if the code were different"
+        },
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),\n          ).fetchall()",
+          "explanation": "The user input `q` is directly interpolated into the SQL query string using an f-string. An attacker can inject malicious SQL code by providing a `q` value like `' OR '1'='1`, leading to unauthorized data access."
+        },
+        {
+          "file": "app.py",
+          "line": 55,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))\n          if os.path.commonpath([path, FILES]) != FILES or not os.path.isfile(path):\n              abort(404)",
+          "explanation": "The `name` parameter from the user is directly used to construct a file path without proper validation. While there is a check using `os.path.commonpath`, the logic relies on resolving symlinks via `os.path.realpath` first, which allows an attacker to bypass the intended directory restriction by syb"
+        }
+      ],
+      "evidence_ok": 3,
+      "fp_regions": [
+        "CWE-22",
+        "CWE-89"
+      ]
+    },
+    {
+      "case": "clean",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 20.0,
+      "prompt_tokens": 982,
+      "gen_tokens": 333,
+      "decode_tok_s": 16.8,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5265.1,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "(f\"%{q}%\",)",
+          "explanation": "The variable 'q' is directly interpolated into an f-string which is then used as a SQL query parameter. Although the subsequent call to db.execute() uses a tuple for parameters (which correctly prevents SQL injection), the construction of the string literal itself using f\"...{q}...\" is unnecessary,\u964b"
+        },
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "(f\"%{q}%\",)",
+          "explanation": "The variable 'q' is directly interpolated into an f-string which is then used as a SQL query parameter. Although the subsequent call to db.execute() uses a tuple for parameters (which correctly prevents SQL injection), the construction of the string literal itself using f\"...{q}...\" is unnecessary,\u964b"
+        },
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "(f\"%{q}%\",)",
+          "explanation": "The variable 'q' is directly interpolated into an f-string which is then used as a SQL query parameter. Although the subsequent call to db.execute() uses a tuple for parameters (which correctly prevents SQL injection), the construction of the string literal itself using f\"...{q}...\" is unnecessary,\u964b"
+        }
+      ],
+      "evidence_ok": 3,
+      "fp_regions": [
+        "CWE-89"
+      ]
+    },
+    {
+      "case": "clean",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 9.4,
+      "prompt_tokens": 982,
+      "gen_tokens": 152,
+      "decode_tok_s": 16.5,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5566.2,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 34,
+          "cwe": "CWE-89",
+          "evidence": "rows = db.execute(\n    \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n    (f\"%{q}%\",),\n).fetchall()",
+          "explanation": "The application constructs a SQL query using string concatenation inside an f-string (`f\"%{q}%\"`) to build the search pattern. Although the parameter is passed positionally, if the `LIKE` pattern logic were different or if the user could control the structure of the query directly, it would be SQLi."
+        }
+      ],
+      "evidence_ok": 1,
+      "fp_regions": [
+        "CWE-89"
+      ]
+    },
+    {
+      "case": "CWE-89",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 22.1,
+      "prompt_tokens": 974,
+      "gen_tokens": 271,
+      "decode_tok_s": 17.0,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 157.4,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\",",
+          "explanation": "The user input 'q' is directly interpolated into an SQL query string without sanitization, allowing an attacker to inject arbitrary SQL commands. This can lead to data exfiltration, such as retrieving the contents of the 'INTERNAL-RECIPE-DRAFT' product which is marked as hidden."
+        },
+        {
+          "file": "app.py",
+          "line": 57,
+          "cwe": "CWE-22",
+          "evidence": "with open(path, encoding=\"utf-8\") as fh:",
+          "explanation": "The 'files' endpoint constructs a file path using user input from the 'name' parameter and opens it directly. Although there is a path canonicalization check, relying solely on string manipulation to prevent directory traversal is error-prone if the check logic is flawed or if symlinks are involved."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-89",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 11.4,
+      "prompt_tokens": 974,
+      "gen_tokens": 189,
+      "decode_tok_s": 16.9,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5774.9,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"",
+          "explanation": "The variable 'q' is directly interpolated into an SQL query string without sanitization, allowing an attacker to inject arbitrary SQL commands via the 'name' parameter."
+        },
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))",
+          "explanation": "The 'name' parameter is concatenated directly into a file path without validation. An attacker can supply path traversal sequences (e.g., '../../../etc/passwd') to read arbitrary files from outside the intended directory."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-89",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 16.1,
+      "prompt_tokens": 974,
+      "gen_tokens": 268,
+      "decode_tok_s": 16.9,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5669.1,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\")",
+          "explanation": "The query string 'q' is directly interpolated into an SQL statement using an f-string without sanitization or parameterization. An attacker can inject malicious SQL code by providing a crafted value for 'q', allowing them to access the 'hidden' table (e.g., 'INTERNAL-RECIPE-DRAFT') or extract data."
+        },
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))\nif os.path.commonpath([path, FILES]) != FILES or not os.path.isfile(path):\n    abort(404)",
+          "explanation": "The application uses `os.path.realpath` to resolve symlinks before validation. If the 'FILES' directory contains a symlink pointing outside the intended directory, an attacker can supply a relative path that resolves to an absolute path outside the allowed scope. Although the code checks `commonpath"
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-639",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 16.4,
+      "prompt_tokens": 957,
+      "gen_tokens": 170,
+      "decode_tok_s": 16.8,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 151.0,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()",
+          "explanation": "The application uses parameterized queries which safely handle the user input `q`. However, the logic relies on a database column `hidden` to filter sensitive data. If an attacker can modify the database schema or if the security review context implies that the `hidden` flag is not enforced in all 4"
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": false,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-639",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 21.8,
+      "prompt_tokens": 957,
+      "gen_tokens": 359,
+      "decode_tok_s": 16.6,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5147.2,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n    (f\"%{q}%\",),\n).fetchall()",
+          "explanation": "The user input 'q' is directly interpolated into an SQL query string using f-strings. Although a parameter placeholder (?) is used in the query template, the value passed to it (`f\"%{q}%\"`) contains the raw user input. If an attacker provides a malicious payload (e.g., \"') OR '1'='1\"), they can exit"
+        },
+        {
+          "file": "app.py",
+          "line": 53,
+          "cwe": "CWE-22",
+          "evidence": "name = request.args.get(\"name\", \"\")\npath = os.path.realpath(os.path.join(FILES, name))\nif os.path.commonpath([path, FILES]) != FILES or not os.path.isfile(path):\n    abort(404)\nwith open(path, encoding=\"utf-8\") as fh:\n    return fh.read(), 200, {\"Content-Type\": \"text/plain; charset=utf-8\"}",
+          "explanation": "The application constructs a file path by concatenating a user-supplied argument 'name' with the base directory. Even though there is a check using os.path.commonpath, if the FILES directory has non-standard permissions or contains symbolic links pointing outside the intended scope, an attacker can "
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-639",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 9.3,
+      "prompt_tokens": 957,
+      "gen_tokens": 151,
+      "decode_tok_s": 16.6,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 4847.4,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 34,
+          "cwe": "CWE-89",
+          "evidence": "rows = db.execute(\n    \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n    (f\"%{q}%\",),\n).fetchall()",
+          "explanation": "The application constructs a SQL query using string concatenation inside an f-string (`f\"%{q}%\"`) to include user input. Although the code attempts to use placeholders, it fails to parameterize the full search term correctly because the `%` wildcards are injected into the string before the `?` is in"
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": false,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-22",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 16.5,
+      "prompt_tokens": 967,
+      "gen_tokens": 159,
+      "decode_tok_s": 16.6,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 139.8,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),\n          ).fetchall()",
+          "explanation": "The parameter `q` is concatenated into a string using an f-string before being passed as the argument to the SQL query. Although the code uses a placeholder (`?`) and passes the constructed string as the argument, this does not mitigate the risk if the attacker can inject characters that change the "
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": false,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-22",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 19.6,
+      "prompt_tokens": 967,
+      "gen_tokens": 321,
+      "decode_tok_s": 16.5,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5106.5,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n    (f\"%{q}%\",),\n).fetchall()",
+          "explanation": "The variable 'q' is directly interpolated into an f-string before being passed as a parameter to the SQL query. Although it is wrapped in wildcards, if the input contains quotes or specific characters that could alter the query logic (e.g., via injection of newlines or comments if the backend were a"
+        },
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-22",
+          "evidence": "name = request.args.get(\"name\", \"\")\npath = os.path.join(FILES, name)\nif not os.path.isfile(path):\nabort(404)\nwith open(path, encoding=\"utf-8\") as fh:\nreturn fh.read(), 200, {\"Content-Type\": \"text/plain; charset=utf-8\"}",
+          "explanation": "The 'name' parameter from the user is directly concatenated into a file path using os.path.join without any sanitization or validation. This allows an attacker to read arbitrary files on the server by providing paths containing '../' sequences, leading to Path Traversal."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-22",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 14.5,
+      "prompt_tokens": 967,
+      "gen_tokens": 233,
+      "decode_tok_s": 16.4,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 4517.3,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),\n          ).fetchall()",
+          "explanation": "The application constructs a SQL query using an f-string with user input `q` before passing it as a parameter. While the code attempts to use a placeholder (`?`) in the final string, the prefix `%{q}%` is inserted directly into the query logic via string concatenation. If the variable `q` contains a"
+        },
+        {
+          "file": "app.py",
+          "line": 55,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.join(FILES, name)",
+          "explanation": "The application takes the raw `name` parameter from user input and directly appends it to the base directory path using `os.path.join`. This lacks any validation to prevent path traversal attacks (e.g., using `../../../etc/passwd`) which could allow attackers to read arbitrary files on the server's."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    }
+  ]
+}
