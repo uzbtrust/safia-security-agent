@@ -9,6 +9,7 @@ Needs a running Ollama (needs-local-verify). Example:
 """
 import argparse
 import json
+import os
 import re
 import time
 import urllib.request
@@ -55,28 +56,51 @@ def ask(model: str, prompt: str, host: str, temperature: float) -> str:
         return json.load(resp)["message"]["content"]
 
 
+def ask_openai(model: str, prompt: str, temperature: float) -> str:
+    """OpenAI-compatible /chat/completions; base url, key and model come from the environment only."""
+    base = os.environ["RED_API_BASE"].rstrip("/")
+    body = json.dumps({"model": model, "temperature": temperature, "response_format": {"type": "json_object"},
+                       "messages": [{"role": "user", "content": prompt}]}).encode()
+    req = urllib.request.Request(f"{base}/chat/completions", body, {
+        "Content-Type": "application/json", "Authorization": "Bearer " + os.environ["RED_API_KEY"]})
+    with urllib.request.urlopen(req, timeout=600) as resp:
+        text = json.load(resp)["choices"][0]["message"]["content"]
+    m = re.search(r"\{.*\}", text, re.S)  # tolerate code fences / prose around the JSON
+    return m.group(0) if m else text
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--n", type=int, default=10, help="samples per CWE")
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--temperature", type=float, default=0.8)
+    ap.add_argument("--provider", choices=["ollama", "openai"], default="ollama")
+    ap.add_argument("--cwe", help="only this CWE (e.g. CWE-89)")
+    ap.add_argument("--no-judge", action="store_true",
+                    help="do not execute model code (use where the referee is not isolated, e.g. macOS)")
     args = ap.parse_args()
 
     source = (APP_DIR / "app.py").read_text()
     samples, t0 = [], time.time()
     for cwe, t in TEMPLATES.items():
+        if args.cwe and cwe != args.cwe:
+            continue
         for i in range(args.n):
             prompt = PROMPT.format(cwe=cwe, title=t.title, hint=t.hint, marker=t.marker, source=source)
             rec = {"cwe": cwe, "i": i}
             try:
-                data = json.loads(ask(args.model, prompt, args.host, args.temperature))
+                raw = (ask(args.model, prompt, args.host, args.temperature) if args.provider == "ollama"
+                       else ask_openai(args.model, prompt, args.temperature))
+                data = json.loads(raw)
                 old, new, exploit = data["old"], data["new"], data["exploit_test"]
             except Exception as exc:  # network, JSON or schema problems
                 rec["status"] = "bad_output"; rec["detail"] = repr(exc)[:200]
                 samples.append(rec); print(cwe, i, rec["status"]); continue
             if source.count(old) != 1 or not old.strip():
                 rec["status"] = "old_not_found"
+            elif args.no_judge:
+                rec["status"] = "old_found_unjudged"; rec["new"] = new; rec["exploit_test"] = exploit
             else:
                 verdict = judge(APP_DIR, Submission(cwe, {"app.py": source.replace(old, new)}, exploit, t.marker))
                 rec["status"] = "accepted" if verdict.accepted else f"rejected:{verdict.reason}"
@@ -85,7 +109,7 @@ def main() -> None:
             samples.append(rec); print(cwe, i, rec["status"])
 
     per_cwe = {}
-    for cwe in TEMPLATES:
+    for cwe in [c for c in TEMPLATES if not args.cwe or c == args.cwe]:
         rows = [s for s in samples if s["cwe"] == cwe]
         ok = [s for s in rows if s["status"] == "accepted"]
         per_cwe[cwe] = {"generated": len(rows), "accepted": len(ok),
