@@ -1,39 +1,84 @@
 # Local model registry (LOCAL chat). Facts only.
 # - download_gb: sum of layer sizes in the Ollama registry manifest, queried 2026-10-01.
-# - digest, quant, params and measured are filled in from `ollama show` and the smoke test
-#   after a model is actually pulled. null means "not measured yet", never a guess.
+# - digest, quant, params and measured come from `ollama show`, the smoke test and the Blue probe.
+#   null means "not measured yet", never a guess.
 # - Models are pulled one at a time (docs/HARDWARE.md, "Storage policy"); `status` says what
 #   is on disk right now.
+# - Blue probe results: eval/results/20261001-blue-probe-comparison/summary.md (n=9 injected runs per model).
 
 server:
   base_url: http://127.0.0.1:11434/v1   # OpenAI-compatible endpoint used by llm/openai_compat.py
   native_url: http://127.0.0.1:11434    # Ollama native API: timings, `ollama ps`
+  ollama_version: 0.35.0                # 0.24.0 until 2026-10-01; baseline probe and smoke test ran on 0.24.0
   num_ctx: 8192                         # server-wide default, see configs/local/ollama.env
   env_file: configs/local/ollama.env
 
 models:
+  - id: gemma4-12b
+    ollama_tag: gemma4:12b
+    role: Blue candidate; best detector in the probe, but heavy (needs other apps closed)
+    download_gb: 8.02
+    status: pulled
+    digest: sha256:6114515d63c17436a7c0417d82820ac65ad643e2806c5a3c89cb62846436ed0b
+    quant: Q4_K_M
+    params: 11.9B
+    ctx_trained: 262144
+    measured:
+      probe: eval/results/20261001-blue-probe-gemma4_12b/summary.md
+      strict_recall: 6/9
+      cwe_named: 9/9
+      false_signal_on_clean_runs: 3/3 (1 finding per run)
+      decode_tok_s: 8.4
+      prefill_tok_s: 79.8
+      wired_gb_added: 10.8       # vm_stat, num_ctx 8192; `ollama ps` shows 1.1-1.4 GB, which is not the real footprint
+
+  - id: qwen35-9b
+    ollama_tag: qwen3.5:9b
+    role: Blue candidate; fast and light, never names the IDOR class
+    download_gb: 6.59
+    status: pulled
+    digest: sha256:6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7
+    quant: Q4_K_M
+    params: 9.7B
+    ctx_trained: 262144
+    measured:
+      probe: eval/results/20261001-blue-probe-qwen3.5_9b/summary.md
+      strict_recall: 5/9
+      cwe_named: 5/9
+      false_signal_on_clean_runs: 3/3 (2.3 findings per run)
+      decode_tok_s: 16.7
+      prefill_tok_s: 154.2
+      wired_gb_added: 6.8
+    notes: with thinking off it reasons inside the `explanation` field and ran into the token cap (invalid JSON in 2 of 2 first generations); the probe protocol v2 caps text length in the schema
+
   - id: qwen25-coder-7b
     ollama_tag: qwen2.5-coder:7b
-    role: baseline
+    role: baseline (probe protocol v1, Ollama 0.24.0, on battery)
     download_gb: 4.68
-    status: pulled
+    status: removed          # deleted by the user on 2026-10-01 after its results were recorded; can be pulled again
     digest: sha256:dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364
     quant: Q4_K_M
     params: 7.6B
     ctx_trained: 32768
-    measured: eval/results/20261001-smoke-ollama-qwen2.5-coder_7b/summary.md   # 20.2 tok/s decode, 5.34 GB resident
+    measured:
+      probe: eval/results/20261001-blue-probe-qwen2.5-coder_7b/summary.md
+      smoke: eval/results/20261001-smoke-ollama-qwen2.5-coder_7b/summary.md
+      strict_recall: 3/9
+      cwe_named: 3/9
+      false_signal_on_clean_runs: 3/3 (1.3 findings per run)
+      decode_tok_s: 20.5
 
   - id: qwen3-8b
     ollama_tag: qwen3:8b
-    role: bake-off candidate (E1); supports a thinking mode, so decide per run and record it
+    role: not probed; AA coding index 9.0 against 28.7 for qwen3.5:9b
     download_gb: 5.23
     status: not-pulled
     digest: null
     measured: null
 
-  - id: gemma4
-    ollama_tag: gemma4:latest
-    role: bake-off candidate (E1); named in docs/PLAN.md, not evaluated yet
+  - id: gemma4-e4b
+    ollama_tag: gemma4:latest    # the same file as gemma4:e4b
+    role: not probed; AA coding index 9.4 against 31.0 for gemma4:12b (both in reasoning mode)
     download_gb: 6.58
     status: not-pulled
     digest: null
@@ -41,7 +86,7 @@ models:
 
   - id: qwen25-coder-14b
     ollama_tag: qwen2.5-coder:14b
-    role: H5 size comparison against the 7B of the same family; marginal fit, pull only after the other models are removed
+    role: H5 size comparison against the 7B of the same family; marginal fit
     download_gb: 8.99
     status: not-pulled
     digest: null
@@ -49,6 +94,12 @@ models:
 
 # H5 quantization pair: qwen2.5-coder:7b (default Q4 tag) against a Q8_0 tag of the same model.
 # Look up the exact tag and its size in the registry before pulling; it is not listed here on purpose.
+
+watch:
+  - model: K2 Horizon 7B (IFM, Apache-2.0, released 2026-09-03)
+    why: AA coding index 38.6 and intelligence 20.6, above every model probed here
+    blocker: not in the Ollama library; the official GGUF (IFM/K2-Horizon-7B-GGUF, Q4_K_M 5.59 GB) needs llama.cpp support for the K2 Horizon architecture, which its model card says is still a pending pull request
+    recheck: when Ollama or llama.cpp lists the architecture
 
 excluded:
   - {ollama_tag: "gpt-oss:20b", download_gb: 13.79, reason: "weights alone exceed the 11.8 GiB Metal budget"}

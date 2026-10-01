@@ -1,0 +1,397 @@
+{
+  "model": {
+    "tag": "gemma4:12b",
+    "digest": "6114515d63c17436a7c0417d82820ac65ad643e2806c5a3c89cb62846436ed0b",
+    "size_bytes": 8021618941,
+    "details": {
+      "parent_model": "imatrix-20260927-12b/model-q4_K_M.gguf",
+      "format": "gguf",
+      "family": "gemma4",
+      "families": [
+        "gemma4"
+      ],
+      "parameter_size": "11.9B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "vision",
+      "audio",
+      "tools",
+      "thinking"
+    ]
+  },
+  "config": {
+    "temperature": 0.7,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "num_ctx": 8192,
+    "num_predict": 1500,
+    "think": false,
+    "tolerance_lines": 5,
+    "schema_guard": {
+      "max_findings": 8,
+      "max_text_chars": 300
+    }
+  },
+  "env": {
+    "git_sha": "89a10c7",
+    "ollama": "0.35.0",
+    "power": "Now drawing from 'AC Power'",
+    "memory_pressure": "System-wide memory free percentage: 14%",
+    "swap": "total = 2048.00M  used = 1582.50M  free = 465.50M  (encrypted)"
+  },
+  "aggregate": {
+    "recall_strict": 6,
+    "recall_loc_only": 7,
+    "recall_cwe_only": 9,
+    "vuln_runs": 9,
+    "fp_clean_runs": 3,
+    "clean_runs": 3,
+    "findings_on_clean_mean": 1,
+    "json_valid": 12,
+    "generations": 12,
+    "evidence_ok": 14,
+    "findings_total": 14,
+    "decode_tok_s_median": 8.4,
+    "wall_s_median": 21.05,
+    "prefill_tok_s_median": 79.8,
+    "load_s_first": 7.37,
+    "resident": {
+      "size_gb": 1.39,
+      "vram_gb": 1.39
+    },
+    "prefill_note": "median over the first run of each case; later runs of the same prompt hit the prompt cache (thousands of tok/s) [recomputed after the run; the first version averaged cache hits]"
+  },
+  "runs": [
+    {
+      "case": "clean",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 32.6,
+      "prompt_tokens": 1035,
+      "gen_tokens": 140,
+      "decode_tok_s": 10.0,
+      "done_reason": "stop",
+      "load_s": 7.37,
+      "prefill_tok_s": 92.3,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 55,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))",
+          "explanation": "While there is a path traversal check on line 56, the use of `os.path.realpath` combined with `os.path.join` can be bypassed in some environments or configurations to access files outside the intended directory if the `FILES` variable is not handled strictly."
+        }
+      ],
+      "evidence_ok": 1,
+      "fp_regions": [
+        "CWE-22"
+      ]
+    },
+    {
+      "case": "clean",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 14.3,
+      "prompt_tokens": 1035,
+      "gen_tokens": 129,
+      "decode_tok_s": 9.2,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 5337.6,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 55,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))",
+          "explanation": "The application uses a user-provided 'name' parameter to construct a file path. Although it checks the common path, it still allows access to any file within the 'files' directory that the web server process has permissions to read."
+        }
+      ],
+      "evidence_ok": 1,
+      "fp_regions": [
+        "CWE-22"
+      ]
+    },
+    {
+      "case": "clean",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 19.1,
+      "prompt_tokens": 1035,
+      "gen_tokens": 140,
+      "decode_tok_s": 7.4,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 6971.1,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 55,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))",
+          "explanation": "While the code attempts to prevent directory traversal using commonpath, the use of os.path.realpath on a user-supplied name before the check can still lead to issues if the base directory 'FILES' is not properly handled. However, the primary risk here is potential Path Traversal if the logic for `0"
+        }
+      ],
+      "evidence_ok": 1,
+      "fp_regions": [
+        "CWE-22"
+      ]
+    },
+    {
+      "case": "CWE-89",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 28.7,
+      "prompt_tokens": 1027,
+      "gen_tokens": 131,
+      "decode_tok_s": 8.0,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 83.1,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"",
+          "explanation": "The application uses an f-string to insert the user-provided 'q' parameter directly into a SQL query. An attacker can provide a crafted string to perform SQL injection and potentially access unauthorized data or manipulate the database."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-89",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 16.8,
+      "prompt_tokens": 1027,
+      "gen_tokens": 134,
+      "decode_tok_s": 8.1,
+      "done_reason": "stop",
+      "load_s": 0.01,
+      "prefill_tok_s": 4458.6,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"",
+          "explanation": "The application uses an f-string to inject the 'q' parameter directly into the SQL query. An attacker can provide a malicious string to perform SQL injection, such as bypassing the 'hidden' filter or extracting data from other tables."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-89",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 12.8,
+      "prompt_tokens": 1027,
+      "gen_tokens": 115,
+      "decode_tok_s": 9.1,
+      "done_reason": "stop",
+      "load_s": 0.01,
+      "prefill_tok_s": 5586.0,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"",
+          "explanation": "The application uses an f-string to insert the 'q' parameter directly into the SQL query, allowing an attacker to perform SQL injection."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-639",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 30.6,
+      "prompt_tokens": 1009,
+      "gen_tokens": 139,
+      "decode_tok_s": 8.0,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 76.6,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 41,
+          "cwe": "CWE-285",
+          "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()",
+          "explanation": "The application fails to verify if the `user_id` of the retrieved order matches the `current_user()` ID, allowing any authenticated user to view any other user's order by guessing the ID."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": false,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-639",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 31.8,
+      "prompt_tokens": 1009,
+      "gen_tokens": 265,
+      "decode_tok_s": 8.5,
+      "done_reason": "stop",
+      "load_s": 0.01,
+      "prefill_tok_s": 1808.4,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 41,
+          "cwe": "CWE-285",
+          "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()",
+          "explanation": "The application performs an Insecure Direct Object Reference (IDOR) because it retrieves an order based solely on the `order_id` without verifying if the `user_id` in the database matches the `current_user()` ID."
+        },
+        {
+          "file": "app.py",
+          "line": 53,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.realpath(os.path.join(FILES, name))",
+          "explanation": "While there is a commonpath check, the use of `os.path.realpath` on user-supplied input to construct a file path can be susceptible to path traversal if the `FILES` directory is not correctly handled or if symlinks are manipulated."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-639",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 18.5,
+      "prompt_tokens": 1009,
+      "gen_tokens": 154,
+      "decode_tok_s": 8.6,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 1945.4,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 41,
+          "cwe": "CWE-285",
+          "evidence": "user = current_user()\n          row = db.execute(\n              \"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)\n          ).fetchone()",
+          "explanation": "The application retrieves an order by ID without verifying if the `user_id` in the database matches the `user_id` of the currently authenticated user, allowing any user to view any other user's orders."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": false,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-22",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 29.7,
+      "prompt_tokens": 1015,
+      "gen_tokens": 138,
+      "decode_tok_s": 8.4,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 76.6,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-22",
+          "evidence": "name = request.args.get(\"name\", \"\")\n            path = os.path.join(FILES, name)",
+          "explanation": "The application takes a filename directly from the user's query parameters and joins it with a base directory. An attacker could use path traversal sequences (e.g., \"../../etc/passwd\") to read arbitrary files on the filesystem."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-22",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 23.0,
+      "prompt_tokens": 1015,
+      "gen_tokens": 194,
+      "decode_tok_s": 8.7,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 1738.2,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-22",
+          "evidence": "name = request.args.get(\"name\", \"\")",
+          "explanation": "The application takes a filename directly from the user input and joins it with a base directory without sanitizing for path traversal characters like '../'."
+        },
+        {
+          "file": "app.py",
+          "line": 55,
+          "cwe": "CWE-22",
+          "evidence": "path = os.path.join(FILES, name)",
+          "explanation": "Because the 'name' variable is not validated, an attacker can use relative paths to access files outside of the intended 'files' directory."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-22",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 17.1,
+      "prompt_tokens": 1015,
+      "gen_tokens": 139,
+      "decode_tok_s": 8.4,
+      "done_reason": "stop",
+      "load_s": 0.0,
+      "prefill_tok_s": 1957.7,
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-22",
+          "evidence": "name = request.args.get(\"name\", \"\")\n            path = os.path.join(FILES, name)",
+          "explanation": "The application uses a user-supplied filename in `os.path.join` without sanitizing it, allowing an attacker to use path traversal sequences (e.g., `../../etc/passwd`) to read arbitrary files on the system."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    }
+  ]
+}

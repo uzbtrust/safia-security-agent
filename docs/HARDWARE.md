@@ -10,12 +10,13 @@ Measured on 2026-10-01 unless a line says *estimate* or *pending*. There are no 
 | CPU / GPU | 10 CPU cores (4 performance + 6 efficiency), 10 GPU cores, Metal 4 |
 | Memory | 16 GB unified |
 | OS | macOS 27.0 (build 26A428), arm64 |
-| Present | Python 3.13.15, uv 0.9.21, git 2.52.0, Ollama 0.24.0 (Homebrew) |
+| Present | Python 3.13.15, uv 0.9.21, git 2.52.0, Ollama 0.35.0 (Homebrew; 0.24.0 until 2026-10-01, see "Serving configuration") |
 | Not installed | Docker (needed from T3.2); Semgrep and Bandit (C0 runs on the cloud side) |
 
 ## Memory budget
 
 - Ollama reports **11.8 GiB** of Metal memory available (server log, `inference compute`). Weights, KV cache and compute buffers have to fit in it, otherwise layers spill to the CPU and decoding slows down.
+- `ollama ps` can under-report: for `gemma4:12b` it shows 1.1-1.4 GB while `vm_stat` ("Pages wired down") rises by 10.8 GB. Measure the wired pages before and after loading a model.
 - Memory pressure swings with what is open. At the first reading (about 02:40) swap was 3.3 of 4.0 GB used and 54% of memory was free; at 03:04 swap was empty and 66% was free. Check `memory_pressure` and `sysctl vm.swapusage` before a timed run and close heavy apps.
 
 ## Disk budget
@@ -36,6 +37,8 @@ Measured on 2026-10-01 unless a line says *estimate* or *pending*. There are no 
 | `OLLAMA_CONTEXT_LENGTH` | `8192` | Ollama's own default here is 4096 (derived from the Metal memory size; server log) |
 | `OLLAMA_KEEP_ALIVE` | `10m` | stay loaded during a run, release memory afterwards |
 
+**Ollama version.** 0.24.0 until 2026-10-01 (the smoke test and the baseline `qwen2.5-coder:7b` probe ran on it), 0.35.0 afterwards (the `qwen3.5:9b` and `gemma4:12b` probes; each result records the version). The upgrade was needed because the registry refuses `gemma4:12b` to older clients (HTTP 412) and Ollama's release notes say 12B support arrived in v0.30.3. `brew upgrade ollama` also moved `mlx` 0.31.2 to 0.32.1, `mlx-c` 0.6.0_2 to 0.6.0_4, `openssl@3` 3.6.4 to 3.6.5, `readline`, `xz` and `ca-certificates`, and added `python@3.14`. The old versions were kept on disk (cleanup was switched off), so the previous Ollama can still be run from its Cellar directory.
+
 ## Which models fit
 
 Download sizes come from the Ollama registry manifests (sum of layers). The verdict is an *estimate* from file size against the 11.8 GiB Metal budget and the disk budget. It becomes a fact only after a real load (`ollama ps`).
@@ -43,7 +46,9 @@ Download sizes come from the Ollama registry manifests (sum of layers). The verd
 | Tag | Download | Verdict |
 |---|---|---|
 | `qwen2.5-coder:7b` | 4.68 GB | fits: 5.34 GB resident, all on the GPU at 8192 context (measured, see below) |
-| `qwen3:8b` | 5.23 GB | fits comfortably |
+| `qwen3:8b` | 5.23 GB | fits comfortably; not probed |
+| `qwen3.5:9b` | 6.59 GB | fits: +6.8 GB wired, 28% of RAM free with it loaded (measured) |
+| `gemma4:12b` | 8.02 GB | fits only with other apps closed: +10.8 GB wired, 8% of RAM free (measured) |
 | `gemma4:latest` | 6.58 GB | fits; not evaluated yet |
 | `qwen2.5-coder:14b` | 8.99 GB | marginal: weights plus KV cache at 8192 tokens take most of the Metal budget; test before relying on it |
 | `qwen3:14b`, `phi4:14b`, `deepseek-coder-v2:16b` | 9.28, 9.05, 8.91 GB | marginal, same as above |
@@ -85,3 +90,18 @@ From `configs/local/smoke_test.py`. Raw data and the three red samples are in `e
 | Determinism | at T=0 seeds 1 to 3 gave identical output; at T=0.8 they differ and a repeated seed reproduces |
 
 Small samples: n=3 per structured-output check, one prompt for determinism. Direction, not proof. Still not measured: other models, sustained load under thermal throttling, and the 14B.
+
+## Measured: the Blue probe models (Ollama 0.35.0, AC power, apps closed)
+
+From `configs/local/blue_probe.py`; the table and the reading are in `eval/results/20261001-blue-probe-comparison/summary.md`. Thinking off, num_ctx 8192.
+
+| | qwen3.5:9b | gemma4:12b |
+|---|---|---|
+| Decode | 16.7 tok/s (16.4 to 17.0, steady) | 8.4 tok/s (7.4 to 10.0) |
+| Prefill (first run of each case) | 154 tok/s | 80 tok/s |
+| First load | 5.1 s | 7.4 s (the files were in the page cache, so a colder load will be slower) |
+| Per generation (median) | 16.4 s | 21.1 s |
+| Wired memory added | 6.8 GB | 10.8 GB |
+| System free memory with it loaded | 28% | 8% |
+
+The prefill figure of a repeated prompt is not a speed: the prompt cache answers it in a fraction of a second and the run then reports thousands of tok/s. Only the first run of each case is used.

@@ -28,10 +28,12 @@ from safia_sec.gym.injections import APP_DIR, TEMPLATES, build  # noqa: E402
 
 TOL = 5  # lines of slack around the injected region
 FAMILY = {"CWE-89": {89}, "CWE-639": {639, 284, 285, 862, 863}, "CWE-22": {22, 23, 36, 73}}
-SCHEMA = {"type": "object", "properties": {"findings": {"type": "array", "items": {
+MAX_FINDINGS, MAX_TEXT = 8, 300  # format guard (protocol v2): a verbose model must not run into the token cap and break the JSON
+SCHEMA = {"type": "object", "properties": {"findings": {"type": "array", "maxItems": MAX_FINDINGS, "items": {
     "type": "object",
     "properties": {"file": {"type": "string"}, "line": {"type": "integer"}, "cwe": {"type": "string"},
-                   "evidence": {"type": "string"}, "explanation": {"type": "string"}},
+                   "evidence": {"type": "string", "maxLength": MAX_TEXT},
+                   "explanation": {"type": "string", "maxLength": MAX_TEXT}},
     "required": ["file", "line", "cwe", "evidence", "explanation"]}}}, "required": ["findings"]}
 PROMPT = """You are a security reviewer. Read the Python/Flask file below and report real security vulnerabilities in it.
 
@@ -124,8 +126,11 @@ def run_one(host, model, source, seed, temperature, think, num_ctx, num_predict)
     d, wall = post(host, "/api/chat", body)
     content = d["message"]["content"]
     ge, gd = d.get("eval_count", 0), d.get("eval_duration", 0)
+    pe, pd = d.get("prompt_eval_count", 0), d.get("prompt_eval_duration", 0)
     rec = {"wall_s": round(wall, 1), "prompt_tokens": d.get("prompt_eval_count"), "gen_tokens": ge,
-           "decode_tok_s": round(ge / (gd / 1e9), 1) if gd else None, "done_reason": d.get("done_reason")}
+           "decode_tok_s": round(ge / (gd / 1e9), 1) if gd else None, "done_reason": d.get("done_reason"),
+           "load_s": round(d.get("load_duration", 0) / 1e9, 2),
+           "prefill_tok_s": round(pe / (pd / 1e9), 1) if pd and pe else None}
     try:
         data = json.loads(content)
         findings = data["findings"]
@@ -188,13 +193,19 @@ def main() -> None:
            "findings_on_clean_mean": round(statistics.mean(len(r["findings"]) for r in clean_runs), 2),
            "json_valid": sum(r["valid_json"] for r in runs), "generations": len(runs),
            "evidence_ok": sum(r["evidence_ok"] for r in runs), "findings_total": n_find,
-           "decode_tok_s_median": statistics.median([r["decode_tok_s"] for r in runs if r["decode_tok_s"]] or [0]),
-           "wall_s_median": statistics.median(r["wall_s"] for r in runs), "resident": resident}
+           "decode_tok_s_median": round(statistics.median([r["decode_tok_s"] for r in runs if r["decode_tok_s"]] or [0]), 1),
+           "wall_s_median": statistics.median(r["wall_s"] for r in runs),
+           "prefill_tok_s_median": round(statistics.median([r["prefill_tok_s"] for r in runs
+                                         if r["prefill_tok_s"] and r["run"] == 0] or [0]), 1),
+           "prefill_note": "median over the first run of each case; later runs of the same prompt hit the prompt cache (thousands of tok/s)",
+           "load_s_first": runs[0]["load_s"], "resident": resident}
     res = {"model": {"tag": a.model, "digest": tags[a.model]["digest"], "size_bytes": tags[a.model]["size"],
                      "details": show.get("details"), "capabilities": caps},
            "config": {"temperature": a.temperature, "seeds": list(range(1, a.runs + 1)), "num_ctx": a.num_ctx,
-                      "num_predict": a.num_predict, "think": think, "tolerance_lines": TOL},
+                      "num_predict": a.num_predict, "think": think, "tolerance_lines": TOL,
+                      "schema_guard": {"max_findings": MAX_FINDINGS, "max_text_chars": MAX_TEXT}},
            "env": {"git_sha": sh(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"]),
+                   "ollama": json.load(urllib.request.urlopen(a.host + "/api/version"))["version"],
                    "power": (sh(["pmset", "-g", "batt"]).splitlines() or ["?"])[0],
                    "memory_pressure": (sh(["memory_pressure"]).splitlines() or ["?"])[-1],
                    "swap": sh(["sysctl", "-n", "vm.swapusage"])},
@@ -205,9 +216,9 @@ def main() -> None:
 
     lo, hi = wilson(agg["recall_strict"], agg["vuln_runs"])
     lines = [f"# Blue probe: {a.model}", "",
-             f"- git `{res['env']['git_sha']}`, digest `{tags[a.model]['digest'][:12]}`, {res['model']['details'].get('parameter_size')} "
+             f"- git `{res['env']['git_sha']}`, Ollama {res['env']['ollama']}, digest `{tags[a.model]['digest'][:12]}`, {res['model']['details'].get('parameter_size')} "
              f"{res['model']['details'].get('quantization_level')}; T={a.temperature}, seeds 1-{a.runs}, num_ctx {a.num_ctx}, "
-             f"thinking={think}",
+             f"thinking={think}, schema guard <= {MAX_FINDINGS} findings and {MAX_TEXT} chars per text field",
              f"- {res['env']['power']}; at the end: {res['env']['memory_pressure']}",
              "- Bandit baseline (eval/baselines/bandit.json): 1 of 3 found (CWE-89 only), no false signal on the clean app.", "",
              "| Case | strict hit | location only | CWE only | findings (mean) | JSON valid |", "|---|---|---|---|---|---|"]
@@ -224,7 +235,8 @@ def main() -> None:
               f"{agg['recall_loc_only']}/{agg['vuln_runs']}; CWE only {agg['recall_cwe_only']}/{agg['vuln_runs']}",
               f"- False signal on the clean app: {agg['fp_clean_runs']}/{agg['clean_runs']} runs; {agg['findings_on_clean_mean']} findings per clean run",
               f"- JSON valid {agg['json_valid']}/{agg['generations']}; evidence found in the source {agg['evidence_ok']}/{agg['findings_total']} findings",
-              f"- Speed {agg['decode_tok_s_median']} tok/s decode (median), {agg['wall_s_median']} s per generation (median); resident {resident}",
+              f"- Speed {agg['decode_tok_s_median']} tok/s decode and {agg['prefill_tok_s_median']} tok/s prefill (first run of each case; medians), "
+              f"{agg['wall_s_median']} s per generation (median); first load {agg['load_s_first']} s; resident {resident}",
               "", "Examples to look at (case, run in result.json):"]
     misses = [f"miss {r['case']}#{r['run']}" for r in vuln if not r["strict"]][:3]
     fps = [f"false signal clean#{r['run']} {r['fp_regions']}" for r in clean_runs if r["fp_regions"]][:2]
