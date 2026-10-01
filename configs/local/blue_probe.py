@@ -124,8 +124,11 @@ def run_one(host, model, source, seed, temperature, think, num_ctx, num_predict)
     d, wall = post(host, "/api/chat", body)
     content = d["message"]["content"]
     ge, gd = d.get("eval_count", 0), d.get("eval_duration", 0)
+    pe, pd = d.get("prompt_eval_count", 0), d.get("prompt_eval_duration", 0)
     rec = {"wall_s": round(wall, 1), "prompt_tokens": d.get("prompt_eval_count"), "gen_tokens": ge,
-           "decode_tok_s": round(ge / (gd / 1e9), 1) if gd else None, "done_reason": d.get("done_reason")}
+           "decode_tok_s": round(ge / (gd / 1e9), 1) if gd else None, "done_reason": d.get("done_reason"),
+           "load_s": round(d.get("load_duration", 0) / 1e9, 2),
+           "prefill_tok_s": round(pe / (pd / 1e9), 1) if pd and pe else None}
     try:
         data = json.loads(content)
         findings = data["findings"]
@@ -189,12 +192,15 @@ def main() -> None:
            "json_valid": sum(r["valid_json"] for r in runs), "generations": len(runs),
            "evidence_ok": sum(r["evidence_ok"] for r in runs), "findings_total": n_find,
            "decode_tok_s_median": statistics.median([r["decode_tok_s"] for r in runs if r["decode_tok_s"]] or [0]),
-           "wall_s_median": statistics.median(r["wall_s"] for r in runs), "resident": resident}
+           "wall_s_median": statistics.median(r["wall_s"] for r in runs),
+           "prefill_tok_s_median": statistics.median([r["prefill_tok_s"] for r in runs if r["prefill_tok_s"]] or [0]),
+           "load_s_first": runs[0]["load_s"], "resident": resident}
     res = {"model": {"tag": a.model, "digest": tags[a.model]["digest"], "size_bytes": tags[a.model]["size"],
                      "details": show.get("details"), "capabilities": caps},
            "config": {"temperature": a.temperature, "seeds": list(range(1, a.runs + 1)), "num_ctx": a.num_ctx,
                       "num_predict": a.num_predict, "think": think, "tolerance_lines": TOL},
            "env": {"git_sha": sh(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"]),
+                   "ollama": json.load(urllib.request.urlopen(a.host + "/api/version"))["version"],
                    "power": (sh(["pmset", "-g", "batt"]).splitlines() or ["?"])[0],
                    "memory_pressure": (sh(["memory_pressure"]).splitlines() or ["?"])[-1],
                    "swap": sh(["sysctl", "-n", "vm.swapusage"])},
@@ -205,7 +211,7 @@ def main() -> None:
 
     lo, hi = wilson(agg["recall_strict"], agg["vuln_runs"])
     lines = [f"# Blue probe: {a.model}", "",
-             f"- git `{res['env']['git_sha']}`, digest `{tags[a.model]['digest'][:12]}`, {res['model']['details'].get('parameter_size')} "
+             f"- git `{res['env']['git_sha']}`, Ollama {res['env']['ollama']}, digest `{tags[a.model]['digest'][:12]}`, {res['model']['details'].get('parameter_size')} "
              f"{res['model']['details'].get('quantization_level')}; T={a.temperature}, seeds 1-{a.runs}, num_ctx {a.num_ctx}, "
              f"thinking={think}",
              f"- {res['env']['power']}; at the end: {res['env']['memory_pressure']}",
@@ -224,7 +230,8 @@ def main() -> None:
               f"{agg['recall_loc_only']}/{agg['vuln_runs']}; CWE only {agg['recall_cwe_only']}/{agg['vuln_runs']}",
               f"- False signal on the clean app: {agg['fp_clean_runs']}/{agg['clean_runs']} runs; {agg['findings_on_clean_mean']} findings per clean run",
               f"- JSON valid {agg['json_valid']}/{agg['generations']}; evidence found in the source {agg['evidence_ok']}/{agg['findings_total']} findings",
-              f"- Speed {agg['decode_tok_s_median']} tok/s decode (median), {agg['wall_s_median']} s per generation (median); resident {resident}",
+              f"- Speed {agg['decode_tok_s_median']} tok/s decode and {agg['prefill_tok_s_median']} tok/s prefill (medians), "
+              f"{agg['wall_s_median']} s per generation (median); first load {agg['load_s_first']} s; resident {resident}",
               "", "Examples to look at (case, run in result.json):"]
     misses = [f"miss {r['case']}#{r['run']}" for r in vuln if not r["strict"]][:3]
     fps = [f"false signal clean#{r['run']} {r['fp_regions']}" for r in clean_runs if r["fp_regions"]][:2]

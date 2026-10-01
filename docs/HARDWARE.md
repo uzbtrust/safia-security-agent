@@ -10,7 +10,7 @@ Measured on 2026-10-01 unless a line says *estimate* or *pending*. There are no 
 | CPU / GPU | 10 CPU cores (4 performance + 6 efficiency), 10 GPU cores, Metal 4 |
 | Memory | 16 GB unified |
 | OS | macOS 27.0 (build 26A428), arm64 |
-| Present | Python 3.13.15, uv 0.9.21, git 2.52.0, Ollama 0.24.0 (Homebrew) |
+| Present | Python 3.13.15, uv 0.9.21, git 2.52.0, Ollama 0.35.0 (Homebrew; 0.24.0 until 2026-10-01, see "Serving configuration") |
 | Not installed | Docker (needed from T3.2); Semgrep and Bandit (C0 runs on the cloud side) |
 
 ## Memory budget
@@ -35,6 +35,8 @@ Measured on 2026-10-01 unless a line says *estimate* or *pending*. There are no 
 | `OLLAMA_FLASH_ATTENTION` | `1` | smaller KV cache, faster long-context prefill |
 | `OLLAMA_CONTEXT_LENGTH` | `8192` | Ollama's own default here is 4096 (derived from the Metal memory size; server log) |
 | `OLLAMA_KEEP_ALIVE` | `10m` | stay loaded during a run, release memory afterwards |
+
+**Ollama version.** 0.24.0 until 2026-10-01 (the smoke test and the baseline `qwen2.5-coder:7b` probe ran on it), 0.35.0 afterwards (the `qwen3.5:9b` and `gemma4:12b` probes; each result records the version). The upgrade was needed because the registry refuses `gemma4:12b` to older clients (HTTP 412) and Ollama's release notes say 12B support arrived in v0.30.3. `brew upgrade ollama` also moved `mlx` 0.31.2 to 0.32.1, `mlx-c` 0.6.0_2 to 0.6.0_4, `openssl@3` 3.6.4 to 3.6.5, `readline`, `xz` and `ca-certificates`, and added `python@3.14`. The old versions were kept on disk (cleanup was switched off), so the previous Ollama can still be run from its Cellar directory.
 
 ## Which models fit
 
