@@ -41,6 +41,7 @@ Muddat 15-okt, topshirish maqsadi 14-okt.
   1. LOCAL: `python scripts/red_generate.py --provider openai|ollama --model <m> --n 10 --no-judge` → `eval/results/<run>/result.json` (namunalar xom, bajarilmagan). Push.
   2. CLOUD (Linux, `unshare -rn`): `python scripts/judge_samples.py eval/results/<run>/` → `eval/judged/<run>/` (qabul soni, rad sabablari).
   3. Qaror cloud'da hakam natijasi bilan chiqadi.
+- **OpenRouter (2026-10-01):** DeepSeek va GLM OpenRouter orqali (`--provider openrouter`, `OPENROUTER_API_KEY`); upstream provayder `served_by` da yoziladi. O'qitish ruxsati upstream shartlariga bog'liq (OpenRouter shartni o'zgartirmaydi). Uchinchi manba: **JEV** (`JEV_TOKEN`; base URL va model ID aniqlanishi kerak).
 - **Kalit xavfsizligi:** `RED_API_BASE/KEY/MODEL` faqat muhit o'zgaruvchisida; kalit hech qachon repo'ga, logga yoki chatga tushmaydi. API'ga faqat `gym_apps/shop` kodi yuboriladi.
 
 ## Budjet

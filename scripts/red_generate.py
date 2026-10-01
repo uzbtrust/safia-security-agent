@@ -65,15 +65,26 @@ def ask(model: str, prompt: str, host: str, temperature: float) -> str:
         return json.load(resp)["message"]["content"]
 
 
-def ask_openai(model: str, prompt: str, temperature: float) -> str:
-    """OpenAI-compatible /chat/completions; base url, key and model come from the environment only."""
-    base = os.environ["RED_API_BASE"].rstrip("/")
+SERVED = {}  # model/provider that actually served the last call (OpenRouter routes between upstreams)
+
+
+def ask_openai(model: str, prompt: str, temperature: float, provider: str = "openai") -> str:
+    """OpenAI-compatible /chat/completions. Base URL and key come from the environment only:
+    openai     -> RED_API_BASE, RED_API_KEY (any OpenAI-compatible endpoint)
+    openrouter -> https://openrouter.ai/api/v1, OPENROUTER_API_KEY
+    """
+    if provider == "openrouter":
+        base, key = "https://openrouter.ai/api/v1", os.environ["OPENROUTER_API_KEY"]
+    else:
+        base, key = os.environ["RED_API_BASE"].rstrip("/"), os.environ["RED_API_KEY"]
     body = json.dumps({"model": model, "temperature": temperature, "response_format": {"type": "json_object"},
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     req = urllib.request.Request(f"{base}/chat/completions", body, {
-        "Content-Type": "application/json", "Authorization": "Bearer " + os.environ["RED_API_KEY"]})
+        "Content-Type": "application/json", "Authorization": "Bearer " + key})
     with urllib.request.urlopen(req, timeout=600) as resp:
-        text = json.load(resp)["choices"][0]["message"]["content"]
+        data = json.load(resp)
+    SERVED.update(model=data.get("model"), provider=data.get("provider"))
+    text = data["choices"][0]["message"]["content"]
     m = re.search(r"\{.*\}", text, re.S)  # tolerate code fences / prose around the JSON
     return m.group(0) if m else text
 
@@ -84,7 +95,7 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=10, help="samples per CWE")
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--temperature", type=float, default=0.8)
-    ap.add_argument("--provider", choices=["ollama", "openai"], default="ollama")
+    ap.add_argument("--provider", choices=["ollama", "openai", "openrouter"], default="ollama")
     ap.add_argument("--cwe", help="only this CWE (e.g. CWE-89)")
     ap.add_argument("--no-judge", action="store_true",
                     help="do not execute model code (use where the referee is not isolated, e.g. macOS)")
@@ -101,7 +112,7 @@ def main() -> None:
             rec = {"cwe": cwe, "i": i}
             try:
                 raw = (ask(args.model, prompt, args.host, args.temperature) if args.provider == "ollama"
-                       else ask_openai(args.model, prompt, args.temperature))
+                       else ask_openai(args.model, prompt, args.temperature, args.provider))
                 data = json.loads(raw)
                 old, new, exploit = data["old"], data["new"], data["exploit_test"]
             except Exception as exc:  # network, JSON or schema problems
@@ -116,6 +127,8 @@ def main() -> None:
                 rec["status"] = "accepted" if verdict.accepted else f"rejected:{verdict.reason}"
                 rec["detail"] = verdict.detail[:300]
                 rec["new"] = new
+            if SERVED:
+                rec["served_by"] = dict(SERVED)
             samples.append(rec); print(cwe, i, rec["status"])
 
     per_cwe = {}
