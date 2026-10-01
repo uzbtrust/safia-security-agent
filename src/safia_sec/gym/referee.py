@@ -8,8 +8,8 @@ A submission is accepted only if, running real code:
 No LLM is involved in the decision.
 
 Sandbox: model-written code is executed, so every run is a separate process with a
-scrubbed environment, a temp HOME/cwd, resource limits, a hard timeout, and (where the
-kernel allows it) an empty network namespace. The AST checks are defense in depth, not
+scrubbed environment, a temp HOME/cwd, resource limits, a hard timeout and an empty
+network namespace. Untrusted code is REFUSED when the namespace is unavailable (macOS). The AST checks are defense in depth, not
 a security boundary; for a real boundary run the gym inside Docker.
 """
 from __future__ import annotations
@@ -27,14 +27,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 TEST_IMPORTS = {"pytest", "flask", "json", "re", "urllib", "app", "typing", "html", "base64"}
-APP_IMPORTS = {"os", "sqlite3", "flask", "json", "re", "pathlib", "functools", "typing",
+APP_IMPORTS = {"os", "sqlite3", "flask", "json", "re", "functools", "typing",
                "html", "werkzeug", "hashlib", "base64", "urllib", "secrets"}
 BANNED_NAMES = {"eval", "exec", "compile", "__import__", "input", "globals", "locals",
                 "vars", "breakpoint", "getattr", "setattr", "delattr"}
 BANNED_ATTRS = {"system", "popen", "fork", "kill", "remove", "unlink", "rmdir", "rmtree",
                 "rename", "chmod", "chown", "environ", "getenv", "__subclasses__",
                 "__globals__", "__builtins__", "__class__", "__bases__", "__mro__",
-                "execv", "execve", "spawn", "spawnv", "walk", "listdir", "scandir"}
+                "execv", "execve", "spawn", "spawnv", "walk", "listdir", "scandir",
+                "write_text", "write_bytes", "urlopen", "urlretrieve"}
 PROTECTED = ("tests/", "tests\\", "pytest.ini", "conftest.py")
 
 
@@ -75,14 +76,25 @@ def check_source(source: str, allowed: set[str], *, allow_writes: bool) -> str |
         return f"syntax error: {exc.msg} (line {exc.lineno})"
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
-            mods = [a.name.split(".")[0] for a in node.names]
+            mods = [a.name for a in node.names]
         elif isinstance(node, ast.ImportFrom):
-            mods = [(node.module or "").split(".")[0]]
+            mods = [node.module or ""]
+            if node.module == "urllib":
+                mods = ["urllib." + a.name for a in node.names]
+            for a in node.names:
+                if a.name in BANNED_ATTRS or a.name in BANNED_NAMES:
+                    return f"import not allowed: {a.name}"
         else:
             mods = []
         for mod in mods:
-            if mod not in allowed:
+            root = mod.split(".")[0]
+            if root not in allowed:
+                return f"import not allowed: {root}"
+            if root == "urllib" and mod != "urllib.parse":
                 return f"import not allowed: {mod}"
+        if isinstance(node, ast.Attribute) and node.attr == "open" \
+                and isinstance(node.value, ast.Name) and node.value.id == "os":
+            return "os.open not allowed"
         if isinstance(node, ast.Name) and node.id in BANNED_NAMES:
             return f"name not allowed: {node.id}"
         if isinstance(node, ast.Attribute) and node.attr in BANNED_ATTRS:
@@ -99,8 +111,9 @@ def check_source(source: str, allowed: set[str], *, allow_writes: bool) -> str |
 
 def _limits() -> None:
     resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
-    resource.setrlimit(resource.RLIMIT_AS, (2 << 30, 2 << 30))
     resource.setrlimit(resource.RLIMIT_FSIZE, (10 << 20, 10 << 20))
+    if sys.platform.startswith("linux"):  # RLIMIT_AS cannot be set on macOS; untrusted code never runs there
+        resource.setrlimit(resource.RLIMIT_AS, (2 << 30, 2 << 30))
 
 
 def _run_pytest(cwd: Path, args: list[str], timeout: int) -> tuple[int | None, str]:
@@ -137,7 +150,9 @@ def _copy(src: Path, dst: Path) -> None:
     shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
 
 
-def judge(app_dir: Path, sub: Submission, timeout: int = 60) -> Verdict:
+def judge(app_dir: Path, sub: Submission, timeout: int = 60, trusted: bool = False) -> Verdict:
+    """trusted=True is for code WE wrote (templates, tests). Untrusted (model-written) code is
+    refused unless the network-namespace sandbox is active (Linux)."""
     app_dir = Path(app_dir).resolve()
 
     def reject(reason: str, detail: str = "") -> Verdict:
@@ -161,6 +176,9 @@ def judge(app_dir: Path, sub: Submission, timeout: int = 60) -> Verdict:
         return reject("static_check_exploit", err)
     if sub.marker and sub.marker not in sub.exploit_test:
         return reject("missing_marker", sub.marker)
+
+    if not trusted and not NETNS:
+        return reject("no_isolation", "network-namespace sandbox unavailable; judge on Linux or Docker")
 
     with tempfile.TemporaryDirectory(prefix="gym_") as tmp:
         orig, patched = Path(tmp) / "orig", Path(tmp) / "patched"

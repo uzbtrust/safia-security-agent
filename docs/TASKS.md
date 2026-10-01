@@ -33,6 +33,16 @@ Muddat 15-okt, topshirish maqsadi 14-okt.
 **Go/no-go qoidasi (3-okt):** 3 CWE dan kamida 2 tasida ≥ 10 ta *har xil* qabul qilingan zaiflik chiqmasa, Red'ni shablon + LLM variatsiyasi bilan almashtiramiz (LLM faqat shablon ichini o'zgartiradi).
 **Tamoyillar:** (a) hakam faqat «zaiflik ishlaydi» ni isbotlaydi, realistiklikni emas — shuning uchun transfer testi; (b) «buzolmadi» ≠ «xavfsiz»: faqat qabul qilinganlar ishonchli musbat; (c) agentlar data orqali o'rganadi, bir-biriga gapirmaydi; (d) dev'da sozlaymiz, test'da bir marta o'lchaymiz.
 
+## Red manbalari va ish oqimi (2026-10-01 qarori)
+- **Red = bir nechta model, hammasi bir xil promptda:** (1) lokal `qwen2.5-coder:7b` (go/no-go o'lchovi), (2) API: **DeepSeek V4.1 Flash** (ToS'da output'dan model o'qitish ruxsat etilgan, birlamchi manba o'qilgan), (3) API: **GLM 5.3 Flash** (coding bahosi yuqori, lekin o'qitish ruxsati noma'lum). Har bir namuna `result.json` da manba modeli bilan belgilanadi.
+- **O'qitish ruxsati qoidasi:** GLM namunalari Blue'ni *o'qitish* uchun faqat Z.AI shartlari ruxsat bergani tasdiqlansa ishlatiladi; aks holda faqat baholash/taqqoslash uchun. DeepSeek namunalari ishlatiladi. README'da manba modellar ochiq yoziladi.
+- **Tanlov mezoni — AA bahosi emas, hakam:** bir xil promptda qaysi model ko'proq *har xil qabul qilingan* zaiflik beradi. AA coding index DeepSeek uchun yo'q (null) — bu yomonlik belgisi emas.
+- **Ish oqimi (macOS'da hakam ishlamaydi, u model kodini izolyatsiyasiz bajarmaydi):**
+  1. LOCAL: `python scripts/red_generate.py --provider openai|ollama --model <m> --n 10 --no-judge` → `eval/results/<run>/result.json` (namunalar xom, bajarilmagan). Push.
+  2. CLOUD (Linux, `unshare -rn`): `python scripts/judge_samples.py eval/results/<run>/` → `eval/judged/<run>/` (qabul soni, rad sabablari).
+  3. Qaror cloud'da hakam natijasi bilan chiqadi.
+- **Kalit xavfsizligi:** `RED_API_BASE/KEY/MODEL` faqat muhit o'zgaruvchisida; kalit hech qachon repo'ga, logga yoki chatga tushmaydi. API'ga faqat `gym_apps/shop` kodi yuboriladi.
+
 ## Budjet
 Cho'ntakdan maksimal ~$20 (faqat ixtiyoriy GPU ijarasi, LoRA uchun). Cloud credit alohida; Ollama va ochiq modellar bepul.
 
@@ -50,7 +60,7 @@ python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
 pytest -q                      # 14 ta test o'tishi kerak (hakam ishlayapti)
 python scripts/bandit_baseline.py   # baseline: Bandit 3 dan 1 tasini topadi
 ollama pull qwen2.5-coder:7b   # birinchi model (~5 GB); nom topilmasa, `ollama search`/kutubxonadan o'xshash 7-8B coder model
-python scripts/red_generate.py --model qwen2.5-coder:7b --n 10
+python scripts/red_generate.py --model qwen2.5-coder:7b --n 10 --no-judge   # macOS: hakam yo'q, cloud baholaydi
 ```
 Natija `eval/results/<sana>-red-<model>/` ga yoziladi (`result.json` + `summary.md`). Uni commit + push qiling va handoff'ga 3–5 qator yozing: nechta qabul qilindi, eng ko'p rad sababi, sizga nima g'alati tuyuldi.
 

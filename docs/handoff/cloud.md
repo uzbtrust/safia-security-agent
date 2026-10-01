@@ -15,3 +15,8 @@ needs-local-verify: `red_generate.py` faqat soxta Ollama serveri bilan sinalgan;
 
 ## 2026-10-01 — CLOUD → LOCAL (jihoz)
 Jihoz: RAM 16 GB, bo'sh disk ~52 GB. `TASKS.md` da «Jihoz» bo'limi qo'shildi (model byudjeti, disk limiti). 2-qadamni `qwen2.5-coder:7b` bilan boshlang; `docs/HARDWARE.md` ga CPU/GPU/OS ni yozing.
+
+## 2026-10-01 — CLOUD → LOCAL (blocker hal qilindi, Red oqimi)
+Bajarildi: `local/dev` merge qilindi. Hakam tuzatildi: (1) izolyatsiya bo'lmasa model kodini **rad etadi** (`no_isolation`, fail-closed; `trusted=True` faqat o'zimiz yozgan kod uchun, testlarda); (2) `RLIMIT_AS` faqat Linux'da; (3) AST: `urllib.request/urlopen`, `os.open`, `pathlib`, `write_text/write_bytes`, `from x import <taqiqlangan>` bloklandi. 24 test (yangi: AST bo'shliqlari, no_isolation). Tanlangan A variant: generatsiya LOCAL, hakam CLOUD (`scripts/judge_samples.py`). Red prompti: valid exploit namunasi, fixture taqiqi, indentation talabi; `--no-judge` endi `old` ni ham saqlaydi.
+LOCAL nima qilsin: (1) merge qiling; (2) `red_generate.py --model qwen2.5-coder:7b --n 10 --no-judge` (≈7 daq) → push; (3) foydalanuvchi API muhitini qo'ygach: DeepSeek va GLM bilan har CWE uchun `--n 10 --no-judge` (har biri alohida run), push. Men Linux'da `judge_samples.py` bilan baholayman.
+Qayd: ctx kesilishi va T=0 determinizm haqidagi topilmalar T0.2 klientiga/T1.2 ga kiritiladi (`prompt_tokens >= num_ctx` → xato; barqarorlik uchun T>0).

@@ -1,7 +1,14 @@
 import pytest
 
 from safia_sec.gym.injections import APP_DIR, TEMPLATES, build
-from safia_sec.gym.referee import Submission, judge
+import functools
+
+from safia_sec.gym import referee
+from safia_sec.gym.referee import Submission, check_source
+from safia_sec.gym.referee import judge as _judge
+
+# All code in these tests is ours, so it may run without the namespace sandbox (e.g. on macOS).
+judge = functools.partial(_judge, trusted=True)
 
 SRC = (APP_DIR / "app.py").read_text()
 
@@ -68,3 +75,31 @@ def test_unchanged_patch_is_rejected():
 def test_hanging_patch_times_out():
     patch = {"app.py": build("CWE-89").patch["app.py"] + "\nwhile True:\n    pass\n"}
     assert judge(APP_DIR, sqli(patch=patch), timeout=5).reason == "timeout"
+
+
+@pytest.mark.parametrize("src", [
+    "import urllib.request\n",
+    "from urllib import request\n",
+    "import urllib\n",
+    "from urllib.request import urlopen\n",
+    "import pathlib\n",
+    "import os\nos.open('/tmp/x', 0)\n",
+    "from os import system\n",
+])
+def test_static_policy_blocks_network_and_write_paths(src):
+    assert check_source(src, referee.APP_IMPORTS, allow_writes=True) is not None
+
+
+def test_urllib_parse_is_allowed():
+    assert check_source("from urllib.parse import quote\n", referee.APP_IMPORTS, allow_writes=True) is None
+
+
+def test_untrusted_code_is_refused_without_isolation(monkeypatch):
+    monkeypatch.setattr(referee, "NETNS", False)
+    assert _judge(APP_DIR, build("CWE-89")).reason == "no_isolation"
+
+
+@pytest.mark.skipif(not referee.NETNS, reason="needs Linux network namespaces")
+def test_untrusted_golden_is_accepted_with_isolation():
+    verdict = _judge(APP_DIR, build("CWE-89"))
+    assert verdict.accepted and verdict.isolated

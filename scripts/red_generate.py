@@ -18,6 +18,8 @@ from datetime import date
 from pathlib import Path
 
 from safia_sec.gym.injections import APP_DIR, TEMPLATES
+
+EXAMPLE = TEMPLATES["CWE-639"].exploit
 from safia_sec.gym.referee import Submission, judge
 
 SCHEMA = {
@@ -39,6 +41,13 @@ Rules:
   Use only: `from app import create_app`, `create_app().test_client()`, pytest, json, re, urllib.parse.
   Logged-in user is selected with the header X-User: <id>. Do not use open(), os or sockets.
   It must assert that protected data appears, and the source must contain the string "{marker}".
+- No pytest fixtures and no test-function parameters: build the client inside the test function.
+- "old" and "new" must keep the exact leading whitespace of app.py (copy the lines verbatim).
+
+Example of a valid exploit test (for a different vulnerability):
+```python
+{example}
+```
 
 app.py:
 ```python
@@ -87,7 +96,8 @@ def main() -> None:
         if args.cwe and cwe != args.cwe:
             continue
         for i in range(args.n):
-            prompt = PROMPT.format(cwe=cwe, title=t.title, hint=t.hint, marker=t.marker, source=source)
+            prompt = PROMPT.format(cwe=cwe, title=t.title, hint=t.hint, marker=t.marker, source=source,
+                                   example=EXAMPLE.strip())
             rec = {"cwe": cwe, "i": i}
             try:
                 raw = (ask(args.model, prompt, args.host, args.temperature) if args.provider == "ollama"
@@ -100,7 +110,7 @@ def main() -> None:
             if source.count(old) != 1 or not old.strip():
                 rec["status"] = "old_not_found"
             elif args.no_judge:
-                rec["status"] = "old_found_unjudged"; rec["new"] = new; rec["exploit_test"] = exploit
+                rec["status"] = "old_found_unjudged"; rec["old"] = old; rec["new"] = new; rec["exploit_test"] = exploit
             else:
                 verdict = judge(APP_DIR, Submission(cwe, {"app.py": source.replace(old, new)}, exploit, t.marker))
                 rec["status"] = "accepted" if verdict.accepted else f"rejected:{verdict.reason}"
@@ -114,11 +124,12 @@ def main() -> None:
         ok = [s for s in rows if s["status"] == "accepted"]
         per_cwe[cwe] = {"generated": len(rows), "accepted": len(ok),
                         "distinct_accepted": len({re.sub(r"\s+", "", s["new"]) for s in ok}),
+                        "unjudged": sum(1 for s in rows if s["status"] == "old_found_unjudged"),
                         "reasons": dict(Counter(s["status"] for s in rows if s["status"] != "accepted"))}
     out = Path("eval/results") / f"{date.today():%Y%m%d}-red-{args.model.replace(':', '_').replace('/', '_')}"
     out.mkdir(parents=True, exist_ok=True)
     (out / "result.json").write_text(json.dumps(
-        {"model": args.model, "n_per_cwe": args.n, "seconds": round(time.time() - t0),
+        {"model": args.model, "provider": args.provider, "n_per_cwe": args.n, "seconds": round(time.time() - t0),
          "per_cwe": per_cwe, "samples": samples}, indent=2))
     lines = [f"# Red go/no-go: {args.model}", "", "| CWE | generated | accepted | distinct | top rejection |", "|---|---|---|---|---|"]
     for cwe, r in per_cwe.items():
