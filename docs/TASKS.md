@@ -12,8 +12,8 @@
 | # | Qadam | Kim | Muddat | Holat |
 |---|---|---|---|---|
 | 1 | Toza ilova + hakam + 3 CWE shablon + testlar + Bandit baseline | CLOUD | tayyor | [x] |
-| 2 | **Go/no-go:** lokal model Red bo'la oladimi? (`scripts/red_generate.py`) | LOCAL | 1–3-okt | [ ] ← **hozir shu** |
-| 3 | **Blue v0 (mahsulot):** `scan` CLI + hisobot (qarang: «Blue tayyor sharti») | CLOUD kod, LOCAL run | 3–5-okt | [ ] |
+| 2 | **Go/no-go:** Red ishlaydimi? API Red: GLM 13/30, DeepSeek 11/30 hakamdan o'tdi (lokal 7B Red shart emas) | LOCAL + CLOUD | 1–3-okt | [x] |
+| 3 | **Blue v0 (mahsulot):** `safia-sec scan` + `eval-gym` yozildi, 56 test yashil (mock). Real modelda dev run kerak | CLOUD kod, LOCAL run | 3–5-okt | [~] ← **hozir shu** |
 | 4 | O'rganish: Blue xatolari → few-shot xotira; oldin/keyin jadval (LoRA ixtiyoriy; 8-okt qaror) | CLOUD kod, LOCAL run | 6–8-okt | [ ] |
 | 5 | Transfer: begona lokal zaif ilova/benchmark'da (RealVuln yoki Juice Shop qismi) oldin/keyin; kodni muzlatish 11-okt kechqurun | LOCAL (+ CLOUD adapter) | 9–11-okt | [ ] |
 | 6 | Yakuniy baholash: muzlatilgan kod, test to'plamida **bir marta** | LOCAL | 12-okt | [ ] |
