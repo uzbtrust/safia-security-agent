@@ -68,7 +68,8 @@ def ask(model: str, prompt: str, host: str, temperature: float) -> str:
 SERVED = {}  # model/provider that actually served the last call (OpenRouter routes between upstreams)
 
 
-def ask_openai(model: str, prompt: str, temperature: float, provider: str = "openai") -> str:
+def ask_openai(model: str, prompt: str, temperature: float, provider: str = "openai",
+               max_tokens: int = 8000, reasoning: str = "low") -> str:
     """OpenAI-compatible /chat/completions. Base URL and key come from the environment only:
     openai     -> RED_API_BASE, RED_API_KEY (any OpenAI-compatible endpoint)
     openrouter -> https://openrouter.ai/api/v1, OPENROUTER_API_KEY
@@ -77,13 +78,19 @@ def ask_openai(model: str, prompt: str, temperature: float, provider: str = "ope
         base, key = "https://openrouter.ai/api/v1", os.environ["OPENROUTER_API_KEY"]
     else:
         base, key = os.environ["RED_API_BASE"].rstrip("/"), os.environ["RED_API_KEY"]
-    body = json.dumps({"model": model, "temperature": temperature, "response_format": {"type": "json_object"},
-                       "messages": [{"role": "user", "content": prompt}]}).encode()
+    payload = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
+               "response_format": {"type": "json_object"}, "messages": [{"role": "user", "content": prompt}]}
+    if provider == "openrouter":  # strict schema keeps the keys right; the cap and effort bound cost and time
+        payload["response_format"] = {"type": "json_schema", "json_schema": {"name": "red_sample", "strict": True, "schema": SCHEMA}}
+        payload["provider"] = {"require_parameters": True}
+        if reasoning != "default":
+            payload["reasoning"] = {"enabled": False} if reasoning == "off" else {"effort": reasoning}
+    body = json.dumps(payload).encode()
     req = urllib.request.Request(f"{base}/chat/completions", body, {
         "Content-Type": "application/json", "Authorization": "Bearer " + key})
     with urllib.request.urlopen(req, timeout=600) as resp:
         data = json.load(resp)
-    SERVED.update(model=data.get("model"), provider=data.get("provider"))
+    SERVED.update(model=data.get("model"), provider=data.get("provider"), usage=data.get("usage"))
     text = data["choices"][0]["message"]["content"]
     m = re.search(r"\{.*\}", text, re.S)  # tolerate code fences / prose around the JSON
     return m.group(0) if m else text
@@ -97,6 +104,9 @@ def main() -> None:
     ap.add_argument("--temperature", type=float, default=0.8)
     ap.add_argument("--provider", choices=["ollama", "openai", "openrouter"], default="ollama")
     ap.add_argument("--cwe", help="only this CWE (e.g. CWE-89)")
+    ap.add_argument("--max-tokens", type=int, default=8000, help="API providers: completion cap, reasoning included")
+    ap.add_argument("--reasoning", choices=["low", "medium", "high", "off", "default"], default="low",
+                    help="API providers: reasoning effort (openrouter)")
     ap.add_argument("--no-judge", action="store_true",
                     help="do not execute model code (use where the referee is not isolated, e.g. macOS)")
     args = ap.parse_args()
@@ -112,7 +122,7 @@ def main() -> None:
             rec = {"cwe": cwe, "i": i}
             try:
                 raw = (ask(args.model, prompt, args.host, args.temperature) if args.provider == "ollama"
-                       else ask_openai(args.model, prompt, args.temperature, args.provider))
+                       else ask_openai(args.model, prompt, args.temperature, args.provider, args.max_tokens, args.reasoning))
                 data = json.loads(raw)
                 old, new, exploit = data["old"], data["new"], data["exploit_test"]
             except Exception as exc:  # network, JSON or schema problems
@@ -143,6 +153,7 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     (out / "result.json").write_text(json.dumps(
         {"model": args.model, "provider": args.provider, "n_per_cwe": args.n, "seconds": round(time.time() - t0),
+         "max_tokens": args.max_tokens, "reasoning": args.reasoning,
          "per_cwe": per_cwe, "samples": samples}, indent=2))
     lines = [f"# Red go/no-go: {args.model}", "", "| CWE | generated | accepted | distinct | top rejection |", "|---|---|---|---|---|"]
     for cwe, r in per_cwe.items():
