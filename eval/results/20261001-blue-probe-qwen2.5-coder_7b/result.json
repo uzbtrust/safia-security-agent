@@ -1,0 +1,398 @@
+{
+  "model": {
+    "tag": "qwen2.5-coder:7b",
+    "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "size_bytes": 4683087561,
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen2",
+      "families": [
+        "qwen2"
+      ],
+      "parameter_size": "7.6B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "tools",
+      "insert"
+    ]
+  },
+  "config": {
+    "temperature": 0.7,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "num_ctx": 8192,
+    "num_predict": 1500,
+    "think": null,
+    "tolerance_lines": 5
+  },
+  "env": {
+    "git_sha": "f562f8d",
+    "power": "Now drawing from 'Battery Power'",
+    "memory_pressure": "System-wide memory free percentage: 28%",
+    "swap": "total = 6144.00M  used = 4802.69M  free = 1341.31M  (encrypted)"
+  },
+  "aggregate": {
+    "recall_strict": 3,
+    "recall_loc_only": 8,
+    "recall_cwe_only": 3,
+    "vuln_runs": 9,
+    "fp_clean_runs": 3,
+    "clean_runs": 3,
+    "findings_on_clean_mean": 1.33,
+    "json_valid": 12,
+    "generations": 12,
+    "evidence_ok": 12,
+    "findings_total": 19,
+    "decode_tok_s_median": 20.5,
+    "wall_s_median": 10.25,
+    "resident": {
+      "size_gb": 5.34,
+      "vram_gb": 5.34
+    }
+  },
+  "runs": [
+    {
+      "case": "clean",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 17.2,
+      "prompt_tokens": 946,
+      "gen_tokens": 114,
+      "decode_tok_s": 19.7,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?",
+          "explanation": "This query is vulnerable to SQL injection because it uses parameterized queries incorrectly. The parameter `f'%{q}%'` should be a separate argument in the tuple passed to `execute`, not part of the SQL string."
+        }
+      ],
+      "evidence_ok": 1,
+      "fp_regions": [
+        "CWE-89"
+      ]
+    },
+    {
+      "case": "clean",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 6.4,
+      "prompt_tokens": 946,
+      "gen_tokens": 106,
+      "decode_tok_s": 20.2,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?",
+          "explanation": "The use of string formatting to construct the SQL query is vulnerable to SQL injection. An attacker could exploit this by providing a malicious input for the `q` parameter."
+        }
+      ],
+      "evidence_ok": 1,
+      "fp_regions": [
+        "CWE-89"
+      ]
+    },
+    {
+      "case": "clean",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 11.1,
+      "prompt_tokens": 946,
+      "gen_tokens": 187,
+      "decode_tok_s": 20.3,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 34,
+          "cwe": "CWE-89",
+          "evidence": "q = request.args.get('q', '')",
+          "explanation": "The 'q' parameter is used in a SQL query without proper sanitization, allowing SQL injection. An attacker could exploit this to manipulate the database or execute arbitrary commands."
+        },
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-20",
+          "evidence": "name = request.args.get('name', '')",
+          "explanation": "The 'name' parameter is used to construct a file path without proper validation, allowing directory traversal attacks. An attacker could exploit this to read arbitrary files on the server."
+        }
+      ],
+      "evidence_ok": 0,
+      "fp_regions": [
+        "CWE-89"
+      ]
+    },
+    {
+      "case": "CWE-89",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 8.3,
+      "prompt_tokens": 939,
+      "gen_tokens": 108,
+      "decode_tok_s": 19.9,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-78",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"",
+          "explanation": "This SQL query is vulnerable to SQL injection. The parameter `q` is directly included in the query string without proper sanitization, allowing attackers to manipulate the SQL query and potentially gain unauthorized access to the database."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-89",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 9.0,
+      "prompt_tokens": 939,
+      "gen_tokens": 154,
+      "decode_tok_s": 20.6,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 34,
+          "cwe": "CWE-89",
+          "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"\n).fetchall()",
+          "explanation": "This SQL query is vulnerable to SQL injection because it uses string formatting with a user-controlled input (`q`). An attacker could inject malicious SQL code into the `q` parameter to manipulate the database query and potentially retrieve hidden products or execute other harmful commands."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-89",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 6.3,
+      "prompt_tokens": 939,
+      "gen_tokens": 110,
+      "decode_tok_s": 21.2,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\"",
+          "explanation": "This SQL query is vulnerable to SQL injection because it uses string formatting with user input. An attacker can inject malicious SQL code in the 'q' parameter."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-639",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 7.1,
+      "prompt_tokens": 923,
+      "gen_tokens": 99,
+      "decode_tok_s": 21.3,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 16,
+          "cwe": "CWE-89",
+          "evidence": "f\"%{q}%\"",
+          "explanation": "The use of string formatting to construct SQL queries with user input (`q`) is vulnerable to SQL injection. An attacker could inject malicious SQL code into the query, potentially leading to unauthorized data access or manipulation."
+        }
+      ],
+      "evidence_ok": 1,
+      "strict": false,
+      "loc_only": false,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-639",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 14.1,
+      "prompt_tokens": 923,
+      "gen_tokens": 251,
+      "decode_tok_s": 21.3,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "f'%{q}%'",
+          "explanation": "The query parameter `q` is not properly sanitized, allowing SQL injection. An attacker can inject malicious SQL code to manipulate the database."
+        },
+        {
+          "file": "app.py",
+          "line": 45,
+          "cwe": "CWE-89",
+          "evidence": "(order_id,)",
+          "explanation": "The `order_id` parameter is not properly sanitized, allowing SQL injection. An attacker can inject malicious SQL code to manipulate the database."
+        },
+        {
+          "file": "app.py",
+          "line": 53,
+          "cwe": "CWE-78",
+          "evidence": "os.path.realpath(os.path.join(FILES, name))",
+          "explanation": "File path manipulation could lead to directory traversal or file inclusion vulnerabilities. An attacker can provide a crafted `name` parameter to access arbitrary files on the server."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-639",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 9.7,
+      "prompt_tokens": 923,
+      "gen_tokens": 171,
+      "decode_tok_s": 21.1,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 36,
+          "cwe": "CWE-89",
+          "evidence": "f'%{q}%'",
+          "explanation": "The use of string formatting with user input (q) without proper sanitization can lead to SQL injection."
+        },
+        {
+          "file": "app.py",
+          "line": 44,
+          "cwe": "CWE-89",
+          "evidence": "'SELECT id, user_id, item, total FROM orders WHERE id = ?'",
+          "explanation": "The use of parameterized queries is correct, but the input (order_id) should still be validated to ensure it's a valid integer."
+        }
+      ],
+      "evidence_ok": 0,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-22",
+      "run": 0,
+      "seed": 1,
+      "wall_s": 11.2,
+      "prompt_tokens": 931,
+      "gen_tokens": 177,
+      "decode_tok_s": 20.4,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 37,
+          "cwe": "CWE-89",
+          "evidence": "f\"%{q}%\"",
+          "explanation": "SQL Injection vulnerability. The query parameter 'q' is not properly sanitized before being used in an SQL statement, allowing attackers to manipulate the query and potentially access hidden products."
+        },
+        {
+          "file": "app.py",
+          "line": 56,
+          "cwe": "CWE-22",
+          "evidence": "os.path.join(FILES, name)",
+          "explanation": "Path Traversal vulnerability. The 'name' parameter is not properly validated before being used to construct a file path, allowing attackers to access files outside the intended directory."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": true,
+      "loc_only": true,
+      "cwe_only": true
+    },
+    {
+      "case": "CWE-22",
+      "run": 1,
+      "seed": 2,
+      "wall_s": 10.8,
+      "prompt_tokens": 931,
+      "gen_tokens": 184,
+      "decode_tok_s": 20.3,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 35,
+          "cwe": "CWE-89",
+          "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?",
+          "explanation": "The query parameter 'q' is used directly in the SQL query without proper sanitization. This can be exploited to perform SQL injection attacks."
+        },
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-78",
+          "evidence": "path = os.path.join(FILES, name)",
+          "explanation": "The file path is constructed using user-supplied input without proper validation or sanitization. This can be exploited to access arbitrary files on the server."
+        }
+      ],
+      "evidence_ok": 2,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": false
+    },
+    {
+      "case": "CWE-22",
+      "run": 2,
+      "seed": 3,
+      "wall_s": 11.2,
+      "prompt_tokens": 931,
+      "gen_tokens": 192,
+      "decode_tok_s": 20.6,
+      "done_reason": "stop",
+      "valid_json": true,
+      "findings": [
+        {
+          "file": "app.py",
+          "line": 34,
+          "cwe": "CWE-89",
+          "evidence": "q = request.args.get('q', '')",
+          "explanation": "The 'q' parameter is used in a SQL query without proper sanitization, allowing SQL injection. An attacker could exploit this by providing malicious input to manipulate the SQL query."
+        },
+        {
+          "file": "app.py",
+          "line": 54,
+          "cwe": "CWE-78",
+          "evidence": "name = request.args.get('name', '')",
+          "explanation": "The 'name' parameter is used to construct a file path without proper validation, allowing directory traversal attacks. An attacker could exploit this by providing malicious input to access files outside the intended directory."
+        }
+      ],
+      "evidence_ok": 0,
+      "strict": false,
+      "loc_only": true,
+      "cwe_only": false
+    }
+  ]
+}

