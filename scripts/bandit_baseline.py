@@ -9,7 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from safia_sec.gym.injections import APP_DIR, TEMPLATES, build
+from safia_sec.gym.injections import all_templates, app_dir, APPS, build
 
 OUT = Path(__file__).resolve().parents[1] / "eval" / "baselines" / "bandit.json"
 
@@ -29,23 +29,25 @@ def region(source: str, snippet: str) -> range:
 
 
 def main() -> None:
-    clean = (APP_DIR / "app.py").read_text()
     rows = []
-    for cwe, t in TEMPLATES.items():
-        patched = build(cwe).patch["app.py"]
-        new_region = region(patched, t.new) if t.new else range(0)
-        # IDOR removes code: the vulnerable spot is where the check used to be.
-        if not t.new:
+    for app, cwe in all_templates():
+        t = APPS[app][cwe]
+        clean = (app_dir(app) / "app.py").read_text()
+        patched = build(cwe, app).patch["app.py"]
+        if t.new:
+            region_new = region(patched, t.new)
+        else:  # code was removed: the weak spot is where the removed lines used to be
             start = clean[: clean.index(t.old)].count("\n") + 1
-            new_region = range(start - 2, start + 2)
-        hit = any(n in new_region for n in bandit_lines(patched))
-        old_region = region(clean, t.old)
-        false_pos = any(n in old_region for n in bandit_lines(clean))
-        rows.append({"cwe": cwe, "title": t.title, "detected": hit, "false_positive_on_clean": false_pos})
+            region_new = range(start - 2, start + 2)
+        hit = any(n in region_new for n in bandit_lines(patched))
+        false_pos = any(n in region(clean, t.old) for n in bandit_lines(clean))
+        rows.append({"app": app, "cwe": cwe, "title": t.title, "detected": hit,
+                     "false_positive_on_clean": false_pos})
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"tool": "bandit", "target": "gym_apps/shop", "results": rows}, indent=2))
+    OUT.write_text(json.dumps({"tool": "bandit", "target": "gym_apps/*", "results": rows}, indent=2))
     for r in rows:
-        print(f"{r['cwe']:8} detected={r['detected']!s:5} fp_on_clean={r['false_positive_on_clean']!s:5} {r['title']}")
+        print(f"{r['app']:5} {r['cwe']:8} detected={r['detected']!s:5} fp_on_clean={r['false_positive_on_clean']!s:5} {r['title']}")
+    print(f"detected {sum(r['detected'] for r in rows)}/{len(rows)}")
 
 
 if __name__ == "__main__":

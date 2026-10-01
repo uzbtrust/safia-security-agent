@@ -44,6 +44,8 @@ Muddat 15-okt, topshirish maqsadi 14-okt.
 - **OpenRouter (2026-10-01):** DeepSeek va GLM OpenRouter orqali (`--provider openrouter`, `OPENROUTER_API_KEY`); upstream provayder `served_by` da yoziladi. O'qitish ruxsati upstream shartlariga bog'liq (OpenRouter shartni o'zgartirmaydi). Uchinchi manba: **JEV** (`JEV_TOKEN`; base URL va model ID aniqlanishi kerak).
 - **Kalit xavfsizligi:** `RED_API_BASE/KEY/MODEL` faqat muhit o'zgaruvchisida; kalit hech qachon repo'ga, logga yoki chatga tushmaydi. API'ga faqat `gym_apps/shop` kodi yuboriladi.
 
+- **Gym ilovalari (2026-10-01):** `shop`, `bank`, `blog`; 11 shablon, 8 xil CWE (89, 639, 22, 840, 79, 915, 330, 601). Red default `--app all`. Xilma-xillik endi ilovalar va CWE'lar orqali; baseline Bandit 2/11.
+
 ## Budjet
 Cho'ntakdan maksimal ~$20 (faqat ixtiyoriy GPU ijarasi, LoRA uchun). Cloud credit alohida; Ollama va ochiq modellar bepul.
 

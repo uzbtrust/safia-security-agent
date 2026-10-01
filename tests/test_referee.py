@@ -1,6 +1,6 @@
 import pytest
 
-from safia_sec.gym.injections import APP_DIR, TEMPLATES, build
+from safia_sec.gym.injections import APP_DIR, APPS, TEMPLATES, all_templates, app_dir, build
 import functools
 
 from safia_sec.gym import referee
@@ -103,3 +103,13 @@ def test_untrusted_code_is_refused_without_isolation(monkeypatch):
 def test_untrusted_golden_is_accepted_with_isolation():
     verdict = _judge(APP_DIR, build("CWE-89"))
     assert verdict.accepted and verdict.isolated
+
+
+@pytest.mark.parametrize("app,cwe", all_templates())
+def test_every_app_template_is_accepted(app, cwe):
+    verdict = judge(app_dir(app), build(cwe, app))
+    assert verdict.accepted, (app, cwe, verdict.reason, verdict.detail)
+
+
+def test_registry_has_three_apps_and_eleven_templates():
+    assert set(APPS) == {"shop", "bank", "blog"} and len(all_templates()) == 11

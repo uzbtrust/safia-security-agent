@@ -1,22 +1,81 @@
 {
   "tool": "bandit",
-  "target": "gym_apps/shop",
+  "target": "gym_apps/*",
   "results": [
     {
+      "app": "shop",
       "cwe": "CWE-89",
       "title": "SQL injection in product search",
       "detected": true,
       "false_positive_on_clean": false
     },
     {
+      "app": "shop",
       "cwe": "CWE-639",
       "title": "IDOR: any logged-in user can read any order",
       "detected": false,
       "false_positive_on_clean": false
     },
     {
+      "app": "shop",
       "cwe": "CWE-22",
       "title": "Path traversal in file download",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "bank",
+      "cwe": "CWE-639",
+      "title": "IDOR: any logged-in user can read any account",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "bank",
+      "cwe": "CWE-840",
+      "title": "Business logic: negative transfer amount steals money",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "bank",
+      "cwe": "CWE-89",
+      "title": "SQL injection in the statement memo search",
+      "detected": true,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "bank",
+      "cwe": "CWE-22",
+      "title": "Path traversal in receipt download",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "blog",
+      "cwe": "CWE-79",
+      "title": "Reflected XSS in the search page",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "blog",
+      "cwe": "CWE-915",
+      "title": "Mass assignment: a user can make themselves admin",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "blog",
+      "cwe": "CWE-330",
+      "title": "Predictable password-reset token",
+      "detected": false,
+      "false_positive_on_clean": false
+    },
+    {
+      "app": "blog",
+      "cwe": "CWE-601",
+      "title": "Open redirect",
       "detected": false,
       "false_positive_on_clean": false
     }
