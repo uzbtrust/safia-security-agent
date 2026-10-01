@@ -16,11 +16,12 @@ models:
     ollama_tag: qwen2.5-coder:7b
     role: baseline
     download_gb: 4.68
-    status: not-pulled
-    digest: null
-    quant: null
-    params: null
-    measured: null
+    status: pulled
+    digest: sha256:dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364
+    quant: Q4_K_M
+    params: 7.6B
+    ctx_trained: 32768
+    measured: eval/results/20261001-smoke-ollama-qwen2.5-coder_7b/summary.md   # 20.2 tok/s decode, 5.34 GB resident
 
   - id: qwen3-8b
     ollama_tag: qwen3:8b
