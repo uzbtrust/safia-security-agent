@@ -49,3 +49,10 @@ clean app, passes on the patched one and the functional tests stay green. *Blue*
 - **H5** Few-shot memory built from Blue's missed cases improves recall on held-out apps.
 - **H6** Any gain from H5 persists on an external benchmark (transfer).
 - **H7** (optional, only if time allows) a small LoRA triage model beats the same base model few-shot.
+
+## Model choice rule (fixed on 2026-10-06, before the dev gym runs of the two local models)
+The only evidence so far is the shop-only probe (9 injected runs per model: strict recall 6/9 for gemma4:12b against 5/9 for qwen3.5:9b, overlapping 95% intervals). The choice therefore waits for the dev gym with identical settings (T=0.7, seeds 1-3, ctx 8192, thinking off, verifier and Bandit on): 7 injected cases x 3 seeds = 21 runs and 2 clean apps x 3 seeds = 6 runs per model.
+1. Function-level recall at the `final` stage over the 21 injected runs. A gap of 3 runs (14 points) or more decides.
+2. Inside that gap: fewer clean runs that keep a false signal at the `final` stage, then fewer findings per clean run.
+3. Still tied: faster end to end (model seconds per run, `meta.wall_s`).
+The winner becomes the default model of `safia-sec`; the other is removed from the machine and stays in this log as the H4 comparison. Memory (+10.8 GB wired for gemma4:12b, +6.8 GB for qwen3.5:9b) is not a criterion; it goes to LIMITATIONS. With n this small the outcome is a direction, not proof.
