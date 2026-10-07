@@ -20,6 +20,9 @@ eval/cache/
 models/
 .ollama/
 
+# Private notes of the LOCAL chat (never pushed)
+LOCAL_NOTES.md
+
 # OS / editor
 .DS_Store
 .idea/

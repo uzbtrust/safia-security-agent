@@ -22,5 +22,7 @@ while kill -0 "$pid" 2>/dev/null; do
   sleep 10
 done
 wait "$pid"
-echo "pull exit=$?" >> "$log"
+rc=$?
+echo "pull exit=$rc" >> "$log"
 echo "free after: $(free)" >> "$log"
+exit "$rc"

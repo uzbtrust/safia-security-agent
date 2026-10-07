@@ -105,3 +105,13 @@ From `configs/local/blue_probe.py`; the table and the reading are in `eval/resul
 | System free memory with it loaded | 28% | 8% |
 
 The prefill figure of a repeated prompt is not a speed: the prompt cache answers it in a fraction of a second and the run then reports thousands of tok/s. Only the first run of each case is used.
+
+## Measured: Blue v0 on the dev gym (Ollama 0.35.0, AC power, 2026-10-07)
+`safia-sec eval-gym --apps shop bank --seeds 1 2 3`: 27 runs per model, detector and verifier on the same model, prompts of about 1.1-1.6k tokens.
+
+| Model | LLM calls | model s per call | model s per run | prompt / generated tokens per call |
+|---|---|---|---|---|
+| gemma4:12b | 61 (9 replayed from the cache) | 28.6 | 64.7 | 1339 / 121 |
+| qwen3.5:9b | 68 | 18.3 | 46.1 | 1252 / 133 |
+
+End to end qwen3.5:9b is 1.4x faster per run (1.56x per call), not the 2x of the decode speed. The Gemma run pushed swap from 0.6 GB to 9.9 GB and free disk from 35.7 GB to 26.0 GB (free memory about 11%); the Qwen run reached 6.8 GB of swap and 30.3 GB of free disk. After `ollama stop` swap fell to 2.1 GB and free disk went back to 34.6 GB. The first Gemma attempt on 2026-10-01 took the disk from 19.3 GB to 15.0 GB in two minutes, so a Gemma run needs about 30 GB free; with 35.7 GB it finished without trouble.

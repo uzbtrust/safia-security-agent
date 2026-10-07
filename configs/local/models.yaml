@@ -5,6 +5,7 @@
 # - Models are pulled one at a time (docs/HARDWARE.md, "Storage policy"); `status` says what
 #   is on disk right now.
 # - Blue probe results: eval/results/20261001-blue-probe-comparison/summary.md (n=9 injected runs per model).
+# - Blue dev gym (shop + bank, 3 seeds, 21 injected + 6 clean runs): eval/results/20261007-blue-gym-<model>/; the choice rule is in docs/EXPERIMENTS.md.
 
 server:
   base_url: http://127.0.0.1:11434/v1   # OpenAI-compatible endpoint used by llm/openai_compat.py
@@ -16,7 +17,7 @@ server:
 models:
   - id: gemma4-12b
     ollama_tag: gemma4:12b
-    role: Blue candidate; best detector in the probe, but heavy (needs other apps closed)
+    role: Blue model, chosen on 2026-10-07 by the rule in docs/EXPERIMENTS.md (step 1: recall gap 17 of 21 runs); heavy, needs other apps closed
     download_gb: 8.02
     status: pulled
     digest: sha256:6114515d63c17436a7c0417d82820ac65ad643e2806c5a3c89cb62846436ed0b
@@ -31,13 +32,15 @@ models:
       decode_tok_s: 8.4
       prefill_tok_s: 79.8
       wired_gb_added: 10.8       # vm_stat, num_ctx 8192; `ollama ps` shows 1.1-1.4 GB, which is not the real footprint
+      dev_gym: {result: eval/results/20261007-blue-gym-gemma4_12b/, function_recall_final: 18/21, function_recall_raw: 18/21, strict_recall_final: 16/21, clean_runs_with_false_signal_final: 2/6, model_s_per_run: 64.7, model_s_per_call: 28.6, errors: 0}
 
   - id: qwen35-9b
     ollama_tag: qwen3.5:9b
-    role: Blue candidate; fast and light, never names the IDOR class
-    download_gb: 6.59
-    status: pulled
-    digest: sha256:6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7
+    role: not selected on 2026-10-07 (docs/EXPERIMENTS.md rule, step 1: recall gap 17 of 21 runs); the user removes it with `ollama rm qwen3.5:9b`
+    download_gb: 6.55            # model 5.63 + vision projector 0.92 + small layers (re-packaged registry revision, pulled 2026-10-06)
+    status: rejected-pending-removal
+    digest: sha256:56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90
+    previous_digest: sha256:6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7   # the 2026-10-01 probe ran on this one (a single 6.59 GB weights blob)
     quant: Q4_K_M
     params: 9.7B
     ctx_trained: 262144
@@ -49,6 +52,7 @@ models:
       decode_tok_s: 16.7
       prefill_tok_s: 154.2
       wired_gb_added: 6.8
+      dev_gym: {result: eval/results/20261007-blue-gym-qwen3.5_9b/, function_recall_final: 1/21, function_recall_raw: 11/21, function_recall_grounded: 9/21, strict_recall_final: 1/21, clean_runs_with_false_signal_raw: 6/6, clean_runs_with_false_signal_final: 1/6, verifier_rejected_true_hits: 9/10, model_s_per_run: 46.1, model_s_per_call: 18.3, errors: 0}
     notes: with thinking off it reasons inside the `explanation` field and ran into the token cap (invalid JSON in 2 of 2 first generations); the probe protocol v2 caps text length in the schema
 
   - id: qwen25-coder-7b
