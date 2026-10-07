@@ -1,0 +1,2447 @@
+{
+ "model": "qwen3.5:9b",
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "verify": true,
+ "bandit": true,
+ "notes": "Users are identified by the X-User header in this toy app; do not report that as a finding. Do not report missing rate limiting, CSRF or logging.",
+ "cases": [
+  "shop/clean",
+  "shop/CWE-89",
+  "shop/CWE-639",
+  "shop/CWE-22",
+  "bank/clean",
+  "bank/CWE-639",
+  "bank/CWE-840",
+  "bank/CWE-89",
+  "bank/CWE-22"
+ ],
+ "runs": [
+  {
+   "case": "shop/clean",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),\n          ).fetchall"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),\n          ).fetchall"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The SQL query uses parameterized placeholders for the search term, preventing SQL injection despite the f-string formatting used to construct the LIKE pattern."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2223,
+    "gen_tokens": 215,
+    "wall_s": 44.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/clean",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\n            (f\"%{q}%\",),"
+     },
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\n            (f\"%{q}%\",),"
+     },
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The input 'q' is passed as a single bound parameter to the SQL query, which prevents SQL injection regardless of any surrounding Python string formatting in the tuple, and the final argument passed to executescript does not execute arbitrary code."
+    },
+    {
+     "file": "app.py",
+     "line": 55,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code effectively mitigates path traversal by combining `os.path.realpath` with a strict check using `os.path.commonpath` that aborts requests where the canonicalized path does not reside within the allowed base directory."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3298,
+    "gen_tokens": 339,
+    "wall_s": 43.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/clean",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The code uses a parameterized query with a placeholder ('?') where the user-supplied input is passed, which prevents SQL injection; wrapping the variable in quotes within the f-string (f\"%{q}%\") does not affect the parameterization and remains safe."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2215,
+    "gen_tokens": 206,
+    "wall_s": 25.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-89",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 54,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 54,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The user input 'q' is used within a parameterized context via the LIKE operator's pattern matching, and since it is embedded directly into an f-string without sanitization, it technically constitutes a SQL injection vulnerability as the string formatting occurs before execution. However, the claim's"
+    },
+    {
+     "file": "app.py",
+     "line": 54,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The vulnerability is refuted because the code normalizes the path using `os.path.realpath` and then strictly validates that the resolved path remains within the intended `FILES` directory via `os.path.commonpath`. Even if an attacker provides a path traversal string like '../../../etc/passwd', the `"
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3276,
+    "gen_tokens": 430,
+    "wall_s": 59.5,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-89",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 54,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 54,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 54,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code validates the resolved absolute path against a strict allowlist (the base FILES directory) using os.path.commonpath after calling os.path.realpath, which resolves symlink attacks and normalization issues before access is attempted."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3270,
+    "gen_tokens": 378,
+    "wall_s": 47.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-89",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 2
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\",\n \"explanation\":\"The user-supplied query "
+     },
+     {
+      "file": "app.py",
+      "line": 54,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))\nif os.path.commonpath([path, FILES]) != FILES or not os.path.isfile(p"
+     },
+     {
+      "file": "app.py",
+      "line": 54,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))\nif os.path.commonpath([path, FILES]) != FILES or not os.path.isfile(p"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))\nif os.path.commonpath([path, FILES]) != FILES or not os.path.isfile(p"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "evidence_not_in_source"
+    },
+    {
+     "file": "app.py",
+     "line": 55,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code correctly uses os.path.commonpath after resolving symlinks with os.path.realpath to ensure the final canonical path remains within the FILES directory, effectively preventing symlink traversal attacks."
+    },
+    {
+     "file": "app.py",
+     "line": 34,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The input is not attacker-controlled because the 'q' parameter is passed directly to the Flask request object, which strictly validates and decodes it before it reaches the database layer. Consequently, there is no SQL injection vulnerability at line 34."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3277,
+    "gen_tokens": 550,
+    "wall_s": 63.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-639",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The input `q` is passed as a parameterized argument to the SQL query, preventing SQL injection even though wildcards are concatenated into the string value. The only other potential issue is that `%` characters in the database content would be escaped by the driver rather than treated as literals, a"
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2175,
+    "gen_tokens": 249,
+    "wall_s": 37.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-639",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 2
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 2
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-89",
+      "evidence": "(f\"%{q}%\",),"
+     },
+     {
+      "file": "app.py",
+      "line": 53,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "(f\"%{q}%\",),"
+     },
+     {
+      "file": "app.py",
+      "line": 53,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(FILES, name))"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 36,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The code uses a parameterized query where the interpolated string is passed as a tuple argument to `db.execute`, which ensures the `q` value is treated purely as a data literal and not parsed as SQL code."
+    },
+    {
+     "file": "app.py",
+     "line": 53,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code canonicalizes the path using `os.path.realpath` and then validates that the resolved path starts with the allowed base directory via `os.path.commonpath`; this effectively blocks symlink escapes and path traversal. Since the input is validated after normalization, the vulnerability does not"
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3208,
+    "gen_tokens": 331,
+    "wall_s": 44.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-639",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rows = db.execute(\n            \"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n            (f\"%"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The code uses a parameterized query with a placeholder (`?`) for the search pattern, which effectively neutralizes SQL injection attempts regardless of how `q` is constructed. Additionally, input validation on the `X-User` header prevents arbitrary user identification attacks."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2176,
+    "gen_tokens": 215,
+    "wall_s": 26.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-22",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(FILES, name)\nif not os.path.isfile(path):\nabort(404)"
+     },
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\n\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n(f\"%{q}%\",),\n).fetchall()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(FILES, name)\nif not os.path.isfile(path):\nabort(404)"
+     },
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rows = db.execute(\n\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n(f\"%{q}%\",),\n).fetchall()"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 55,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The `name` input is passed to `os.path.join()`, which normalizes the path and prevents directory traversal attacks from escaping the intended `FILES` directory, as confirmed by the security-focused project notes."
+    },
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The query uses a parameterized placeholder (?) for the user-supplied input 'q', which correctly prevents SQL injection even when combined with the LIKE operator. The claim that this allows bypassing via '% OR 1=1' is invalid because the percent signs are treated as literal characters passed to the `"
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3283,
+    "gen_tokens": 449,
+    "wall_s": 61.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-22",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\n            (f\"%{q}%\",),"
+     },
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\n            (f\"%{q}%\",),"
+     },
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The input 'q' is passed to the SQL query via a parameterized placeholder (?), which prevents SQL injection attacks regardless of the f-string formatting used to create the argument tuple."
+    },
+    {
+     "file": "app.py",
+     "line": 55,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code validates that the resolved file path remains within the intended 'files' directory by checking if the file exists, which implicitly fails for any traversal attempt (like '../') that escapes the base path before os.path.isfile can confirm existence inside the target directory."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3261,
+    "gen_tokens": 344,
+    "wall_s": 45.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "shop/CWE-22",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\",\n              (f\"%{q}%\",),"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 35,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The code uses a parameterized query with a placeholder (?), which ensures that the string value of 'q' is treated as data, not SQL code, effectively neutralizing any attempt to break out of the LIKE pattern or inject commands."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2180,
+    "gen_tokens": 192,
+    "wall_s": 25.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/clean",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 3,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "final": {
+     "n_findings": 1,
+     "false_signal": true
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 19,
+      "cwe": "CWE-532",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n            (account_id, f\"%{q}%\"),"
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))\n            if os.path.commonpath([path, RECEIPTS]) != RECEIPTS or"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n            (account_id, f\"%{q}%\"),"
+     },
+     {
+      "file": "app.py",
+      "line": 82,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))\n            if os.path.commonpath([path, RECEIPTS]) != RECEIPTS or"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The use of a parameterized placeholder for the `LIKE` clause argument prevents SQL injection, as the database treats the pattern string (including any injected `%` or `_`) as literal data rather than executable SQL syntax."
+    },
+    {
+     "file": "app.py",
+     "line": 82,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The use of `os.path.realpath` resolves any symlinks or relative path components (like `../`) to their absolute canonical paths, and the subsequent check with `os.path.commonpath` strictly enforces that the resolved path must remain within the `RECEIPTS` directory, effectively neutralizing path trunc"
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 4,
+    "prompt_tokens": 5434,
+    "gen_tokens": 776,
+    "wall_s": 111.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/clean",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    \"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\","
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    \"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\","
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The variable `q` is safely passed within a parameterized query tuple where the `%{q}%` fragment acts as a constant string literal that gets concatenated with the user input before being bound, preventing SQL injection."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2856,
+    "gen_tokens": 215,
+    "wall_s": 28.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/clean",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 20,
+     "cwe": "CWE-532",
+     "reason": "refuted_by_verifier: The 'VIP-SECRET-MEMO' is hardcoded in the database initialization script within a controlled environment, not injected by an attacker; therefore, it does not constitute a vulnerability exploitable via external input."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2853,
+    "gen_tokens": 199,
+    "wall_s": 27.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-639",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 71,
+      "cwe": "CWE-89",
+      "evidence": "\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n              (account_id, f\"%{q}%\"),"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 71,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n              (account_id, f\"%{q}%\"),"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 71,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The SQL query uses a parameterized placeholder (?) for the user-controlled input 'q', which prevents SQL injection regardless of how the string is formatted before binding. The f-string concatenation only affects the value sent to the driver, not the SQL structure itself."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2807,
+    "gen_tokens": 229,
+    "wall_s": 39.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-639",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 71,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\n    \"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n    (account_id, f\"%{q}%\"),\n)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 71,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rows = db.execute(\n    \"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n    (account_id, f\"%{q}%\"),\n)"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 71,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The SQL query uses parameterized bindings (`?`) for both the account ID and the LIKE pattern, which effectively neutralizes any malicious input in `q` from causing SQL injection. The f-string formatting occurs only within the second bound parameter value, not the query string itself."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2827,
+    "gen_tokens": 229,
+    "wall_s": 30.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-639",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 63,
+      "cwe": "CWE-89",
+      "evidence": "account_id = request.args.get(\"account\", \"\")\nq = request.args.get(\"q\", \"\")\nowner = db.execute(\"SELECT user_id FROM accou"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "account_id = request.args.get(\"account\", \"\")\nq = request.args.get(\"q\", \"\")\nowner = db.execute(\"SELECT user_id FROM accou"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 65,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The 'q' parameter is safe because the code performs a role-based authorization check on line 68 before executing the vulnerable query, ensuring users can only see their own transaction memos regardless of injection attempts."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2938,
+    "gen_tokens": 269,
+    "wall_s": 34.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-840",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 3
+    },
+    "grounded": {
+     "n_findings": 3,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 3
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 19,
+      "cwe": "CWE-532",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n              (account_id, f\"%{q}%\"),"
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))\n          if os.path.commonpath([path, RECEIPTS]) != RECEIPTS or n"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n              (account_id, f\"%{q}%\"),"
+     },
+     {
+      "file": "app.py",
+      "line": 82,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))\n          if os.path.commonpath([path, RECEIPTS]) != RECEIPTS or n"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The `account_id` is safely parameterized in the query definition, and the `q` input is passed as a tuple element to the parameterized placeholder, preventing SQL injection regardless of the f-string formatting used for concatenation."
+    },
+    {
+     "file": "app.py",
+     "line": 82,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The use of os.path.commonpath() after resolving symlinks with os.path.realpath() effectively prevents directory traversal attacks by ensuring the final resolved path remains within the RECEIPTS directory."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 4,
+    "prompt_tokens": 5390,
+    "gen_tokens": 671,
+    "wall_s": 96.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-840",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    \"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\","
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "q = request.args.get(\"q\", \"\")\nrows = db.execute(\n    \"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\","
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The input `q` is correctly passed to the SQL query via a parameterized argument (`?`) rather than string interpolation, so the f-string formatting does not introduce an injection vulnerability."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2845,
+    "gen_tokens": 207,
+    "wall_s": 28.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-840",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 64,
+      "cwe": "CWE-89",
+      "evidence": "q = request.args.get(\"q\", \"\")\n        rows = db.execute(\n            \"SELECT memo, amount FROM tx WHERE account_id = ? A"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "q = request.args.get(\"q\", \"\")\n        rows = db.execute(\n            \"SELECT memo, amount FROM tx WHERE account_id = ? A"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The input 'q' is concatenated into a LIKE pattern string before being passed as the second parameter to `execute()`, which means SQLite treats it as a literal value rather than interpolating SQL syntax, effectively mitigating injection."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2853,
+    "gen_tokens": 225,
+    "wall_s": 29.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-89",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The parameterized query prevents SQL injection on the `account_id`, and the application already performs a strict ownership check using `user_id` before executing the statement, effectively neutralizing any attempt to escalate privileges or access unauthorized data."
+    },
+    {
+     "file": "app.py",
+     "line": 81,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The application uses `os.path.realpath` to resolve the input and then explicitly checks if the canonical path starts with the allowed directory using `os.path.commonpath`, effectively preventing path traversal even without an additional guard on line 82."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3991,
+    "gen_tokens": 398,
+    "wall_s": 61.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-89",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The code uses a parameterized query for `account_id`, but the `%{q}%` string is concatenated directly into the SQL statement, creating an injection path where an attacker can close the LIKE clause or inject new conditions. Since `sqlite3` does not support placeholders within string literals or wildp"
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2828,
+    "gen_tokens": 250,
+    "wall_s": 31.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-89",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\",\n            (account_id,),\n        ).fetchall"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\",\n            (account_id,),\n        ).fetchall"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The query uses a parameterized placeholder for `account_id`, and the only user-supplied input `q` is concatenated into the string literal of the `LIKE` clause where special characters like quotes cannot break the SQL syntax, preventing injection."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2834,
+    "gen_tokens": 196,
+    "wall_s": 27.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-22",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 2
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "evidence": "INSERT INTO accounts VALUES (1, 1, 100.0), (2, 2, 500.0); INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SEC"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\\n              \\\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\\\",\\n              ("
+     },
+     {
+      "file": "app.py",
+      "line": 84,
+      "cwe": "CWE-22",
+      "evidence": "with open(path, encoding=\\\"utf-8\\\") as fh:"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "INSERT INTO accounts VALUES (1, 1, 100.0), (2, 2, 500.0); INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SEC"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "evidence_not_in_source"
+    },
+    {
+     "file": "app.py",
+     "line": 84,
+     "cwe": "CWE-22",
+     "reason": "evidence_not_in_source"
+    },
+    {
+     "file": "app.py",
+     "line": 20,
+     "cwe": "CWE-532",
+     "reason": "refuted_by_verifier: The data containing 'VIP-SECRET-MEMO' is inserted via a static `executescript` call during application initialization, meaning the string is not attacker-controlled and cannot be injected at runtime."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 2869,
+    "gen_tokens": 558,
+    "wall_s": 64.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-22",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(RECEIPTS, name)\nif not os.path.isfile(path):\nabort(404)"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\n\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n(account_id, f\"%{q}%\"),\n).fetchal"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(RECEIPTS, name)\nif not os.path.isfile(path):\nabort(404)"
+     },
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rows = db.execute(\n\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\",\n(account_id, f\"%{q}%\"),\n).fetchal"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 81,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The input 'name' is attacker-controlled but the code uses os.path.join which correctly interprets path separators, making '../' inputs safe from traversal attacks; thus, no arbitrary file read vulnerability exists at line 81."
+    },
+    {
+     "file": "app.py",
+     "line": 73,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The f-string interpolation is safe because the entire `LIKE` clause value (including wildcards) is passed as a single bound parameter, preventing any SQL syntax manipulation."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3975,
+    "gen_tokens": 377,
+    "wall_s": 57.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  },
+  {
+   "case": "bank/CWE-22",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 0,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-522",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 20,
+      "cwe": "CWE-522",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "INSERT INTO tx VALUES (1, 1, 'salary', 100.0), (2, 2, 'VIP-SECRET-MEMO', 500.0);"
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 20,
+     "cwe": "CWE-522",
+     "reason": "refuted_by_verifier: The input is not attacker-controlled; the 'q' parameter is passed to a prepared statement using a placeholder ('?') which safely escapes any user-supplied characters, preventing SQL injection despite the unparameterized '%{q}%' string format."
+    },
+    {
+     "file": "app.py",
+     "line": 81,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code validates that the resulting joined path is an actual file within the server using `os.path.isfile(path)` before reading it, which prevents directory traversal attacks from succeeding."
+    }
+   ],
+   "meta": {
+    "model": "qwen3.5:9b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 3988,
+    "gen_tokens": 367,
+    "wall_s": 53.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "prompt_sha": "495704089c57"
+   }
+  }
+ ]
+}
