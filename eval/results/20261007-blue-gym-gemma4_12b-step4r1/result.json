@@ -1,0 +1,2600 @@
+{
+ "model": "gemma4:12b",
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "verify": true,
+ "bandit": true,
+ "examples": true,
+ "notes": "Users are identified by the X-User header in this toy app; do not report that as a finding. This toy app omits rate limiting, CSRF protection, security headers and logging, and its seed data holds plaintext demo passwords, all by design: do not report those.",
+ "cases": [
+  "shop/clean",
+  "shop/CWE-89",
+  "shop/CWE-639",
+  "shop/CWE-22",
+  "bank/clean",
+  "bank/CWE-639",
+  "bank/CWE-840",
+  "bank/CWE-89",
+  "bank/CWE-22"
+ ],
+ "runs": [
+  {
+   "case": "shop/clean",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "grounded": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [],
+    "grounded": [],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 1,
+    "prompt_tokens": 2222,
+    "gen_tokens": 10,
+    "wall_s": 32.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/clean",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "grounded": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [],
+    "grounded": [],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 1,
+    "prompt_tokens": 2222,
+    "gen_tokens": 10,
+    "wall_s": 1.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/clean",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "grounded": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [],
+    "grounded": [],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 1,
+    "prompt_tokens": 2222,
+    "gen_tokens": 6,
+    "wall_s": 0.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-89",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3893,
+    "gen_tokens": 203,
+    "wall_s": 38.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-89",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3893,
+    "gen_tokens": 202,
+    "wall_s": 39.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-89",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 35,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3893,
+    "gen_tokens": 175,
+    "wall_s": 29.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-639",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3858,
+    "gen_tokens": 198,
+    "wall_s": 56.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-639",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3861,
+    "gen_tokens": 195,
+    "wall_s": 43.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-639",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, item, total FROM orders WHERE id = ?\", (order_id,)).fetchone()"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3875,
+    "gen_tokens": 188,
+    "wall_s": 73.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-22",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3862,
+    "gen_tokens": 199,
+    "wall_s": 55.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-22",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 3864,
+    "gen_tokens": 211,
+    "wall_s": 54.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "shop/CWE-22",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(FILES, name)"
+     },
+     {
+      "file": "app.py",
+      "line": 34,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\", (f\"%{q}%\",),).fetchall()"
+     },
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(FILES, name)"
+     },
+     {
+      "file": "app.py",
+      "line": 34,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rows = db.execute(\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE ?\", (f\"%{q}%\",),).fetchall()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 55,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(FILES, name)"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 34,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The query uses a bound parameter for the LIKE clause. Constructing the wildcard string using an f-string before passing it as a bound parameter is a safe and standard practice."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 5590,
+    "gen_tokens": 486,
+    "wall_s": 118.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/clean",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "evidence": "account_id = request.args.get(\"account\", \"\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "account_id = request.args.get(\"account\", \"\")"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 65,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The application performs a proper ownership check immediately after the fetch by comparing 'owner[\"user_id\"]' against the 'user' retrieved from the authenticated 'X-User' header."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4669,
+    "gen_tokens": 177,
+    "wall_s": 80.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/clean",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "evidence": "account_id = request.args.get(\"account\", \"\")"
+     },
+     {
+      "file": "app.py",
+      "line": 80,
+      "cwe": "CWE-22",
+      "evidence": "name = request.args.get(\"name\", \"\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "account_id = request.args.get(\"account\", \"\")"
+     },
+     {
+      "file": "app.py",
+      "line": 80,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "name = request.args.get(\"name\", \"\")"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 65,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code performs an ownership check on line 70, comparing the account's user_id with the current user's ID before proceeding."
+    },
+    {
+     "file": "app.py",
+     "line": 80,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code implements a proper path traversal defense by using os.path.commonpath to ensure the resolved real path remains within the RECEIPTS directory. This check prevents escaping the intended directory even if the user provides absolute paths or '..' sequences."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 6476,
+    "gen_tokens": 323,
+    "wall_s": 92.3,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/clean",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 0,
+     "false_signal": false
+    },
+    "final": {
+     "n_findings": 0,
+     "false_signal": false
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "evidence": "account_id = request.args.get(\"account\", \"\")"
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "account_id = request.args.get(\"account\", \"\")"
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))"
+     }
+    ],
+    "verified": [],
+    "final": []
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 65,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The application performs a mandatory ownership check (row['user_id'] != user) immediately after fetching the account record, which mitigates the IDOR risk."
+    },
+    {
+     "file": "app.py",
+     "line": 81,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The application performs a strict containment check using os.path.commonpath on line 82, which ensures the resolved path remains within the RECEIPTS directory regardless of path traversal attempts."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 6468,
+    "gen_tokens": 350,
+    "wall_s": 103.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-639",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     },
+     {
+      "file": "app.py",
+      "line": 71,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\", (account_id, f\"%{q}%\")).fetchall()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 71,
+     "cwe": "CWE-89",
+     "reason": "evidence_not_in_source"
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4643,
+    "gen_tokens": 279,
+    "wall_s": 93.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-639",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     },
+     {
+      "file": "app.py",
+      "line": 71,
+      "cwe": "CWE-89",
+      "evidence": "rows = db.execute(\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE ?\", (account_id, f\"%{q}%\")).fetchall()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 71,
+     "cwe": "CWE-89",
+     "reason": "evidence_not_in_source"
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4655,
+    "gen_tokens": 292,
+    "wall_s": 63.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-639",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     },
+     {
+      "file": "app.py",
+      "line": 63,
+      "cwe": "CWE-639",
+      "evidence": "owner = db.execute(\"SELECT user_id FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "owner = db.execute(\"SELECT user_id FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "row = db.execute(\"SELECT id, user_id, balance FROM accounts WHERE id = ?\", (account_id,)).fetchone()"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 65,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code performs a mandatory ownership check on line 68, comparing the `user_id` from the database record against the authenticated `user` ID before proceeding."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 6682,
+    "gen_tokens": 330,
+    "wall_s": 124.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-840",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4688,
+    "gen_tokens": 199,
+    "wall_s": 102.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-840",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4695,
+    "gen_tokens": 202,
+    "wall_s": 65.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-840",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 58,
+      "cwe": "CWE-840",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "db.execute(\"UPDATE accounts SET balance = balance - ? WHERE id = ?\", (amount, src))"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4704,
+    "gen_tokens": 210,
+    "wall_s": 70.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-89",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4568,
+    "gen_tokens": 217,
+    "wall_s": 79.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-89",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4567,
+    "gen_tokens": 194,
+    "wall_s": 68.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-89",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     },
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.realpath(os.path.join(RECEIPTS, name))"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 73,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "f\"SELECT memo, amount FROM tx WHERE account_id = ? AND memo LIKE '%{q}%'\""
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 81,
+     "cwe": "CWE-22",
+     "reason": "refuted_by_verifier: The code uses os.path.commonpath to ensure the resolved path remains within the RECEIPTS directory, which is a standard defense against path traversal."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 6363,
+    "gen_tokens": 369,
+    "wall_s": 131.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-22",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4343,
+    "gen_tokens": 198,
+    "wall_s": 78.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-22",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4343,
+    "gen_tokens": 201,
+    "wall_s": 68.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  },
+  {
+   "case": "bank/CWE-22",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 81,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "path = os.path.join(RECEIPTS, name)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 4365,
+    "gen_tokens": 217,
+    "wall_s": 87.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "2d3a760131b8"
+   }
+  }
+ ]
+}

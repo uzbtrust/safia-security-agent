@@ -33,12 +33,13 @@ models:
       prefill_tok_s: 79.8
       wired_gb_added: 10.8       # vm_stat, num_ctx 8192; `ollama ps` shows 1.1-1.4 GB, which is not the real footprint
       dev_gym: {result: eval/results/20261007-blue-gym-gemma4_12b/, function_recall_final: 18/21, function_recall_raw: 18/21, strict_recall_final: 16/21, clean_runs_with_false_signal_final: 2/6, model_s_per_run: 64.7, model_s_per_call: 28.6, errors: 0}
+      dev_gym_step4r1: {result: eval/results/20261007-blue-gym-gemma4_12b-step4r1/, note: step-4 prompts with few-shot, tuned on dev, function_recall_final: 21/21, strict_recall_final: 18/21, clean_runs_with_false_signal_final: 0/6, model_s_per_run: 68.7, model_s_per_call: 33.1, errors: 0}
 
   - id: qwen35-9b
     ollama_tag: qwen3.5:9b
     role: not selected on 2026-10-07 (docs/EXPERIMENTS.md rule, step 1: recall gap 17 of 21 runs); the user removes it with `ollama rm qwen3.5:9b`
     download_gb: 6.55            # model 5.63 + vision projector 0.92 + small layers (re-packaged registry revision, pulled 2026-10-06)
-    status: rejected-pending-removal
+    status: removed          # deleted by the user on 2026-10-07 after the dev gym decision; can be pulled again (the registry tag was re-packaged after 2026-10-01)
     digest: sha256:56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90
     previous_digest: sha256:6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7   # the 2026-10-01 probe ran on this one (a single 6.59 GB weights blob)
     quant: Q4_K_M
