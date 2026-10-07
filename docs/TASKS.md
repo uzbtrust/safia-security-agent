@@ -42,6 +42,7 @@ Muddat 15-okt, topshirish maqsadi 14-okt.
   2. CLOUD (Linux, `unshare -rn`): `python scripts/judge_samples.py eval/results/<run>/` → `eval/judged/<run>/` (qabul soni, rad sabablari).
   3. Qaror cloud'da hakam natijasi bilan chiqadi.
 - **OpenRouter (2026-10-01):** DeepSeek va GLM OpenRouter orqali (`--provider openrouter`, `OPENROUTER_API_KEY`); upstream provayder `served_by` da yoziladi. O'qitish ruxsati upstream shartlariga bog'liq (OpenRouter shartni o'zgartirmaydi). Uchinchi manba: **JEV** (`JEV_TOKEN`; base URL va model ID aniqlanishi kerak).
+- **Claude-authored Red (2026-10-07):** `scripts/claude_red_batch.py` — Claude to'g'ridan-to'g'ri (API emas, shu sessiyada) yozgan 5 qo'shimcha variant, hakamda 5/5 qabul. Faqat gym diversity + few-shot xotira uchun; LoRA/fine-tune uchun EMAS (qarang CLAUDE.md).
 - **Kalit xavfsizligi:** `RED_API_BASE/KEY/MODEL` faqat muhit o'zgaruvchisida; kalit hech qachon repo'ga, logga yoki chatga tushmaydi. API'ga faqat `gym_apps/shop` kodi yuboriladi.
 
 - **Gym ilovalari (2026-10-01):** `shop`, `bank`, `blog`; 11 shablon, 8 xil CWE (89, 639, 22, 840, 79, 915, 330, 601). Red default `--app all`. Xilma-xillik endi ilovalar va CWE'lar orqali; baseline Bandit 2/11.

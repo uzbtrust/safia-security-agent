@@ -17,7 +17,8 @@ Repo: Safia (AI Team) ML Engineer case study — **lokal AI security agent**. Re
 ## Qoidalar
 - **Raqamlarni hech qachon to'qima.** Hujjatdagi har bir metrika `eval/results/*/result.json` dagi haqiqiy run'dan. Halol baho ber: muammo va xavfni yashirma, natijani chiroyli ko'rsatma.
 - **Xavfsizlik doirasi:** faqat o'zimizniki va lokal lablar. Begona tizimga so'rov yo'q. Agentning o'ziga umumiy shell tool berilmaydi. Dinamik tekshiruv faqat allowlist'dagi host'ga (127.0.0.1).
-- Agent mahsulot yo'lida to'liq lokal: cloud LLM yo'q. Cloud modelni faqat ochiq belgilangan "reference" sifatida baholashda ishlatish mumkin; uning chiqishlari fine-tune ma'lumoti bo'lmaydi.
+- Agent mahsulot yo'lida to'liq lokal: cloud LLM yo'q (`scan`/`eval-gym` hech qachon Claude API'ga chiqmaydi).
+- **Claude chiqishi — qoida (2026-10-07):** gym ma'lumotini kengaytirish (yangi Red variantlari, xilma-xillik) va Blue'ning few-shot xotirasiga misol sifatida ishlatish — ruxsat etilgan (bu "kod yozish", model vazni o'zgarmaydi; har doim hakam tekshiradi, `authored_by: claude-assistant` bilan belgilanadi). Claude chiqishidan **LoRA/fine-tune** (model vaznini o'zgartirish) uchun foydalanilmaydi — bu bosqich faqat ochiq vaznli modellar (DeepSeek/GLM, o'qitish ruxsati tasdiqlangan) chiqishi bilan qilinadi. "Reference baholash" qatori (ixtiyoriy, T4.5) alohida va ochiq belgilanadi.
 - Til: foydalanuvchi bilan o'zbekcha (lotin). Kod, izohlar, commit xabarlari, README/DECISIONS/EXPERIMENTS/ARCHITECTURE/LIMITATIONS/THREAT_MODEL — inglizcha. `PLAN.md` va `TASKS.md` — o'zbekcha.
 - Katta fayllar (model, cache, dataset) commit qilinmaydi. Natija — kichik JSON + `summary.md` (≤ 60 qator).
 - Commit'lar kichik va ma'noli. Sessiya tugashidan oldin commit + push (cloud konteyner vaqtinchalik).

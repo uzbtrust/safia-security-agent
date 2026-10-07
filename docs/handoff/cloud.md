@@ -53,3 +53,16 @@ LOCAL nima qilsin (DEV split: faqat shop va bank; **blog = test, hozir ishga tus
 2. Ilovalarni yoping (gemma ≈ +10.8 GB wired). Smoke: `.venv/bin/safia-sec scan gym_apps/shop --model gemma4:12b --notes "Users are identified by the X-User header in this toy app; do not report that as a finding." --out /tmp/scan_shop` — hisobotni (report.md) o'qib, g'alati joylarini yozing. Eslatma: gym_apps/shop TOZA versiya, topilma bo'lsa u soxta signal.
 3. DEV eval: `.venv/bin/safia-sec eval-gym --model gemma4:12b --apps shop bank --seeds 1 2 3` (≈ 25–30 daqiqa taxmin; 9 holat × 3 seed, detect + verify chaqiruvlari). Keyin xuddi shu `qwen3.5:9b` bilan. Natija `eval/results/<sana>-blue-gym-<model>/` (result.json + summary.md); push.
 4. Xatolar `meta.errors` da ko'rinadi (JSON, kontekst). Muammo bo'lsa handoff'ga yozing, promptni o'zgartirmang (promptlar `src/safia_sec/prompts/*.md` — tuzatishlar faqat DEV natijalariga qarab, sababi bilan).
+
+## 2026-10-07 — CLOUD (Claude-authored Red variants; narrowed the Claude-output policy)
+Foydalanuvchi: DeepSeek o'rniga Claude'ni (Opus/Sonnet 5.5, obuna doirasida, tekin) Red data uchun ishlatish taklif qildi.
+Qaror: CLAUDE.md'dagi "Claude chiqishi fine-tune emas" qoidasini aniqlashtirdim (yuqorida). Gym diversity/few-shot uchun
+ruxsat, LoRA/vazn o'qitish uchun yo'q (faqat DeepSeek/GLM, ochiq vazn + o'qitish ruxsati tasdiqlangan).
+Bajarildi: `src/safia_sec/gym/authored/claude_variants.py` + `scripts/claude_red_batch.py` — 5 ta qo'lda yozilgan
+Red variant (shop/CWE-89 .format() SQLi, shop/CWE-22 absolute-path bypass, bank/CWE-89 concat SQLi,
+bank/CWE-840 abs() bilan "tuzatilgan" lekin hali zaif tekshiruv, blog/CWE-79 concat XSS), hammasi mavjud golden
+shablonlardan **kod shakli bo'yicha boshqacha** (xilma-xillik muammosiga javob). Hakamda 5/5 qabul qilindi
+(API chaqiruv emas, shu sessiyada to'g'ridan-to'g'ri yozildi, qo'shimcha token xarajati yo'q). 56 test yashil.
+Natija: `eval/results/20261007-red-claude-claude_sonnet_5/`. `served_by.authored_by=claude-assistant` bilan
+belgilangan, DeepSeek/GLM namunalaridan ajratib turiladi.
+LOCAL uchun ta'sir yo'q: bu faqat gym ma'lumotini boyitadi, Blue DEV eval jarayoniga halaqit bermaydi.
