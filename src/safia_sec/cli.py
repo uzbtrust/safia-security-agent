@@ -32,7 +32,8 @@ def add_model_options(p: argparse.ArgumentParser) -> None:
     p.add_argument("--no-verify", action="store_true", help="skip the refutation step")
     p.add_argument("--no-bandit", action="store_true", help="do not use Bandit")
     p.add_argument("--no-examples", action="store_true",
-                    help="do not add the curated few-shot examples to the detect prompt (for before/after comparison)")
+                    help="do not add the few-shot examples to the prompts (for before/after comparison)")
+    p.add_argument("--include-tests", action="store_true", help="also scan test files and migrations")
     p.add_argument("--no-cache", action="store_true")
     p.add_argument("--cache", default=".cache/llm")
 
@@ -60,7 +61,8 @@ def main(argv: list[str] | None = None, client_factory=None) -> int:
             print(f"no such path: {target}", file=sys.stderr)
             return 2
         scanner = Scanner(factory(args, args.seed), notes=args.notes, verify=not args.no_verify,
-                          use_bandit=not args.no_bandit, use_examples=not args.no_examples)
+                          use_bandit=not args.no_bandit, use_examples=not args.no_examples,
+                          include_tests=args.include_tests)
         result = scanner.scan(target)
         md = report.to_markdown(result, str(target))
         if args.out:

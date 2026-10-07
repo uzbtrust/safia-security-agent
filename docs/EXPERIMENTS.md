@@ -63,20 +63,51 @@ clean app, passes on the patched one and the functional tests stay green. *Blue*
   The test split therefore measures whether the model applies the checklist to unseen code, not whether it
   discovers unknown classes.
 
-## Few-shot examples (step 4, added 2026-10-07, not yet measured on a real model)
-`src/safia_sec/blue/fewshot.py` adds a fixed block of 3 hand-written vulnerability-pattern examples to the
-detect prompt (`--no-examples` / `use_examples=False` turns it off). The examples are **original snippets,
-not copied from any gym app** — using literal gym code would leak ground truth into the dev/test eval and
-make any recall gain meaningless; the goal is to coach the model on the shape of a bug class. The first
-example targets the one case both local models missed 3/3 in the dev gym: bank/CWE-840 (a weakened
-business-logic check, `abs()` instead of a sign check). Two more (removed ownership check, a second SQL
-injection shape) check whether the block teaches a pattern rather than only nudging one CWE.
-Because the examples text sits at a new `{examples}` slot in `prompts/detect.md` that is empty by default
-when off, `--no-examples` reproduces the exact prompt text of the pre-2026-10-07 runs — so the "baseline"
-side of this comparison can replay from the existing `.cache/llm` entries for free; only the "with examples"
-side needs fresh model calls. **needs-local-verify**: run `eval-gym` on gemma4:12b with and without
-`--no-examples` (same apps/seeds as the 2026-10-07 dev gym) and compare bank/CWE-840 recall and the
-clean-app false-signal rate (an example framed around one CWE could make the model over-call it elsewhere).
+## Step 4 protocol (pre-registered 2026-10-07, before any run of the round-1 changes)
+**At most two improvement rounds, then a freeze.** Each round may only use dev evidence.
+- **Round 1 (this commit).** Evidence used: the gemma4:12b dev gym run of 2026-10-07 (`result.json`), the
+  class/CWE distribution of the RealVuln *dev* repos, and RealVuln's public scoring config
+  (`config/cwe-families.json`, i.e. the rules, not the answers). From the RealVuln *test* half only repo-level
+  counts (LOC, number of labels) were printed while designing the split; no test repo was cloned or scanned
+  and no test label was read. Changes: a CWE menu in the detect prompt (the dev gym showed gemma4:12b
+  pointing at the right function of bank/CWE-840 but labelling it CWE-606/603); a rule not to report code
+  that is already guarded; a revised few-shot block (`blue/fewshot.py`, original snippets, never gym code)
+  that is also given to the verifier; test files and migrations skipped by default (no RealVuln dev label
+  sits in them; LOCAL's smoke scan flagged a test file); finding cap per chunk 8 -> 12 and generation cap
+  1500 -> 2048 tokens (a RealVuln dev file has 14 labels in 161 lines; the largest dev chunk plus the prompt
+  is about 16k characters, so prompt + answer still fit the 8192-token context). The gym's project notes now
+  also name the toy apps' deliberate omissions that the new menu would otherwise invite (security headers,
+  plaintext demo passwords in seed data): the gym's ground truth covers only the injected bug. Because the
+  prompts changed, round-1 gym numbers are compared with the 2026-10-07 run as context, not as an ablation.
+- **Round 2** (once): its content must come from round-1 failures on the gym dev split and RealVuln dev only.
+- **Freeze rule:** the frozen configuration is whichever of round 1 / round 2 has the higher RealVuln-dev F3
+  (tie: higher gym-dev function recall). No change after the freeze.
+- **Final, once, after the freeze:** gym test (`blog`) and RealVuln test, each with the frozen configuration
+  and with the same configuration plus `--no-examples`. That pair is the H5/H6 comparison: it isolates the
+  few-shot block; the CWE menu, the guard rule and the file filter are product changes kept in both arms.
+
+### RealVuln (external benchmark)
+- RealVuln 3.0.0 ground truth, benchmark commit `7a710251f55c` (Apache-2.0), Python repos only (the scanner
+  reads Python). Each repo is pinned to the commit SHA in RealVuln's manifest.
+- **Split by repo, mechanical:** sha256(repo_id) even -> dev, odd -> test (34 dev / 32 test Python repos).
+- **Selection (runtime budget), same rule for both halves:** human-authored repos with a known size in
+  ascending LOC while the cumulative LOC is <= 500, plus the single smallest LLM-generated repo.
+  Result (`targets/realvuln/split.json`, written by `scripts/realvuln_split.py`): dev = 5 human-authored +
+  1 LLM-generated repo (91 vulnerabilities, 16 false-positive traps); test = 3 + 1 (80 and 14).
+- **Scoring = RealVuln's matcher semantics** (re-implemented, their code is not executed): a finding is a TP
+  if file matches, its CWE is in the entry's `acceptable_cwes` and its line is within the entry's range
+  +-10; every finding that matches no vulnerable entry is an FP (including a hit on a trap); unmatched
+  vulnerable entries are FN; `non_scoring` entries are ignored. Primary metric: F3 = 10PR / (9P + R), the
+  benchmark's own; precision and recall are always shown separately. Secondary: recall over entries in
+  `.py` files only (the scanner's scope). Reported per stratum: human-authored (older community apps, likely
+  seen in pre-training) and LLM-generated (2026, unlikely to be memorized).
+- Run settings: same as the gym (T=0.7, ctx 8192, thinking off, verifier and Bandit on), seed 1 only (each
+  repo has many labels), no project notes (the gym's notes would suppress classes RealVuln scores, such as
+  missing rate limiting and CSRF).
+
+### Gym diagnostic added before round 1
+- **Located** (diagnostic, not a hit): any finding inside the function of the injected bug, whatever its CWE.
+  It separates "found the spot but mislabelled it" from "did not find it".
 
 ## Hypotheses (before the Blue gym runs)
 - **H1** The model-based detector finds more injected vulnerabilities (function-level) than Bandit's 2/11.

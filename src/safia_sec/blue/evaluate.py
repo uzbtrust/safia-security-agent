@@ -15,7 +15,8 @@ from .scanner import Scanner
 from .score import build_cases, score_case, wilson
 
 GYM_NOTES = ("Users are identified by the X-User header in this toy app; do not report that as a finding. "
-             "Do not report missing rate limiting, CSRF or logging.")
+             "This toy app omits rate limiting, CSRF protection, security headers and logging, and its seed data "
+             "holds plaintext demo passwords, all by design: do not report those.")
 STAGES = ["raw", "grounded", "verified", "final"]
 
 
@@ -48,15 +49,16 @@ def summarize(result: dict, model: str) -> str:
              f"{'on' if result['verify'] else 'off'}, bandit {'on' if result['bandit'] else 'off'}, examples "
              f"{'on' if result.get('examples', True) else 'off'}. "
              "n is small: a direction, not proof.", "",
-             "| stage | strict recall | function recall | CWE-only | clean runs with a false signal | findings per clean run | extras per injected run |",
-             "|---|---|---|---|---|---|---|"]
+             "| stage | strict recall | function recall | CWE-only | located (any CWE) | clean runs with a false signal | findings per clean run | extras per injected run |",
+             "|---|---|---|---|---|---|---|---|"]
     for st in STAGES:
         n = len(vuln)
-        cell = lambda key: f"{(k := sum(r['scores'][st][key] for r in vuln))}/{n} ({wilson(k, n)[0]:.2f}-{wilson(k, n)[1]:.2f})"
+        cell = lambda key: f"{(k := sum(r['scores'][st].get(key, 0) for r in vuln))}/{n} ({wilson(k, n)[0]:.2f}-{wilson(k, n)[1]:.2f})"
+        loc = sum(r["scores"][st].get("located", 0) for r in vuln)
         fs = sum(r["scores"][st]["false_signal"] for r in clean)
         avg = sum(r["scores"][st]["n_findings"] for r in clean) / max(len(clean), 1)
         ex = sum(r["scores"][st]["extras"] for r in vuln) / max(n, 1)
-        lines.append(f"| {st} | {cell('strict')} | {cell('function')} | {cell('cwe_only')} | {fs}/{len(clean)} | {avg:.2f} | {ex:.2f} |")
+        lines.append(f"| {st} | {cell('strict')} | {cell('function')} | {cell('cwe_only')} | {loc}/{n} | {fs}/{len(clean)} | {avg:.2f} | {ex:.2f} |")
     per = defaultdict(lambda: [0, 0, 0])
     for r in vuln:
         c = per[r["case"]]

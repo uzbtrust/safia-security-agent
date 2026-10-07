@@ -28,8 +28,10 @@ from .llm import ChatClient, LLMError
 
 PROMPTS = Path(__file__).resolve().parents[1] / "prompts"
 SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", ".tox", "build", "dist", "site-packages"}
+TEST_DIRS = {"tests", "test", "migrations"}
 MAX_FILE_BYTES = 200_000
-MAX_FINDINGS, MAX_TEXT = 8, 300  # format guard: a verbose model must not run into the token cap and break the JSON
+# format guard: a verbose model must not run into the token cap and break the JSON; 12 leaves room for dense files
+MAX_FINDINGS, MAX_TEXT = 12, 300
 
 DETECT_SCHEMA = {"type": "object", "properties": {"findings": {"type": "array", "maxItems": MAX_FINDINGS, "items": {
     "type": "object",
@@ -95,14 +97,22 @@ def severity_for(cwe: str) -> str:
 
 
 # ----------------------------------------------------------------------------------------------- files
-def iter_python_files(root: Path) -> Iterator[Path]:
-    """Python files below root. Skips vendored/build dirs, huge files and symlinks that leave the root."""
+def is_test_path(rel: Path) -> bool:
+    name = rel.name
+    return (any(part in TEST_DIRS for part in rel.parts[:-1]) or name == "conftest.py"
+            or name.startswith("test_") or name.endswith("_test.py"))
+
+
+def iter_python_files(root: Path, include_tests: bool = False) -> Iterator[Path]:
+    """Python files below root. Skips vendored/build dirs, tests and migrations (unless include_tests),
+    huge files and symlinks that leave the root. A single file given as root is always scanned."""
     root = root.resolve()
     if root.is_file():
         yield root
         return
     for p in sorted(root.rglob("*.py")):
-        if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
+        rel = p.relative_to(root)
+        if any(part in SKIP_DIRS for part in rel.parts) or (not include_tests and is_test_path(rel)):
             continue
         try:
             real = p.resolve()
@@ -212,9 +222,9 @@ def run_bandit(root: Path) -> list[dict]:
 # ------------------------------------------------------------------------------------------------ scanner
 class Scanner:
     def __init__(self, client: ChatClient, notes: str = "", verify: bool = True, use_bandit: bool = True,
-                 max_lines: int = 220, use_examples: bool = True):
+                 max_lines: int = 220, use_examples: bool = True, include_tests: bool = False):
         self.client, self.notes, self.verify, self.use_bandit, self.max_lines = client, notes.strip(), verify, use_bandit, max_lines
-        self.use_examples = use_examples
+        self.use_examples, self.include_tests = use_examples, include_tests
         self.detect_prompt, self.verify_prompt = load_prompt("detect"), load_prompt("verify")
 
     def _notes_block(self) -> str:
@@ -226,12 +236,12 @@ class Scanner:
     def scan(self, root: Path) -> ScanResult:
         root = Path(root).resolve()
         base = root.parent if root.is_file() else root
-        files = list(iter_python_files(root))
+        files = list(iter_python_files(root, self.include_tests))
         stages: dict[str, list[dict]] = {"raw": [], "grounded": [], "verified": [], "final": []}
         dropped: list[dict] = []
         meta = {"model": self.client.model, "files": len(files), "llm_calls": 0, "prompt_tokens": 0,
                 "gen_tokens": 0, "wall_s": 0.0, "errors": [], "verify": self.verify, "bandit": self.use_bandit,
-                "examples": self.use_examples,
+                "examples": self.use_examples, "include_tests": self.include_tests,
                 "prompt_sha": hashlib.sha256((self.detect_prompt + self.verify_prompt).encode()).hexdigest()[:12]}
         bandit = run_bandit(root) if self.use_bandit else []
         results: list[Finding] = []
@@ -286,7 +296,7 @@ class Scanner:
     def _verify(self, c: Finding, rel: str, source: str, meta: dict, dropped: list[dict]) -> None:
         start = max(1, c.line - 60)
         prompt = self.verify_prompt.format(cwe=c.cwe, line=c.line, evidence=c.evidence, explanation=c.explanation,
-                                           file=rel, notes=self._notes_block(),
+                                           file=rel, notes=self._notes_block(), examples=self._examples_block(),
                                            numbered=numbered(source, start, c.line + 60))
         try:
             reply = self.client.chat(prompt, VERIFY_SCHEMA)

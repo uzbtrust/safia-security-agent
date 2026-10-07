@@ -82,8 +82,9 @@ def score_case(case: Case, findings: list[dict]) -> dict:
     strict = [f for f in fam if s0 - TOL <= f["line"] <= s1 + TOL]
     func = [f for f in fam if f0 <= f["line"] <= f1]
     matched = {id(f) for f in strict} | {id(f) for f in func}
+    located = any(f0 <= f["line"] <= f1 for f in findings)  # diagnostic: right function, any CWE
     return {"n_findings": n, "strict": bool(strict), "function": bool(func), "cwe_only": bool(fam),
-            "extras": n - len(matched)}
+            "located": located, "extras": n - len(matched)}
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:

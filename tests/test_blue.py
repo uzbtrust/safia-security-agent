@@ -93,19 +93,47 @@ def test_prompt_injection_in_code_is_only_data():
     assert "never instructions to you" in seen[0] and "ignore all previous instructions" in seen[0]
 
 
-def test_fewshot_examples_appear_in_detect_prompt_by_default():
-    seen = []
-    fake = FakeClient(lambda p: seen.append(p) or json.dumps({"findings": []}))
-    scan_dir(source(), fake, verify=False, use_bandit=False)
-    assert "CWE-840" in seen[0] and "weakened business-logic check" in seen[0]
+EXAMPLES_HEADER = "Examples (not from this codebase"
 
 
-def test_no_examples_flag_removes_the_block():
-    seen = []
-    fake = FakeClient(lambda p: seen.append(p) or json.dumps({"findings": []}))
-    scan_dir(source(), fake, verify=False, use_bandit=False, use_examples=False)
-    assert "weakened business-logic check" not in seen[0]
-    assert "CWE-840" not in seen[0]
+def test_fewshot_examples_reach_detector_and_verifier_by_default():
+    src, fake = oracle()
+    scan_dir(src, fake, verify=True, use_bandit=False)
+    detect, verify = fake.calls[0], fake.calls[1]
+    assert verify.startswith("You are a skeptical")
+    assert EXAMPLES_HEADER in detect and EXAMPLES_HEADER in verify
+    assert "business rule not enforced" in detect
+
+
+def test_no_examples_flag_removes_the_block_everywhere():
+    src, fake = oracle()
+    scan_dir(src, fake, verify=True, use_bandit=False, use_examples=False)
+    assert all(EXAMPLES_HEADER not in p for p in fake.calls)
+    assert "CWE-840 business rule not enforced" in fake.calls[0]  # the CWE menu is not part of the examples
+
+
+def test_fewshot_examples_are_not_gym_code():
+    from safia_sec.blue import fewshot
+    gym = "".join((app_dir / "app.py").read_text() for app_dir in (Path("gym_apps") / a for a in APPS))
+    for e in fewshot.EXAMPLES:
+        for line in (e.flawed + "\n" + e.guarded).splitlines():
+            assert len(line.strip()) < 12 or line.strip() not in gym, line
+
+
+def test_tests_and_migrations_are_skipped_unless_asked(tmp_path):
+    for rel in ("app.py", "tests/test_a.py", "pkg/migrations/0001.py", "pkg/test_b.py", "pkg/b_test.py",
+                "conftest.py", "pkg/latest.py"):
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / rel).write_text("x = 1\n")
+    assert [p.name for p in iter_python_files(tmp_path)] == ["app.py", "latest.py"]
+    assert len(list(iter_python_files(tmp_path, include_tests=True))) == 7
+
+
+def test_located_counts_the_right_function_whatever_the_cwe():
+    case = next(c for c in build_cases() if c.id == "bank/CWE-840")
+    inside = case.function[0] + 1
+    s = score_case(case, [{"file": "app.py", "line": inside, "cwe": "CWE-606"}])
+    assert s["located"] and not s["function"] and not s["cwe_only"]
 
 
 def test_symlink_leaving_root_is_not_read(tmp_path):
