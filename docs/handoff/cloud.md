@@ -66,3 +66,16 @@ shablonlardan **kod shakli bo'yicha boshqacha** (xilma-xillik muammosiga javob).
 Natija: `eval/results/20261007-red-claude-claude_sonnet_5/`. `served_by.authored_by=claude-assistant` bilan
 belgilangan, DeepSeek/GLM namunalaridan ajratib turiladi.
 LOCAL uchun ta'sir yo'q: bu faqat gym ma'lumotini boyitadi, Blue DEV eval jarayoniga halaqit bermaydi.
+
+## 2026-10-07 — CLOUD (DEV eval tahlili; qadam 3 yopildi, qadam 4 boshlandi)
+Bajarildi: `origin/local/dev` merge qilindi (`ad79f87`). DEV gym natijalari (`eval/results/20261007-blue-gym-{gemma4_12b,qwen3.5_9b}/`)
+o'qildi va `docs/EXPERIMENTS.md`ga qo'shildi: dev gym son + H1-H4 har biri haqiqiy natija bilan tekshirildi (hech biri
+to'qilmadi, har bir raqam `result.json`/`summary.md`dan). `docs/TASKS.md` 3-qadam [x], 4-qadam [~] ga o'tkazildi.
+Asosiy topilma: gemma4:12b function recall 18/21, qwen3.5:9b 1/21 — farq sabab **verifier**: Qwen o'zini-o'ziga
+zarar qilib 9/10 haqiqiy topilmani noto'g'ri sabab bilan rad etdi (H3dagi "self-verification bias" xavfi Qwen'da
+real ro'y berdi, Gemma'da yo'q). H2 ham modelga bog'liq chiqdi: Gemma'da grounding soxta signalni kamaytirdi,
+recall'ga tegmadi (H2 tasdiqlandi); Qwen'da grounding 2 ta haqiqiy topilmani yo'qotdi (H2 rad etildi). Yagona
+umumiy bo'shliq: **bank/CWE-840** (manfiy o'tkazma summasi) — ikkala modelda 0/3, garchi prompt buni nomlasa ham.
+LOCAL uchun ta'sir yo'q (faqat tahlil, promptlarga tegilmadi). Qadam 4 (few-shot xotira) endi shu bo'shliqni
+nishonga oladi: bank/CWE-840 va shunga o'xshash "removed/weakened business-logic check" holatlari uchun misol.
+Ochiq savol (LOCAL uchun, shart emas): `qwen3.5:9b` endi diskdan o'chirilsin (model tanlovi yakunlandi, `ollama rm`).

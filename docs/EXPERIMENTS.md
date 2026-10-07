@@ -19,6 +19,29 @@ clean app, passes on the patched one and the functional tests stay green. *Blue*
 - Local model probe on the `shop` app only (3 injected + clean, 3 seeds): gemma4:12b strict recall 6/9,
   qwen3.5:9b 5/9, qwen2.5-coder:7b 3/9; all three raise a false signal on the clean app in 3/3 runs.
   [`eval/results/20261001-blue-probe-comparison/`]
+- **Dev gym (shop + bank, 7 injected x 3 seeds + 2 clean x 3 seeds, verifier + Bandit on), 2026-10-07:**
+  function recall at `final`: gemma4:12b **18/21**, qwen3.5:9b 1/21. Clean-app false signal: gemma4:12b 2/6,
+  qwen3.5:9b 1/6. Model choice rule (pre-registered 2026-10-06) picked **gemma4:12b** on step 1 (recall gap
+  of 17/21 runs, far past the 3-run threshold). [`eval/results/20261007-blue-gym-gemma4_12b/`,
+  `20261007-blue-gym-qwen3.5_9b/`]
+
+### Hypotheses: result against the dev gym
+- **H1** (beats Bandit 2/11): confirmed for gemma4:12b (6 of 7 injected cases hit 3/3; Bandit only 2/7 of
+  those same cases). Not confirmed for qwen3.5:9b at the `final` stage (1/21) — only at `raw` (11/21).
+- **H2** (grounding lowers false signals, not recall): confirmed for gemma4:12b (clean false signal 3/6 ->
+  2/6, function recall unchanged 18/21). Not confirmed for qwen3.5:9b (false signal unchanged 6/6, function
+  recall fell 11/21 -> 9/21 — grounding dropped two correct hits, so the "deterministic, recall-neutral"
+  assumption in H2 does not hold for every model).
+- **H3** (verifier removes >=30% of false signals at <=10 points of recall): confirmed for gemma4:12b (false
+  signal 3/12 extras+clean removed, 0/18 true hits rejected). The low-confidence self-verification-bias
+  worry is **confirmed as a real failure mode for qwen3.5:9b**: its verifier rejected 9/10 true hits with
+  factually wrong reasoning (called a SQL injection "parameterized", claimed `os.path.join` prevents
+  traversal), collapsing function recall from 9/21 to 1/21 — a loss, not a >=30%-signal/<=10-point trade.
+- **H4** (gemma4:12b higher recall, qwen3.5:9b ~2x faster): recall confirmed (18/21 vs 1/21, even more lopsided
+  than expected). Speed not confirmed: qwen3.5:9b was only 1.4x faster per run (46.1s vs 64.7s), not ~2x —
+  the probe's 2x decode-speed gap did not carry over to end-to-end run time.
+- One case neither model found: **bank/CWE-840** (negative transfer amount) — 0/3 for both, even though
+  `prompts/detect.md` names negative/oversized amounts explicitly. This is the clearest target for step 4.
 
 ## Scoring protocol v3 (fixed before any Blue gym run)
 - **Strict hit**: CWE family matches and the line is within +-5 of the injected lines.
