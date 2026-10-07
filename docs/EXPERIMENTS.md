@@ -63,6 +63,21 @@ clean app, passes on the patched one and the functional tests stay green. *Blue*
   The test split therefore measures whether the model applies the checklist to unseen code, not whether it
   discovers unknown classes.
 
+## Few-shot examples (step 4, added 2026-10-07, not yet measured on a real model)
+`src/safia_sec/blue/fewshot.py` adds a fixed block of 3 hand-written vulnerability-pattern examples to the
+detect prompt (`--no-examples` / `use_examples=False` turns it off). The examples are **original snippets,
+not copied from any gym app** — using literal gym code would leak ground truth into the dev/test eval and
+make any recall gain meaningless; the goal is to coach the model on the shape of a bug class. The first
+example targets the one case both local models missed 3/3 in the dev gym: bank/CWE-840 (a weakened
+business-logic check, `abs()` instead of a sign check). Two more (removed ownership check, a second SQL
+injection shape) check whether the block teaches a pattern rather than only nudging one CWE.
+Because the examples text sits at a new `{examples}` slot in `prompts/detect.md` that is empty by default
+when off, `--no-examples` reproduces the exact prompt text of the pre-2026-10-07 runs — so the "baseline"
+side of this comparison can replay from the existing `.cache/llm` entries for free; only the "with examples"
+side needs fresh model calls. **needs-local-verify**: run `eval-gym` on gemma4:12b with and without
+`--no-examples` (same apps/seeds as the 2026-10-07 dev gym) and compare bank/CWE-840 recall and the
+clean-app false-signal rate (an example framed around one CWE could make the model over-call it elsewhere).
+
 ## Hypotheses (before the Blue gym runs)
 - **H1** The model-based detector finds more injected vulnerabilities (function-level) than Bandit's 2/11.
 - **H2** Evidence grounding lowers false signals on clean apps without lowering recall (it is deterministic).

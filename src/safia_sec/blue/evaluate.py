@@ -20,19 +20,21 @@ STAGES = ["raw", "grounded", "verified", "final"]
 
 
 def run_eval(make_client: Callable[[int], object], seeds: list[int], apps: list[str] | None = None,
-             verify: bool = True, use_bandit: bool = True, notes: str = GYM_NOTES, progress=print) -> dict:
+             verify: bool = True, use_bandit: bool = True, use_examples: bool = True,
+             notes: str = GYM_NOTES, progress=print) -> dict:
     cases = build_cases(apps)
     runs = []
     for case in cases:
         for seed in seeds:
             with tempfile.TemporaryDirectory(prefix="blue_eval_") as tmp:
                 (Path(tmp) / "app.py").write_text(case.source)
-                res = Scanner(make_client(seed), notes=notes, verify=verify, use_bandit=use_bandit).scan(Path(tmp))
+                res = Scanner(make_client(seed), notes=notes, verify=verify, use_bandit=use_bandit,
+                              use_examples=use_examples).scan(Path(tmp))
             scores = {st: score_case(case, res.stages[st]) for st in STAGES}
             runs.append({"case": case.id, "seed": seed, "scores": scores, "stages": res.stages,
                          "dropped": res.dropped, "meta": res.meta})
             progress(f"{case.id} seed={seed} final={scores['final']} calls={res.meta['llm_calls']}")
-    return {"seeds": seeds, "verify": verify, "bandit": use_bandit, "notes": notes,
+    return {"seeds": seeds, "verify": verify, "bandit": use_bandit, "examples": use_examples, "notes": notes,
             "cases": [c.id for c in cases], "runs": runs}
 
 
@@ -43,7 +45,8 @@ def summarize(result: dict, model: str) -> str:
     lines = [f"# Blue gym evaluation: {model}", "",
              f"{len(result['cases'])} cases ({len(clean) // len(result['seeds'])} clean, "
              f"{len(vuln) // len(result['seeds'])} injected), seeds {result['seeds']}, verify "
-             f"{'on' if result['verify'] else 'off'}, bandit {'on' if result['bandit'] else 'off'}. "
+             f"{'on' if result['verify'] else 'off'}, bandit {'on' if result['bandit'] else 'off'}, examples "
+             f"{'on' if result.get('examples', True) else 'off'}. "
              "n is small: a direction, not proof.", "",
              "| stage | strict recall | function recall | CWE-only | clean runs with a false signal | findings per clean run | extras per injected run |",
              "|---|---|---|---|---|---|---|"]

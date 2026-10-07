@@ -31,6 +31,8 @@ def add_model_options(p: argparse.ArgumentParser) -> None:
     p.add_argument("--think", choices=["off", "on", "auto"], default="off")
     p.add_argument("--no-verify", action="store_true", help="skip the refutation step")
     p.add_argument("--no-bandit", action="store_true", help="do not use Bandit")
+    p.add_argument("--no-examples", action="store_true",
+                    help="do not add the curated few-shot examples to the detect prompt (for before/after comparison)")
     p.add_argument("--no-cache", action="store_true")
     p.add_argument("--cache", default=".cache/llm")
 
@@ -57,7 +59,8 @@ def main(argv: list[str] | None = None, client_factory=None) -> int:
         if not target.exists():
             print(f"no such path: {target}", file=sys.stderr)
             return 2
-        scanner = Scanner(factory(args, args.seed), notes=args.notes, verify=not args.no_verify, use_bandit=not args.no_bandit)
+        scanner = Scanner(factory(args, args.seed), notes=args.notes, verify=not args.no_verify,
+                          use_bandit=not args.no_bandit, use_examples=not args.no_examples)
         result = scanner.scan(target)
         md = report.to_markdown(result, str(target))
         if args.out:
@@ -70,7 +73,8 @@ def main(argv: list[str] | None = None, client_factory=None) -> int:
 
     out = Path(args.out or f"eval/results/{date.today():%Y%m%d}-blue-gym-{args.model.replace(':', '_').replace('/', '_')}")
     result = evaluate.run_eval(lambda seed: factory(args, seed), args.seeds, args.apps,
-                               verify=not args.no_verify, use_bandit=not args.no_bandit)
+                               verify=not args.no_verify, use_bandit=not args.no_bandit,
+                               use_examples=not args.no_examples)
     evaluate.write(result, args.model, out)
     print(evaluate.summarize(result, args.model))
     print("written:", out)

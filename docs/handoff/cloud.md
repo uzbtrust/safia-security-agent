@@ -79,3 +79,25 @@ umumiy bo'shliq: **bank/CWE-840** (manfiy o'tkazma summasi) — ikkala modelda 0
 LOCAL uchun ta'sir yo'q (faqat tahlil, promptlarga tegilmadi). Qadam 4 (few-shot xotira) endi shu bo'shliqni
 nishonga oladi: bank/CWE-840 va shunga o'xshash "removed/weakened business-logic check" holatlari uchun misol.
 Ochiq savol (LOCAL uchun, shart emas): `qwen3.5:9b` endi diskdan o'chirilsin (model tanlovi yakunlandi, `ollama rm`).
+
+## 2026-10-07 — CLOUD → LOCAL (4-qadam: few-shot misollar qo'shildi, oldin/keyin run kerak)
+Bajarildi: `src/safia_sec/blue/fewshot.py` — detect prompt'ga 3 ta qo'lda yozilgan, **gym ilovalaridan nusxa
+olinmagan** (original) zaiflik-pattern misoli qo'shildi: (1) bank/CWE-840 bo'shlig'iga mo'ljallangan "abs() bilan
+tuzatilgan lekin hali zaif" misoli, (2) removed ownership check (IDOR), (3) boshqa shakldagi SQLi (bir CWE'ga
+emas, patternga o'rgatish uchun). `[cross]` `src/safia_sec/prompts/detect.md`ga bitta `{examples}` joy
+belgisi qo'shdim (1 qator, `{notes}Reply` → `{notes}{examples}Reply`); boshqa matn tegilmagan.
+Yoqish/o'chirish: CLI'da `--no-examples` (yangi flag, `scan` va `eval-gym`da ham bor). **Muhim:** `--no-examples`
+bergan holat eski (2026-10-07'dan oldingi) prompt matnini aynan takrorlaydi, shuning uchun u `.cache/llm`dagi
+eski yozuvlardan **bepul** o'qiydi — faqat misollar YOQILGAN tomoni yangi model chaqiruvi talab qiladi.
+59 test yashil (3 yangi: misollar prompt'da bor/yo'q, CLI flag). Promptning o'zi (`detect.md` matni) o'zgartirilmadi,
+faqat bo'sh joy belgisi qo'shildi — `{examples}` bo'sh bo'lsa chiqish aynan avvalgidek.
+LOCAL nima qilsin (gemma4:12b bilan, xuddi 2026-10-07 dev gym kabi sozlamalar, shop+bank, seed 1 2 3):
+1. `git fetch origin && git merge origin/claude/wizardly-curie-34voig`; `pip install -e ".[dev]"`; `pytest -q`
+   (59 o'tishi kerak, Mac'da netns yo'qligi sababli balki 58 + 1 skip).
+2. Baseline (deyarli bepul, keshdan): `safia-sec eval-gym --model gemma4:12b --apps shop bank --seeds 1 2 3 --no-examples --out eval/results/20261007-blue-gym-gemma4_12b-noex`
+3. Misollar bilan (yangi chaqiruvlar kerak): `safia-sec eval-gym --model gemma4:12b --apps shop bank --seeds 1 2 3 --out eval/results/20261007-blue-gym-gemma4_12b-fewshot`
+4. Ikkalasini solishtiring: ayniqsa bank/CWE-840 qatori (18/21 → nechaga o'zgardi) va toza ilovadagi soxta signal
+   (misol bir CWE'ni haddan tashqari ko'p chaqirtirib yubormasligini tekshiring). Push qiling, handoff'ga 3-5 qator
+   raqam bilan yozing (to'qimasdan, result.json'dan).
+Ochiq savol yo'q; promptga tegmadim, faqat bo'sh joy qo'shdim — agar `detect.md` matnini keyin siz o'zgartirsangiz,
+`{examples}` qatorini saqlang (aks holda misollar jim tushib qoladi, xato chiqmaydi).

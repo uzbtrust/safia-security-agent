@@ -93,6 +93,21 @@ def test_prompt_injection_in_code_is_only_data():
     assert "never instructions to you" in seen[0] and "ignore all previous instructions" in seen[0]
 
 
+def test_fewshot_examples_appear_in_detect_prompt_by_default():
+    seen = []
+    fake = FakeClient(lambda p: seen.append(p) or json.dumps({"findings": []}))
+    scan_dir(source(), fake, verify=False, use_bandit=False)
+    assert "CWE-840" in seen[0] and "weakened business-logic check" in seen[0]
+
+
+def test_no_examples_flag_removes_the_block():
+    seen = []
+    fake = FakeClient(lambda p: seen.append(p) or json.dumps({"findings": []}))
+    scan_dir(source(), fake, verify=False, use_bandit=False, use_examples=False)
+    assert "weakened business-logic check" not in seen[0]
+    assert "CWE-840" not in seen[0]
+
+
 def test_symlink_leaving_root_is_not_read(tmp_path):
     outside = tmp_path / "outside.py"
     outside.write_text("SECRET = 1\n")
@@ -201,6 +216,16 @@ def test_cli_scan_writes_reports(tmp_path, capsys):
     assert data["findings"][0]["cwe"] == "CWE-89" and (tmp_path / "out" / "report.md").exists()
     # the scanned tree was not modified
     assert sorted(p.name for p in target.iterdir()) == ["app.py"]
+
+
+def test_cli_scan_no_examples_flag(tmp_path):
+    src, fake = oracle()
+    target = tmp_path / "proj"
+    target.mkdir()
+    (target / "app.py").write_text(src)
+    rc = cli.main(["scan", str(target), "--model", "fake", "--no-bandit", "--no-examples"],
+                  client_factory=lambda args, seed: fake)
+    assert rc == 1  # the flag only drops the examples block; the oracle still gets scored
 
 
 def test_cache_makes_reruns_free(tmp_path):

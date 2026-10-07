@@ -23,6 +23,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Iterator
 
+from . import fewshot
 from .llm import ChatClient, LLMError
 
 PROMPTS = Path(__file__).resolve().parents[1] / "prompts"
@@ -211,12 +212,16 @@ def run_bandit(root: Path) -> list[dict]:
 # ------------------------------------------------------------------------------------------------ scanner
 class Scanner:
     def __init__(self, client: ChatClient, notes: str = "", verify: bool = True, use_bandit: bool = True,
-                 max_lines: int = 220):
+                 max_lines: int = 220, use_examples: bool = True):
         self.client, self.notes, self.verify, self.use_bandit, self.max_lines = client, notes.strip(), verify, use_bandit, max_lines
+        self.use_examples = use_examples
         self.detect_prompt, self.verify_prompt = load_prompt("detect"), load_prompt("verify")
 
     def _notes_block(self) -> str:
         return f"- Project notes (from the maintainers): {self.notes}\n" if self.notes else ""
+
+    def _examples_block(self) -> str:
+        return fewshot.block() if self.use_examples else ""
 
     def scan(self, root: Path) -> ScanResult:
         root = Path(root).resolve()
@@ -226,6 +231,7 @@ class Scanner:
         dropped: list[dict] = []
         meta = {"model": self.client.model, "files": len(files), "llm_calls": 0, "prompt_tokens": 0,
                 "gen_tokens": 0, "wall_s": 0.0, "errors": [], "verify": self.verify, "bandit": self.use_bandit,
+                "examples": self.use_examples,
                 "prompt_sha": hashlib.sha256((self.detect_prompt + self.verify_prompt).encode()).hexdigest()[:12]}
         bandit = run_bandit(root) if self.use_bandit else []
         results: list[Finding] = []
@@ -235,7 +241,8 @@ class Scanner:
             source = path.read_text(errors="replace")
             candidates: list[Finding] = []
             for start, end in chunk_ranges(source, self.max_lines):
-                prompt = self.detect_prompt.format(file=rel, notes=self._notes_block(), numbered=numbered(source, start, end))
+                prompt = self.detect_prompt.format(file=rel, notes=self._notes_block(), examples=self._examples_block(),
+                                                   numbered=numbered(source, start, end))
                 try:
                     reply = self.client.chat(prompt, DETECT_SCHEMA)
                     self._account(meta, reply)
