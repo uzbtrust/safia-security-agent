@@ -101,3 +101,27 @@ LOCAL nima qilsin (gemma4:12b bilan, xuddi 2026-10-07 dev gym kabi sozlamalar, s
    raqam bilan yozing (to'qimasdan, result.json'dan).
 Ochiq savol yo'q; promptga tegmadim, faqat bo'sh joy qo'shdim — agar `detect.md` matnini keyin siz o'zgartirsangiz,
 `{examples}` qatorini saqlang (aks holda misollar jim tushib qoladi, xato chiqmaydi).
+
+## 2026-10-07 — CLOUD → LOCAL (4-qadam 1-raund + RealVuln; YUQORIDAGI yozuv o'rniga shu bajariladi)
+Foydalanuvchi bilan kelishuv: few-shot ko'pi bilan 2 raund, faqat dev dalili bilan; keyin muzlatish; yakuniy test bir marta;
+LoRA qarori eng oxirida. Protokol run'dan OLDIN `docs/EXPERIMENTS.md` ("Step 4 protocol", "RealVuln") ga yozildi.
+Bajarildi (`[cross]`, foydalanuvchi so'rovi bilan): `prompts/detect.md` qayta yozildi (CWE ro'yxati — gemma bank/CWE-840 ni
+to'g'ri funksiyada topgan, lekin CWE-606/603 deb belgilagan edi; "himoyalangan kod topilma emas" qoidasi; qaysi qatorni
+ko'rsatish), `verify.md`ga `{examples}`. `blue/fewshot.py` — 4 ta "zaif / himoyalangan" juftlik (gym yoki benchmark kodi emas).
+Test fayllari va migrations sukut bo'yicha o'tkaziladi (`--include-tests`). Topilma limiti 12, javob limiti 2048 token.
+RealVuln: `targets/realvuln/split.json` (sha256 juft/toq → dev/test, keyin LOC byudjeti; dev = 6 repo, 91 zaiflik + 16 tuzoq),
+`scripts/realvuln_fetch.py`, `safia-sec eval-realvuln`. Skorlash RealVuln matcher qoidalari bilan (fayl + CWE + qator ±10,
+mos kelmagan topilma = FP), asosiy metrika F3. Adapter tekshiruvi: dev ground truth'ni topilma sifatida bersak TP 91/91, FP 0.
+74 test yashil. Promptlar o'zgargani uchun eski kesh ishlamaydi (kutilgan).
+LOCAL nima qilsin (gemma4:12b; ilovalarni yoping; uzun run'lar uchun `caffeinate -i` Mac uxlab qolmasligi uchun):
+1. `git fetch origin && git merge origin/claude/wizardly-curie-34voig`; `pip install -e ".[dev]"`; `pytest -q` (74 o'tishi kerak;
+   macOS'da netns yo'qligi sababli 1 ta skip bo'lishi mumkin).
+2. `python scripts/realvuln_fetch.py --split dev` (≈10 s, ≈14 MB; faqat o'qish, kod ishga tushirilmaydi).
+3. Gym dev: `caffeinate -i safia-sec eval-gym --model gemma4:12b --apps shop bank --seeds 1 2 3` (taxmin 35–45 daq, o'lchanmagan).
+4. RealVuln dev: `caffeinate -i safia-sec eval-realvuln --model gemma4:12b --split dev` (taxmin 1–2 soat, o'lchanmagan: 37 chunk,
+   har biriga 1 detect + bir nechta verify chaqiruvi).
+5. Vaqt bo'lsa (tavsiya, majburiy emas): xuddi shu 4-buyruq `--no-examples` bilan (few-shot gym tashqarisida yordam beradimi?).
+   Gym `--no-examples` ixtiyoriy.
+6. Natijalarni push qiling; handoff'ga har run uchun 3–5 qator (raqamlar faqat result.json/summary.md dan, to'qimasdan):
+   gym (function recall, located, clean false signal), RealVuln (TP/FP/FN, precision, recall, F3, stratum bo'yicha, xatolar soni).
+TAQIQ: `blog` (gym test) va RealVuln `--split test` ishga tushirilmaydi — ular muzlatishdan keyin bir marta.

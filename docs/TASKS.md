@@ -14,9 +14,10 @@
 | 1 | Toza ilova + hakam + 3 CWE shablon + testlar + Bandit baseline | CLOUD | tayyor | [x] |
 | 2 | **Go/no-go:** Red ishlaydimi? API Red: GLM 13/30, DeepSeek 11/30 hakamdan o'tdi (lokal 7B Red shart emas) | LOCAL + CLOUD | 1–3-okt | [x] |
 | 3 | **Blue v0 (mahsulot):** `safia-sec scan` + `eval-gym` yozildi, 56 test yashil (mock). Real dev eval: gemma4:12b function recall 18/21, qwen3.5:9b 1/21 (verifier o'zini-o'ziga zarar qildi) → **gemma4:12b tanlandi** | CLOUD kod, LOCAL run | 3–5-okt | [x] |
-| 4 | O'rganish: Blue xatolari → few-shot xotira (`src/safia_sec/blue/fewshot.py`, `--no-examples` bilan yoqiladi/o'chiriladi); oldin/keyin jadval LOCAL'da kutilmoqda; LoRA ixtiyoriy (8-okt qaror) | CLOUD kod, LOCAL run | 6–8-okt | [~] ← **hozir shu** |
-| 5 | Transfer: begona lokal zaif ilova/benchmark'da (RealVuln yoki Juice Shop qismi) oldin/keyin; kodni muzlatish 11-okt kechqurun | LOCAL (+ CLOUD adapter) | 9–11-okt | [ ] |
-| 6 | Yakuniy baholash: muzlatilgan kod, test to'plamida **bir marta** | LOCAL | 12-okt | [ ] |
+| 4 | Few-shot yaxshilash, **ko'pi bilan 2 raund**: 1-raund kodi tayyor (CWE ro'yxati, himoyalangan kod qoidasi, few-shot juftliklari, test fayllari o'tkaziladi) → LOCAL: gym dev + RealVuln dev run → 2-raund → muzlatish | CLOUD kod, LOCAL run | 7–10-okt | [~] ← **hozir shu** |
+| 5 | Begona benchmark: **RealVuln** (Python, Apache-2.0), repo bo'yicha mexanik bo'linish (`targets/realvuln/split.json`); adapter tayyor (`safia-sec eval-realvuln`); test qismi `--final`siz ochilmaydi | CLOUD (tayyor) | 7-okt | [x] |
+| 6 | Yakuniy baholash: muzlatilgan kod, blog + RealVuln test'da **bir marta** (misollar bilan va `--no-examples` bilan) | LOCAL | 11–12-okt | [ ] |
+| 6b | LoRA qarori: faqat 6-qadam natijalari muzlagandan keyin (vaqt bo'lsa) | SIZ | 12-okt | [ ] |
 | 7 | README (agent birinchi), EXPERIMENTS (muvaffaqiyatsizlar bilan), demo, email | SIZ + CLOUD | 13–14-okt | [ ] |
 
 Muddat 15-okt, topshirish maqsadi 14-okt.

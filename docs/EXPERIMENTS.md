@@ -104,6 +104,8 @@ clean app, passes on the patched one and the functional tests stay green. *Blue*
 - Run settings: same as the gym (T=0.7, ctx 8192, thinking off, verifier and Bandit on), seed 1 only (each
   repo has many labels), no project notes (the gym's notes would suppress classes RealVuln scores, such as
   missing rate limiting and CSRF).
+- Adapter check (cloud, no model): feeding the dev ground truth itself as findings scores TP 91/91, FP 0; the
+  test half is locked in code (`--final` required).
 
 ### Gym diagnostic added before round 1
 - **Located** (diagnostic, not a hit): any finding inside the function of the injected bug, whatever its CWE.

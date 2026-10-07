@@ -2,6 +2,7 @@
 
   safia-sec scan <path> --model gemma4:12b --out report/
   safia-sec eval-gym --model gemma4:12b --seeds 1 2 3 --out eval/results/<run>/
+  safia-sec eval-realvuln --model gemma4:12b --split dev
 """
 from __future__ import annotations
 
@@ -11,7 +12,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from .blue import evaluate, report
+from .blue import evaluate, realvuln, report
 from .blue.llm import CachedClient, OllamaClient
 from .blue.scanner import Scanner
 
@@ -52,8 +53,32 @@ def main(argv: list[str] | None = None, client_factory=None) -> int:
     ev.add_argument("--apps", nargs="+", choices=["shop", "bank", "blog"])
     ev.add_argument("--out")
     add_model_options(ev)
+    rv = sub.add_parser("eval-realvuln", help="measure Blue on the pre-registered RealVuln split")
+    rv.add_argument("--split", choices=["dev", "test"], required=True)
+    rv.add_argument("--final", action="store_true", help="required for the test half (run once, after the freeze)")
+    rv.add_argument("--data", default=".cache/realvuln", help="output of scripts/realvuln_fetch.py")
+    rv.add_argument("--seed", type=int, default=1)
+    rv.add_argument("--out")
+    add_model_options(rv)
     args = ap.parse_args(argv)
     factory = client_factory or default_client
+
+    if args.cmd == "eval-realvuln":
+        settings = realvuln.Settings(verify=not args.no_verify, use_bandit=not args.no_bandit,
+                                     use_examples=not args.no_examples, include_tests=args.include_tests)
+        try:
+            result = realvuln.run(lambda seed: factory(args, seed), args.split, Path(args.data), args.seed,
+                                  settings, final=args.final, progress=lambda s: print(s, flush=True))
+        except realvuln.SplitLocked as exc:
+            print(exc, file=sys.stderr)
+            return 2
+        tag = "" if settings.use_examples else "-noex"
+        out = Path(args.out or f"eval/results/{date.today():%Y%m%d}-realvuln-{args.split}-"
+                               f"{args.model.replace(':', '_').replace('/', '_')}{tag}")
+        realvuln.write(result, args.model, out)
+        print(realvuln.summarize(result, args.model))
+        print("written:", out)
+        return 0
 
     if args.cmd == "scan":
         target = Path(args.path)
@@ -73,10 +98,11 @@ def main(argv: list[str] | None = None, client_factory=None) -> int:
         print(md)
         return 1 if result.findings else 0
 
-    out = Path(args.out or f"eval/results/{date.today():%Y%m%d}-blue-gym-{args.model.replace(':', '_').replace('/', '_')}")
+    tag = "-noex" if args.no_examples else ""
+    out = Path(args.out or f"eval/results/{date.today():%Y%m%d}-blue-gym-{args.model.replace(':', '_').replace('/', '_')}{tag}")
     result = evaluate.run_eval(lambda seed: factory(args, seed), args.seeds, args.apps,
                                verify=not args.no_verify, use_bandit=not args.no_bandit,
-                               use_examples=not args.no_examples)
+                               use_examples=not args.no_examples, progress=lambda s: print(s, flush=True))
     evaluate.write(result, args.model, out)
     print(evaluate.summarize(result, args.model))
     print("written:", out)
