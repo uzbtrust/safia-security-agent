@@ -186,3 +186,10 @@ kodini yuklaydi), qoida Mac r1 natijasini 0.459 deb qayta hisoblaydi. GPU qismi 
 9. Handoff: GPU nomi va soni, digest mos keldimi, vaqt va narx, r1/r2 GPU F3 (+ Mac r1 0.459 bilan farq), g'olib;
    B: blog (function recall, located, toza ilovada soxta signal) va RealVuln test (TP/FP/FN, P, R, F3, stratum bo'yicha)
    — ikki qo'l (misollar bilan / `--no-examples`); xatolar soni. Raqamlar faqat result.json/summary.md dan.
+
+## 2026-10-08 — CLOUD (yakuniy hujjatlar)
+Merge `local/dev` (8951558). Natijalar fayllar bilan tekshirildi (`step4-freeze` dan keyin `src/` o'zgarmagan). Qo'shildi:
+Bandit baseline RealVuln'da (`scripts/bandit_realvuln.py`, `eval/baselines/realvuln_bandit.*`; test F3 0.14 / 0.16, CPU'da,
+muzlatishdan keyin, Blue'ga tegilmagan). Yozildi: `README.md`, `docs/EXPERIMENTS.md` (yakuniy natijalar + H1–H7 xulosalari),
+`docs/LIMITATIONS.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/DECISIONS.md`. Har raqam `eval/` fayllaridan.
+LOCAL uchun ish yo'q. Keyingi: foydalanuvchi bilan LoRA muhokamasi; demo va topshirish.

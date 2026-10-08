@@ -168,3 +168,68 @@ The only evidence so far is the shop-only probe (9 injected runs per model: stri
 2. Inside that gap: fewer clean runs that keep a false signal at the `final` stage, then fewer findings per clean run.
 3. Still tied: faster end to end (model seconds per run, `meta.wall_s`).
 The winner becomes the default model of `safia-sec`; the other is removed from the machine and stays in this log as the H4 comparison. Memory (+10.8 GB wired for gemma4:12b, +6.8 GB for qwen3.5:9b) is not a criterion; it goes to LIMITATIONS. With n this small the outcome is a direction, not proof.
+
+## Final results (frozen at tag `step4-freeze`, each test run once, 2026-10-08)
+Machine: one rented node with 2x RTX 3090, Ollama 0.40.1, gemma4:12b digest `6114515d63c1` (same as the Mac
+runs). Sources: `eval/results/20261008-*`, `eval/baselines/realvuln_bandit.*`.
+
+**Freeze (RealVuln dev, same machine):** round 1 TP 37 / FP 9 / FN 54, F3 0.428; round 2 TP 53 / FP 11 / FN 38,
+F3 0.600 -> round 2 frozen (`20261008-step4-freeze-gpu/decision.json`).
+
+**RealVuln test** (4 repos, 80 vulnerabilities, 14 traps; seed 1):
+
+| system | TP | FP | FN | precision | recall (95% CI) | F3 |
+|---|---|---|---|---|---|---|
+| Blue, frozen (with few-shot) | 31 | 9 | 49 | 0.78 | 0.39 (0.29-0.50) | **0.41** |
+| Blue, frozen, `--no-examples` | 30 | 13 | 50 | 0.70 | 0.38 (0.28-0.48) | 0.39 |
+| Bandit, MEDIUM+ | 10 | 8 | 70 | 0.56 | 0.12 | 0.14 |
+| Bandit, all results | 12 | 11 | 68 | 0.52 | 0.15 | 0.16 |
+
+By stratum (Blue with few-shot): human-authored repos F3 0.27 (P 0.73, R 0.26), LLM-generated repo F3 0.56
+(P 0.80, R 0.54). Without few-shot: 0.32 and 0.47. Stages (with few-shot): raw 34/8/46 F3 0.45 -> final
+31/9/49 F3 0.41. The verified stage also adds Bandit-only candidates: with few-shot, the final list holds 2 of
+them, both FP; the model's own findings are 31 TP / 7 FP.
+
+**Gym test (`blog`, 4 injected cases x 3 seeds + clean x 3):**
+
+| arm | function recall | strict recall | clean runs with a false signal |
+|---|---|---|---|
+| with few-shot | 6/12 (0.25-0.75) | 9/12 | 3/3 |
+| `--no-examples` | 11/12 (0.65-0.99) | 11/12 | 3/3 |
+
+Per case with few-shot: CWE-79 3/3, CWE-915 3/3, CWE-601 strict 3/3 but function 0/3 (all three point at the
+`@app.get("/go")` decorator, one line above the function, as the round-2 prompt asked for endpoint-level
+issues), CWE-330 0/3 (only CWE-307 reported for the reset handler). The clean-app false signals are CWE-307
+(no brute-force protection) on the reset endpoints, which the gym notes declare out of scope; without
+few-shot also CWE-601 on the guarded redirect and CWE-204.
+
+### Verdicts on the pre-registered hypotheses (small n: directions, not proof)
+- **H1 (beats Bandit): supported.** Gym dev 18/21 function recall vs Bandit 2/7 on the same cases; RealVuln
+  test F3 0.41 vs 0.14-0.16, with higher precision (0.78 vs 0.52-0.56) and 2.6-3.3x the recall.
+- **H2 (grounding lowers false signals without costing recall): partly.** Never removed a true hit on the gym
+  (2026-10-07 run); on RealVuln it removed hallucinated quotes but also cost a few TP (test: 34 -> 33), and in
+  round 1 a too-broad dedupe cost two more (fixed in round 2).
+- **H3 (verifier removes >= 30% of false signals for <= 10 points of recall): supported on the gym, not on
+  RealVuln.** Gym dev round 1: 5/5 clean findings and 3/3 extras removed, 21/21 true hits kept. RealVuln test:
+  the verified stage lowered F3 (0.43 -> 0.41): the verifier rejected 2 TP and none of the 7 model FPs, and 2
+  Bandit-only FPs were added. qwen3.5:9b showed the failure mode the hypothesis warned of
+  (its own verifier rejected 9/10 true hits).
+- **H4 (gemma4:12b higher recall, qwen3.5:9b about 2x faster): recall yes (18/21 vs 1/21); speed only 1.4x.**
+- **H5 (few-shot improves recall on held-out apps): not supported.** Blog: 6/12 with vs 11/12 without.
+- **H6 (gain transfers to the external benchmark): not supported.** RealVuln test F3 0.41 vs 0.39, recall 0.39
+  vs 0.38: inside the noise (next item).
+- **H7 (LoRA): not run.**
+
+### What the numbers say beyond the hypotheses
+- **Noise floor.** The same frozen-in-round-1 configuration scored F3 0.459 on the Mac and 0.428 on the GPU node
+  (same weights, same seed; 4 of 6 repos gave identical counts). Differences of about 0.03 F3 on one seed are
+  not meaningful.
+- **Dev optimism.** Round 2 was written from the RealVuln dev misses: dev F3 0.600, test F3 0.41. The gym went
+  from 21/21 (dev) to 6/12 (blog). The test numbers are the ones to quote.
+- **Where the gain came from.** Round 1 -> round 2 on the same machine raised dev F3 from 0.428 to 0.600. Both
+  test arms carry those prompt and pipeline changes; only the few-shot block differs between them, and it
+  made no measurable difference. The improvement that holds up is the instruction-level change (report every
+  issue per handler, CWE menu) plus pipeline fixes, not the examples.
+- **No sign of memorization.** The 2026 LLM-generated test repo (F3 0.56) scored higher than the older,
+  public human-authored apps (0.27), the opposite of what memorized training data would produce.
+- **Dense files stay hard.** `dsvw` (27 labels in one 93-line file): 8 raw findings, recall 0.19.

@@ -14,11 +14,11 @@
 | 1 | Toza ilova + hakam + 3 CWE shablon + testlar + Bandit baseline | CLOUD | tayyor | [x] |
 | 2 | **Go/no-go:** Red ishlaydimi? API Red: GLM 13/30, DeepSeek 11/30 hakamdan o'tdi (lokal 7B Red shart emas) | LOCAL + CLOUD | 1–3-okt | [x] |
 | 3 | **Blue v0 (mahsulot):** `safia-sec scan` + `eval-gym` yozildi, 56 test yashil (mock). Real dev eval: gemma4:12b function recall 18/21, qwen3.5:9b 1/21 (verifier o'zini-o'ziga zarar qildi) → **gemma4:12b tanlandi** | CLOUD kod, LOCAL run | 3–5-okt | [x] |
-| 4 | Few-shot yaxshilash, **ko'pi bilan 2 raund**. 1-raund: gym dev 21/21, RealVuln dev F3 0.459 (R 0.44, P 0.77). 2-raund kodi tayyor (`e0c88de`) → LOCAL Vast GPU'da bitta skript (`scripts/vast_final.sh`): r1 va r2 RealVuln dev → qoida → muzlatish (`step4-freeze`) → yakuniy test | CLOUD kod, LOCAL run | 7–9-okt | [~] ← **hozir shu** |
+| 4 | Few-shot yaxshilash, 2 raund. GPU'da bir mashinada: r1 F3 0.428, r2 F3 0.600 → **r2 muzlatildi** (`step4-freeze` = 0a3580c) | CLOUD kod, LOCAL run | 7–8-okt | [x] |
 | 5 | Begona benchmark: **RealVuln** (Python, Apache-2.0), repo bo'yicha mexanik bo'linish (`targets/realvuln/split.json`); adapter tayyor (`safia-sec eval-realvuln`); test qismi `--final`siz ochilmaydi | CLOUD (tayyor) | 7-okt | [x] |
-| 6 | Yakuniy baholash: muzlatilgan kod, blog + RealVuln test'da **bir marta** (misollar bilan va `--no-examples` bilan) | LOCAL | 11–12-okt | [ ] |
-| 6b | LoRA qarori: faqat 6-qadam natijalari muzlagandan keyin (vaqt bo'lsa) | SIZ | 12-okt | [ ] |
-| 7 | README (agent birinchi), EXPERIMENTS (muvaffaqiyatsizlar bilan), demo, email | SIZ + CLOUD | 13–14-okt | [ ] |
+| 6 | Yakuniy baholash (bir marta): RealVuln test F3 0.41 (P 0.78, R 0.39; `--no-examples` 0.39), Bandit 0.14–0.16; blog function 6/12 (`--no-examples` 11/12) | LOCAL (Vast GPU) | 8-okt | [x] |
+| 6b | LoRA qarori: hujjatlardan keyin muhokama | SIZ | 9-okt | [ ] ← **keyingi** |
+| 7 | README, EXPERIMENTS (yakuniy), LIMITATIONS, ARCHITECTURE, THREAT_MODEL, DECISIONS — CLOUD yozdi; siz o'qib tasdiqlaysiz; demo video, topshirish xati | SIZ + CLOUD | 8–14-okt | [~] |
 
 Muddat 15-okt, topshirish maqsadi 14-okt.
 
