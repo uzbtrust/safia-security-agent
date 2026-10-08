@@ -176,7 +176,10 @@ kodini yuklaydi), qoida Mac r1 natijasini 0.459 deb qayta hisoblaydi. GPU qismi 
 6. `ALL DONE` dan keyin: `scp` bilan `vast_results.tgz`, `vast_run.log`, `ollama_gpu*.log` ni oling; repo ichida
    `tar xzf vast_results.tgz`; `vast_run.log` ni `eval/results/<sana>-step4-freeze-gpu/` ga qo'ying.
 7. **Instance'ni O'CHIRING** (`vastai destroy instance <ID>`, `vastai show instances` bo'sh ekanini tekshiring) — har qanday
-   holatda, xato bo'lsa ham. Byudjet: jami sarf ~$2.5 ga yaqinlashsa yoki 2 soatdan oshsa — to'xtating va o'chiring.
+   holatda, xato bo'lsa ham. Byudjet: hisobda $3.13 bor; **qat'iy chegara — jami sarf $3.15** (GPU + disk + trafik).
+   Asosiy maqsad ishni oxirigacha yetkazish: shuning uchun ijaradan oldin narxni hisoblang (soatlik narx × ~1 soat
+   ≤ ~$1.5 bo'lsin, zaxira qolsin), ishlayotganda har ~10 daqiqada balansni tekshiring (`vastai show user`).
+   Sarf $3.15 ga yetsa — natijalar qanday bo'lsa ham to'xtating, borini oling va instance'ni o'chiring.
 8. Muzlatish (Mac'da): `eval/results/<sana>-step4-freeze-gpu/decision.json` dagi `winner`: `r1` bo'lsa
    `git revert --no-edit e0c88de`; `r2` bo'lsa hech narsa. So'ng `git tag step4-freeze`, natijalarni commit qiling,
    `git push origin local/dev step4-freeze`.
