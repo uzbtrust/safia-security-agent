@@ -125,3 +125,31 @@ LOCAL nima qilsin (gemma4:12b; ilovalarni yoping; uzun run'lar uchun `caffeinate
 6. Natijalarni push qiling; handoff'ga har run uchun 3–5 qator (raqamlar faqat result.json/summary.md dan, to'qimasdan):
    gym (function recall, located, clean false signal), RealVuln (TP/FP/FN, precision, recall, F3, stratum bo'yicha, xatolar soni).
 TAQIQ: `blog` (gym test) va RealVuln `--split test` ishga tushirilmaydi — ular muzlatishdan keyin bir marta.
+
+## 2026-10-08 — CLOUD → LOCAL (4-qadam 2-raund; muzlatish va yakuniy test tartibi)
+Merge: `local/dev` (06103d0). 1-raund tahlili va 2-raund `docs/EXPERIMENTS.md`da (run'dan OLDIN yozildi).
+Asosiy topilma: RealVuln dev'dagi 51 FN'dan 32 tasida model 10 qator ichida BOSHQA zaiflikni aytgan — har handler'dan
+bitta (odatda injection) aytib, yonidagi "yo'q narsa"larni (rate limit, cookie flaglari, xato tafsilotlari) o'tkazgan.
+2-raund (`e0c88de`, bitta commit, `[cross]`): har funksiyadagi HAR BIR zaiflik; har handler nimasi yo'qligini tekshirish;
+"yo'q nazorat" def/route qatoriga; CWE aniqlashtirishlar; 5-few-shot misol (bitta handler, 3 topilma). Skaner tuzatishlari:
+dedupe ikki xil secret'ni birlashtirib yuborardi, Django `tests.py` skan qilinardi, JSON'dan keyingi matn xato berardi,
+topilma limiti 12 to'lgan edi (endi 16, javob 2560 token). Gym eslatmasiga: "X-User o'qimaydigan route'lar ochiq".
+77 test yashil. Promptlar o'zgargan, kesh ishlamaydi.
+
+### A sessiya — 2-raundni dev'da o'lchash va muzlatish (taxmin 75–90 daq; 1-raund 73 daq edi)
+1. `git fetch origin && git merge origin/claude/wizardly-curie-34voig`; `pip install -e ".[dev]"`; `pytest -q` (77; macOS'da 76 + 1 skip).
+2. `caffeinate -i safia-sec eval-realvuln --model gemma4:12b --split dev --out eval/results/20261008-realvuln-dev-gemma4_12b-r2`
+3. Qoida (mexanik, oldindan yozilgan). 1-raund final F3 = **0.459** (TP 40, FP 12, FN 51 dan hisoblangan).
+   r2 final F3 (`result.json` dagi TP/FP/FN dan, 3 xona aniqlikda) **> 0.459** → 2-raund muzlaydi.
+   **< 0.459** → `git revert --no-edit e0c88de` (1-raund qaytadi). **Aynan teng** → to'xtang, menga yozing (gym-dev bilan hal qilinadi).
+4. `git tag step4-freeze && git push origin local/dev step4-freeze`. Handoff'ga: r2 TP/FP/FN, P, R, F3 (stratum bo'yicha),
+   qaysi raund muzladi. Muzlatilgandan keyin `src/` va `prompts/` ga hech kim tegmaydi.
+
+### B sessiya — yakuniy test, BIR MARTA (taxmin 2–2.5 soat; muzlatilgan commit'da)
+5. `python scripts/realvuln_fetch.py --split test --final`
+6. Gym test (blog), ikki qo'l: `caffeinate -i safia-sec eval-gym --model gemma4:12b --apps blog --seeds 1 2 3 --out eval/results/<sana>-final-gym-blog-gemma4_12b`
+   va xuddi shu `--no-examples --out eval/results/<sana>-final-gym-blog-gemma4_12b-noex` (har biri ~17 daq).
+7. RealVuln test, ikki qo'l: `caffeinate -i safia-sec eval-realvuln --model gemma4:12b --split test --final --out eval/results/<sana>-final-realvuln-test-gemma4_12b`
+   va xuddi shu `--no-examples --out ...-noex` (har biri taxmin 50–65 daq).
+8. Hech narsani qayta ishga tushirmang va hech narsani sozlamang (natija yomon bo'lsa ham — bu halol natija). Push + handoff.
+Keyin men README / LIMITATIONS / EXPERIMENTS yakuniy matnini faqat shu fayllardagi raqamlar bilan yozaman.

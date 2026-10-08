@@ -107,6 +107,37 @@ clean app, passes on the patched one and the functional tests stay green. *Blue*
 - Adapter check (cloud, no model): feeding the dev ground truth itself as findings scores TP 91/91, FP 0; the
   test half is locked in code (`--final` required).
 
+### Round 1 results (dev only)
+- Gym dev (gemma4:12b, 3 seeds; `eval/results/20261007-blue-gym-gemma4_12b-step4r1/`): function recall 21/21
+  (2026-10-07 prompts: 18/21), strict 18/21 (16/21), bank/CWE-840 3/3 (0/3), clean runs with a false signal
+  0/6 (2/6). Caveats: the prompts were written after seeing the 2026-10-07 gaps, and the gym notes were
+  widened, so this is a dev-set improvement, not evidence of generalization. The gym dev split is now at its
+  ceiling and can no longer guide round 2.
+- RealVuln dev (seed 1; `eval/results/20261008-realvuln-dev-gemma4_12b/`): final TP 40, FP 12, FN 51,
+  precision 0.77, recall 0.44, **F3 0.46**; 0 of 16 traps flagged. Human-authored: P 0.93, R 0.48;
+  LLM-generated Django repo: P 0.60, R 0.38. Raw F3 0.50 > final 0.46: grounding/dedupe cost 3 TP, the
+  verifier 1 TP and removed 6 FP.
+- Failure analysis (cloud, from that `result.json` and the dev ground truth): of 51 missed labels, 32 had a
+  *different* final finding within 10 lines (one issue reported per handler, the absent controls next to it
+  skipped), 5 were found in raw output only, 14 were nowhere near a finding. Most missed: CWE-307 (5),
+  CWE-798 (4). Mislabels seen: SSTI as CWE-79, header injection as CWE-601, role bugs as CWE-639, a fixed
+  default password as CWE-256. Pipeline faults: dedupe merged two different hardcoded secrets two lines
+  apart (and an XSS/SSTI pair), the 12-finding cap was hit in one dense file, a Django `tests.py` was
+  scanned, one verifier reply had trailing text after valid JSON.
+
+### Round 2 (pre-registered 2026-10-08, before its run; commit "Round 2 of step 4")
+Changes, each tied to the analysis above: the detect prompt asks for every distinct issue per function and
+for what each handler is missing, says where absent controls are labelled (def line or route registration,
+as the dev labels do), and sharpens the CWE choices that cost hits (639 vs 862/863, 798 vs 256, 1336 vs 79,
+113, 209); one few-shot example shows a handler with three findings; dedupe merges only same line or same
+quote; `tests.py` skipped; JSON with trailing text accepted; finding cap 16, answer cap 2560 tokens; gym notes
+add "routes that never read X-User are public by design".
+**Freeze procedure (applies the rule above mechanically):** LOCAL runs RealVuln dev with round 2 (same
+settings). If its final F3 is higher than round 1's 0.459 (TP 40, FP 12, FN 51), round 2 is frozen; if lower,
+the round-2 commit is reverted and round 1 is frozen; an exact tie goes to the gym-dev function recall. The frozen commit is tagged
+`step4-freeze`. Then, once: gym test (`blog`, 3 seeds) and RealVuln test, each with and without
+`--no-examples`.
+
 ### Gym diagnostic added before round 1
 - **Located** (diagnostic, not a hit): any finding inside the function of the injected bug, whatever its CWE.
   It separates "found the spot but mislabelled it" from "did not find it".
