@@ -193,3 +193,31 @@ Bandit baseline RealVuln'da (`scripts/bandit_realvuln.py`, `eval/baselines/realv
 muzlatishdan keyin, Blue'ga tegilmagan). Yozildi: `README.md`, `docs/EXPERIMENTS.md` (yakuniy natijalar + H1–H7 xulosalari),
 `docs/LIMITATIONS.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/DECISIONS.md`. Har raqam `eval/` fayllaridan.
 LOCAL uchun ish yo'q. Keyingi: foydalanuvchi bilan LoRA muhokamasi; demo va topshirish.
+
+## 2026-10-08 — CLOUD → LOCAL (LoRA tajribasi, H7: bitta Vast sessiyasi)
+Protokol o'qitishdan OLDIN `docs/EXPERIMENTS.md` ("LoRA experiment") ga yozildi. Tayyor: `src/safia_sec/lora/data.py`,
+`scripts/lora_split.py` (→ `targets/realvuln/lora_train.json`, 28 repo, test bilan kod o'xshashligi ≤ 8.2%),
+`scripts/lora_build_data.py` (402 misol, 442 maqsad topilma, ~1.16M token, sha256 3055e51df897…; cloud'da qurildi),
+`scripts/lora_train.py` (QLoRA, gate va to'liq, merge), `scripts/vast_lora.sh` (hammasi bitta skriptda). 85 test yashil.
+GPU qismi (torch/transformers/peft/Ollama import) cloud'da SINALMAGAN — gate aynan shuni birinchi tekshiradi.
+**Foydalanuvchidan oldin kerak:** Hugging Face akkaunti; Gemma 4 litsenziyasini qabul qilish (fine-tune ruxsatini
+o'qib tasdiqlash); **faqat o'qish** huquqli token; `gemma4:12b` (Ollama) ga mos rasmiy instruction-tuned 12B
+checkpoint'ning HF repo id'si (taxmin qilmang: Ollama kutubxona sahifasi / HF'dagi rasmiy Google sahifasidan tekshiring).
+LOCAL qadamlari:
+1. Merge; `pytest -q` (85; macOS'da 84 + 1 skip).
+2. Vast: **1× 48 GB GPU** (RTX A6000 / A40 / L40S / RTX 6000 Ada), on-demand, disk ≥ 150 GB, RAM ≥ 64 GB,
+   internet ≥ 500 Mbps, CUDA ≥ 12.2, image: rasmiy `pytorch/pytorch` CUDA 12 runtime (torch tayyor bo'lsin), SSH.
+   Narx ≤ ~$0.6/soat. Taxmin (o'lchanmagan): 3–4 soat, ~$1.5–2.5. **Qat'iy chegara: shu sessiya uchun jami $5.**
+   Balans yetmasa ijaradan OLDIN to'ldiring.
+3. Kodni yuborish (`.git` bilan, `.venv`, `.cache`, `__pycache__` siz): oldingi kabi `rsync`.
+4. Ishga tushirish (token faqat muhitda, chop etilmaydi, diskka yozilmaydi):
+   `ssh ... "cd /workspace/safia && HF_TOKEN='<token>' BASE_HF='<repo id>' nohup bash scripts/vast_lora.sh > lora_run.log 2>&1 &"`
+5. Kuzatish: har ~10 daqiqada `tail -5 lora_run.log` va balans. Chiqish kodlari: 4 = gate o'tmadi (TO'XTANG — bu ham
+   natija: "urinildi, bloklandi" deb yoziladi), 5 = ma'lumot xeshi mos emas, 6 = konvertatsiya tekshiruvi o'tmadi
+   (test qismi ishlatilmaydi). Hech birida skriptni o'zgartirib qayta urinmang — menga yozing.
+   Infratuzilma xatosi (tarmoq, o'rnatish) bo'lsa — tuzatib qayta ishga tushirish mumkin (oldingi kabi).
+6. `ALL DONE` yoki to'xtagandan keyin: `lora_results.tgz` (bo'lsa), `lora_run.log`, `ollama.log` ni oling; repo ichida oching;
+   **instance'ni o'chiring** (`vastai destroy instance <ID> -y`), `vastai show instances` bo'sh bo'lsin.
+7. Foydalanuvchi HF tokenni bekor qiladi (revoke). Adapter og'irliklari repo'ga commit qilinmaydi.
+8. Natijalarni commit + push; handoff'ga: GPU, vaqt, narx, gate natijalari, o'qitish (qadam, oxirgi loss, vaqt),
+   konvertatsiya tekshiruvi, dev (3 qo'l) va test (2 qo'l) raqamlari — faqat fayllardan.

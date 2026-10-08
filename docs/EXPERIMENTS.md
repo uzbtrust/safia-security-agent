@@ -233,3 +233,46 @@ few-shot also CWE-601 on the guarded redirect and CWE-204.
 - **No sign of memorization.** The 2026 LLM-generated test repo (F3 0.56) scored higher than the older,
   public human-authored apps (0.27), the opposite of what memorized training data would produce.
 - **Dense files stay hard.** `dsvw` (27 labels in one 93-line file): 8 raw findings, recall 0.19.
+
+## LoRA experiment (H7, pre-registered 2026-10-08, before any training)
+**Question.** Does a QLoRA adapter trained on RealVuln-dev labels improve the frozen scanner on held-out code,
+compared with *the same base weights without the adapter, converted the same way*?
+The shipped default stays the frozen Ollama `gemma4:12b` whatever the outcome; the LoRA model is an
+experimental variant.
+
+**Data** (`src/safia_sec/lora/data.py`, `scripts/lora_build_data.py`, list in `targets/realvuln/lora_train.json`):
+- Repos: the RealVuln dev half minus the 6 dev-evaluation repos = 28 repos. Rule: also drop any repo whose
+  distinctive code lines overlap the selected test repos by more than 10%; measured maximum 8.2%, none dropped.
+- Seeding hubs excluded: a file with more than 16 labels (24 files; every LLM-generated repo has one, the
+  test LLM repo too). Training on them would teach the benchmark's seeding template.
+- One example per detect call, byte-identical to the frozen scanner's prompt (a unit test checks this);
+  answer = the labels as the scanner's JSON (evidence = a quotable line of the label, so every target passes
+  grounding; explanation = the label's description cut to 300 characters).
+- All 201 labelled chunks, all 50 chunks holding a false-positive trap (answer: no findings), 151 sampled
+  label-free chunks (seed 1): 402 examples, 442 target findings, about 1.16M tokens, sha256 `3055e51df897...`.
+  The run stops if the rebuilt set has a different hash.
+
+**Training** (`scripts/lora_train.py`, fixed): QLoRA (nf4, double quant, bf16 compute) on the official
+instruction-tuned checkpoint that matches Ollama's `gemma4:12b` (repo id recorded); LoRA r 16, alpha 32,
+dropout 0.05 on the language model's attention and MLP projections; lr 1e-4, cosine, 10 warm-up steps,
+2 epochs, effective batch 8, max length 8192 tokens, seed 1; loss on answer tokens only. No tuning on results.
+
+**Gate (stop and report "attempted, blocked" on any failure):** (a) the base weights download; (b) 4 QLoRA steps
+run; (c) a merged smoke adapter imports into Ollama and the scanner gets valid JSON from it.
+
+**Arms and runs** (`scripts/vast_lora.sh`, one 48 GB GPU): `safia-base-conv` (base, no adapter) and `safia-lora`
+(adapter merged) both go HF -> `ollama create --quantize q4_K_M` with the official template and parameters;
+the frozen pipeline (few-shot, verifier, Bandit), seed 1.
+1. Validation, RealVuln dev: official `gemma4:12b`, base-converted, LoRA.
+2. Conversion check: |F3(official) - F3(base-converted)| <= 0.05 on dev, else stop before the test half (the
+   conversion would not reproduce the product model).
+3. Test, once: RealVuln test and gym `blog` (3 seeds) for base-converted and LoRA.
+
+**Reading the result.** Primary: RealVuln test F3, LoRA vs base-converted. A gain is claimed only if it is at
+least 0.05 F3 (above the 0.03 noise floor). Also reported: precision, recall, strata, blog function and
+strict recall, and the test LLM repo's seeding hub (`backend/app/loan_operations.py`) separately from the
+rest of that repo, since hubs were left out of training.
+
+**Known caveats.** Training and test labels come from one benchmark (its labelling style can be learned); the
+LLM-generated training repos share generators with the test LLM repo; the merged adapter also changes the
+verifier's behaviour. Budget: at most $5 for the GPU session.

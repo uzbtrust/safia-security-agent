@@ -17,7 +17,7 @@
 | 4 | Few-shot yaxshilash, 2 raund. GPU'da bir mashinada: r1 F3 0.428, r2 F3 0.600 → **r2 muzlatildi** (`step4-freeze` = 0a3580c) | CLOUD kod, LOCAL run | 7–8-okt | [x] |
 | 5 | Begona benchmark: **RealVuln** (Python, Apache-2.0), repo bo'yicha mexanik bo'linish (`targets/realvuln/split.json`); adapter tayyor (`safia-sec eval-realvuln`); test qismi `--final`siz ochilmaydi | CLOUD (tayyor) | 7-okt | [x] |
 | 6 | Yakuniy baholash (bir marta): RealVuln test F3 0.41 (P 0.78, R 0.39; `--no-examples` 0.39), Bandit 0.14–0.16; blog function 6/12 (`--no-examples` 11/12) | LOCAL (Vast GPU) | 8-okt | [x] |
-| 6b | LoRA qarori: hujjatlardan keyin muhokama | SIZ | 9-okt | [ ] ← **keyingi** |
+| 6b | LoRA tajribasi (H7): protokol oldindan yozildi; ma'lumot (402 misol, sha 3055e51d) va skriptlar tayyor → LOCAL: Vast 48 GB GPU'da `scripts/vast_lora.sh` (gate → o'qitish → dev → test bir marta) | CLOUD kod, LOCAL run | 9–11-okt | [~] ← **hozir shu** |
 | 7 | README, EXPERIMENTS (yakuniy), LIMITATIONS, ARCHITECTURE, THREAT_MODEL, DECISIONS — CLOUD yozdi; siz o'qib tasdiqlaysiz; demo video, topshirish xati | SIZ + CLOUD | 8–14-okt | [~] |
 
 Muddat 15-okt, topshirish maqsadi 14-okt.
