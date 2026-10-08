@@ -15,6 +15,7 @@ from .scanner import Scanner
 from .score import build_cases, score_case, wilson
 
 GYM_NOTES = ("Users are identified by the X-User header in this toy app; do not report that as a finding. "
+             "Routes that never read X-User are public by design. "
              "This toy app omits rate limiting, CSRF protection, security headers and logging, and its seed data "
              "holds plaintext demo passwords, all by design: do not report those.")
 STAGES = ["raw", "grounded", "verified", "final"]

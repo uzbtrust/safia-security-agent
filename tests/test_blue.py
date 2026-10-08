@@ -109,7 +109,7 @@ def test_no_examples_flag_removes_the_block_everywhere():
     src, fake = oracle()
     scan_dir(src, fake, verify=True, use_bandit=False, use_examples=False)
     assert all(EXAMPLES_HEADER not in p for p in fake.calls)
-    assert "CWE-840 business rule not enforced" in fake.calls[0]  # the CWE menu is not part of the examples
+    assert "CWE-840 business rule" in fake.calls[0]  # the CWE menu is not part of the examples
 
 
 def test_fewshot_examples_are_not_gym_code():
@@ -127,6 +127,31 @@ def test_tests_and_migrations_are_skipped_unless_asked(tmp_path):
         (tmp_path / rel).write_text("x = 1\n")
     assert [p.name for p in iter_python_files(tmp_path)] == ["app.py", "latest.py"]
     assert len(list(iter_python_files(tmp_path, include_tests=True))) == 7
+
+
+def test_django_tests_module_is_skipped(tmp_path):
+    (tmp_path / "app").mkdir()
+    (tmp_path / "app" / "tests.py").write_text("x = 1\n")
+    (tmp_path / "app" / "views.py").write_text("x = 1\n")
+    assert [p.name for p in iter_python_files(tmp_path)] == ["views.py"]
+
+
+def test_dedupe_keeps_distinct_bugs_of_one_cwe_on_nearby_lines():
+    from safia_sec.blue.scanner import Finding, dedupe
+    a = Finding("c.py", 13, "CWE-798", 'TOKEN = "x1"', "")
+    b = Finding("c.py", 15, "CWE-798", 'NAME = "x2"', "")
+    again = Finding("c.py", 13, "CWE-798", 'TOKEN = "x1"', "")
+    assert dedupe([a, b, again]) == [a, b]
+
+
+def test_reply_with_trailing_text_is_still_parsed():
+    src, _ = oracle()
+    quote = "f\"SELECT id, name, price FROM products WHERE hidden = 0 AND name LIKE '%{q}%'\""
+    fake = FakeClient(lambda p: json.dumps({"verdict": "confirmed", "reason": "r", "fix": "f"}) + " trailing"
+                      if p.startswith("You are a skeptical")
+                      else json.dumps({"findings": [finding(1, "CWE-89", quote)]}) + "\n}")
+    res = scan_dir(src, fake, verify=True, use_bandit=False)
+    assert res.findings and not res.meta["errors"]
 
 
 def test_located_counts_the_right_function_whatever_the_cwe():

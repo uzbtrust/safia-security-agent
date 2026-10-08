@@ -30,8 +30,8 @@ PROMPTS = Path(__file__).resolve().parents[1] / "prompts"
 SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", ".tox", "build", "dist", "site-packages"}
 TEST_DIRS = {"tests", "test", "migrations"}
 MAX_FILE_BYTES = 200_000
-# format guard: a verbose model must not run into the token cap and break the JSON; 12 leaves room for dense files
-MAX_FINDINGS, MAX_TEXT = 12, 300
+# format guard: a verbose model must not run into the token cap and break the JSON; 16 leaves room for dense files
+MAX_FINDINGS, MAX_TEXT = 16, 300
 
 DETECT_SCHEMA = {"type": "object", "properties": {"findings": {"type": "array", "maxItems": MAX_FINDINGS, "items": {
     "type": "object",
@@ -99,7 +99,7 @@ def severity_for(cwe: str) -> str:
 # ----------------------------------------------------------------------------------------------- files
 def is_test_path(rel: Path) -> bool:
     name = rel.name
-    return (any(part in TEST_DIRS for part in rel.parts[:-1]) or name == "conftest.py"
+    return (any(part in TEST_DIRS for part in rel.parts[:-1]) or name in ("conftest.py", "tests.py")
             or name.startswith("test_") or name.endswith("_test.py"))
 
 
@@ -149,8 +149,13 @@ def numbered(source: str, start: int, end: int) -> str:
 
 
 # ------------------------------------------------------------------------------------------- grounding
+def load_json(text: str):
+    """First JSON value in the reply; a model occasionally appends text after a valid object."""
+    return json.JSONDecoder().raw_decode(text.lstrip())[0]
+
+
 def parse_findings(text: str) -> list[dict]:
-    data = json.loads(text)
+    data = load_json(text)
     items = data["findings"]
     out = []
     for f in items if isinstance(items, list) else []:
@@ -191,7 +196,9 @@ def ground(raw: list[dict], source: str, file: str) -> tuple[list[Finding], list
 def dedupe(findings: list[Finding]) -> list[Finding]:
     out: list[Finding] = []
     for f in findings:
-        if any(g.file == f.file and g.cwe == f.cwe and abs(g.line - f.line) <= 3 for g in out):
+        # only true repeats: dense code often has two distinct bugs of one CWE a few lines apart
+        if any(g.file == f.file and g.cwe == f.cwe and (g.line == f.line or norm(g.evidence) == norm(f.evidence))
+               for g in out):
             continue
         out.append(f)
     return out
@@ -301,7 +308,7 @@ class Scanner:
         try:
             reply = self.client.chat(prompt, VERIFY_SCHEMA)
             self._account(meta, reply)
-            data = json.loads(reply.text)
+            data = load_json(reply.text)
             verdict = data["verdict"]
         except (LLMError, ValueError, KeyError, TypeError) as exc:
             meta["errors"].append(f"verify {rel}:{c.line}: {type(exc).__name__}: {exc}"[:200])

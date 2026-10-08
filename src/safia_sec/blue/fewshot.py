@@ -9,6 +9,10 @@ any gain meaningless. Round 1 targets what the dev evidence showed:
   f-string -> a contrast pair separating SQL text from bound values;
 - removed ownership checks have no line of their own -> where to point;
 - RealVuln dev labels many configuration-level issues (hardcoded keys, debug mode) -> one config example.
+Round 2 adds one example from the RealVuln dev misses: in 32 of 51 missed labels the model had reported a
+different issue within 10 lines, i.e. it named one bug per handler (usually an injection) and skipped the
+absent controls next to it (brute-force protection, cookie flags, error details) -> a handler with several
+findings, each pointed at its own line.
 """
 from __future__ import annotations
 
@@ -54,6 +58,17 @@ EXAMPLES: list[Example] = [
         'app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]',
         "anyone with the source can forge sessions. Configuration lines are findings too: a debug mode left on "
         "(CWE-489) or a cookie without Secure/HttpOnly (CWE-614) is reported at its own line.",
+    ),
+    Example(
+        "CWE-89 + CWE-307 + CWE-614", "one handler, three separate findings",
+        '@app.post("/signin")\ndef signin():\n'
+        '    row = db.execute("SELECT id FROM members WHERE email = \'" + request.form["email"] + "\'").fetchone()\n'
+        '    resp = make_response(redirect("/"))\n    resp.set_cookie("sid", new_session(row))',
+        '@limiter.limit("5 per minute")\ndef signin():\n'
+        '    row = db.execute("SELECT id FROM members WHERE email = ?", (request.form["email"],)).fetchone()\n'
+        '    resp.set_cookie("sid", new_session(row), secure=True, httponly=True)',
+        "three findings, not one: CWE-89 at the query line, CWE-307 at the def line (nothing limits attempts) and "
+        "CWE-614 at set_cookie. Do not stop at the most severe issue of a function.",
     ),
 ]
 

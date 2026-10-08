@@ -48,7 +48,7 @@ def check_context(prompt_tokens: int | None, num_ctx: int) -> None:
 
 class OllamaClient:
     def __init__(self, model: str, host: str = "http://127.0.0.1:11434", num_ctx: int = 8192,
-                 num_predict: int = 2048, temperature: float = 0.7, seed: int = 1,
+                 num_predict: int = 2560, temperature: float = 0.7, seed: int = 1,
                  think: bool | None = False, timeout: int = 900):
         self.model, self.host, self.timeout = model, host.rstrip("/"), timeout
         self.num_ctx, self.num_predict, self.temperature, self.seed, self.think = num_ctx, num_predict, temperature, seed, think
