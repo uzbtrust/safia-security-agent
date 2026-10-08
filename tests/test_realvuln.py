@@ -85,6 +85,16 @@ def test_committed_split_follows_the_rule():
         assert sum(r["loc"] for r in human) <= s["human_loc_cap"] and len(llm) == 1
 
 
+def test_freeze_rule_picks_higher_f3_and_leaves_ties_undecided():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("freeze_decide", Path(__file__).parents[1] / "scripts" / "freeze_decide.py")
+    fd = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fd)
+    assert fd.decide({"f3": 0.459}, {"f3": 0.4612}) == "r2"
+    assert fd.decide({"f3": 0.459}, {"f3": 0.4401}) == "r1"
+    assert fd.decide({"f3": 0.4591}, {"f3": 0.4589}) == "tie"
+
+
 def fake_dataset(tmp_path: Path) -> tuple[Path, Path]:
     data = tmp_path / "data"
     repo = data / "repos" / "demo"

@@ -138,6 +138,16 @@ the round-2 commit is reverted and round 1 is frozen; an exact tie goes to the g
 `step4-freeze`. Then, once: gym test (`blog`, 3 seeds) and RealVuln test, each with and without
 `--no-examples`.
 
+### Hardware change for the freeze and the final runs (2026-10-08, before those runs)
+The remaining runs move from the Mac (Apple Silicon, Ollama/Metal) to one rented NVIDIA machine, because the
+Mac is needed for other work. The same model tag is pulled and its digest is compared with the Mac's
+(`6114515d63c1`) and recorded. Because two backends can answer differently with the same seed, **round 1 is
+re-run on the GPU** and the freeze rule compares round 1 and round 2 *on the same machine*
+(`scripts/freeze_decide.py`; higher final F3 at 3 decimals; exact tie: stop). The Mac round-1 run (F3 0.459)
+stays as a cross-hardware reproducibility reference. With two identical GPUs, r1/r2 run in parallel, then the
+final arms run in parallel (with examples on GPU 0, `--no-examples` on GPU 1); with one GPU, sequentially.
+Everything is one script (`scripts/vast_final.sh`); the final runs use only the tree the rule selected.
+
 ### Gym diagnostic added before round 1
 - **Located** (diagnostic, not a hit): any finding inside the function of the injected bug, whatever its CWE.
   It separates "found the spot but mislabelled it" from "did not find it".

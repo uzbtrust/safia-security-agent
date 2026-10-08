@@ -153,3 +153,33 @@ topilma limiti 12 to'lgan edi (endi 16, javob 2560 token). Gym eslatmasiga: "X-U
    va xuddi shu `--no-examples --out ...-noex` (har biri taxmin 50–65 daq).
 8. Hech narsani qayta ishga tushirmang va hech narsani sozlamang (natija yomon bo'lsa ham — bu halol natija). Push + handoff.
 Keyin men README / LIMITATIONS / EXPERIMENTS yakuniy matnini faqat shu fayllardagi raqamlar bilan yozaman.
+
+## 2026-10-08 — CLOUD → LOCAL (A+B BITTA SESSIYADA, Vast.ai GPU'da; yuqoridagi A/B o'rniga SHU bajariladi)
+Sabab: Mac boshqa ish uchun band. Protokol o'zgarishi run'dan OLDIN `EXPERIMENTS.md` ("Hardware change") ga yozildi:
+r1 ham GPU'da qayta ishlatiladi, qoida r1 va r2 ni BIR mashinada solishtiradi (`scripts/freeze_decide.py`).
+Hamma ish bitta skriptda: `scripts/vast_final.sh` (o'rnatish → pytest → Ollama (har GPU'ga alohida server, faqat 127.0.0.1)
+→ model digest tekshiruvi → A: r1 va r2 RealVuln dev, parallel → qoida → B: faqat g'olib daraxtda blog + RealVuln test,
+misollar bilan GPU0'da, `--no-examples` GPU1'da → `vast_results.tgz`, oxirgi qator `ALL DONE`). 1 GPU bo'lsa ketma-ket ishlaydi.
+Cloud'da sinalgan: sintaksis, ikki daraxt (r1 = e0c88de qaytarilgan: 4 misol, limit 12; r2: 5 misol, limit 16, har daraxt o'z
+kodini yuklaydi), qoida Mac r1 natijasini 0.459 deb qayta hisoblaydi. GPU qismi (Ollama/CUDA) sinalmagan — needs-local-verify.
+1. Merge: `git fetch origin && git merge origin/claude/wizardly-curie-34voig`; Mac'da `pytest -q` (78; 77 + 1 skip).
+2. Vast (kalit `$VAST_TOKEN` muhitdan; hech qachon chop etmang): `vastai` CLI (yo'q bo'lsa `pip install vastai`), `vastai set api-key`.
+   Taklif: **bitta mashinada 2× RTX 4090** (yoki 2× RTX 3090), on-demand (interruptible EMAS), reliability ≥ 0.98,
+   disk ≥ 60 GB, internet ≥ 500 Mbps, CUDA ≥ 12.2, jami ≤ ~$1/soat, eng arzonidan. Topilmasa: bitta 24 GB karta
+   (4090/3090/A5000) ≤ ~$0.5/soat. Image: CUDA 12 + Python ≥ 3.10 (masalan rasmiy `pytorch/pytorch` CUDA 12 runtime), SSH.
+3. Kodni yuborish (token instance'ga YUBORILMAYDI): `.git` bilan, `.venv`, `.cache`, `__pycache__` siz:
+   `rsync -az --exclude .venv --exclude .cache --exclude __pycache__ -e "ssh -p <PORT>" ./ root@<HOST>:/workspace/safia/`
+4. Ishga tushirish: `ssh ... 'cd /workspace/safia && nohup bash scripts/vast_final.sh > vast_run.log 2>&1 &'`;
+   har ~5 daqiqada `tail -5 vast_run.log`. Taxmin (o'lchanmagan): o'rnatish + model ~10 daq, A+B 2×GPU'da ~20–30 daq.
+5. Xato bo'lsa: sababi infratuzilma bo'lsa tuzatib skriptni qayta ishga tushiring (kesh tufayli tugagan chaqiruvlar bepul va
+   aynan bir xil takrorlanadi). `exit 3` (aynan teng) → B qilinmaydi, to'xtang. Hech qanday sozlama/promptni o'zgartirmang.
+6. `ALL DONE` dan keyin: `scp` bilan `vast_results.tgz`, `vast_run.log`, `ollama_gpu*.log` ni oling; repo ichida
+   `tar xzf vast_results.tgz`; `vast_run.log` ni `eval/results/<sana>-step4-freeze-gpu/` ga qo'ying.
+7. **Instance'ni O'CHIRING** (`vastai destroy instance <ID>`, `vastai show instances` bo'sh ekanini tekshiring) — har qanday
+   holatda, xato bo'lsa ham. Byudjet: jami sarf ~$2.5 ga yaqinlashsa yoki 2 soatdan oshsa — to'xtating va o'chiring.
+8. Muzlatish (Mac'da): `eval/results/<sana>-step4-freeze-gpu/decision.json` dagi `winner`: `r1` bo'lsa
+   `git revert --no-edit e0c88de`; `r2` bo'lsa hech narsa. So'ng `git tag step4-freeze`, natijalarni commit qiling,
+   `git push origin local/dev step4-freeze`.
+9. Handoff: GPU nomi va soni, digest mos keldimi, vaqt va narx, r1/r2 GPU F3 (+ Mac r1 0.459 bilan farq), g'olib;
+   B: blog (function recall, located, toza ilovada soxta signal) va RealVuln test (TP/FP/FN, P, R, F3, stratum bo'yicha)
+   — ikki qo'l (misollar bilan / `--no-examples`); xatolar soni. Raqamlar faqat result.json/summary.md dan.

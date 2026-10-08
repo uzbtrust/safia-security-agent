@@ -14,7 +14,7 @@
 | 1 | Toza ilova + hakam + 3 CWE shablon + testlar + Bandit baseline | CLOUD | tayyor | [x] |
 | 2 | **Go/no-go:** Red ishlaydimi? API Red: GLM 13/30, DeepSeek 11/30 hakamdan o'tdi (lokal 7B Red shart emas) | LOCAL + CLOUD | 1–3-okt | [x] |
 | 3 | **Blue v0 (mahsulot):** `safia-sec scan` + `eval-gym` yozildi, 56 test yashil (mock). Real dev eval: gemma4:12b function recall 18/21, qwen3.5:9b 1/21 (verifier o'zini-o'ziga zarar qildi) → **gemma4:12b tanlandi** | CLOUD kod, LOCAL run | 3–5-okt | [x] |
-| 4 | Few-shot yaxshilash, **ko'pi bilan 2 raund**. 1-raund: gym dev 21/21, RealVuln dev F3 0.459 (R 0.44, P 0.77). 2-raund kodi tayyor (`e0c88de`) → LOCAL: RealVuln dev r2 → qoida bo'yicha muzlatish (`step4-freeze` tag) | CLOUD kod, LOCAL run | 7–9-okt | [~] ← **hozir shu** |
+| 4 | Few-shot yaxshilash, **ko'pi bilan 2 raund**. 1-raund: gym dev 21/21, RealVuln dev F3 0.459 (R 0.44, P 0.77). 2-raund kodi tayyor (`e0c88de`) → LOCAL Vast GPU'da bitta skript (`scripts/vast_final.sh`): r1 va r2 RealVuln dev → qoida → muzlatish (`step4-freeze`) → yakuniy test | CLOUD kod, LOCAL run | 7–9-okt | [~] ← **hozir shu** |
 | 5 | Begona benchmark: **RealVuln** (Python, Apache-2.0), repo bo'yicha mexanik bo'linish (`targets/realvuln/split.json`); adapter tayyor (`safia-sec eval-realvuln`); test qismi `--final`siz ochilmaydi | CLOUD (tayyor) | 7-okt | [x] |
 | 6 | Yakuniy baholash: muzlatilgan kod, blog + RealVuln test'da **bir marta** (misollar bilan va `--no-examples` bilan) | LOCAL | 11–12-okt | [ ] |
 | 6b | LoRA qarori: faqat 6-qadam natijalari muzlagandan keyin (vaqt bo'lsa) | SIZ | 12-okt | [ ] |
