@@ -1,0 +1,4167 @@
+{
+ "model": "gemma4:12b",
+ "benchmark_commit": "7a710251f55c17d32d3adcb13d37468e2e3b9e4a",
+ "split": "dev",
+ "seed": 1,
+ "settings": {
+  "verify": true,
+  "use_bandit": true,
+  "use_examples": true,
+  "include_tests": false
+ },
+ "repos": [
+  {
+   "id": "realvuln-insecure-web",
+   "authorship": "human_authored",
+   "loc": 46,
+   "commit_sha": "5d1b791bb6c2d1397843f29ee6a0d5c9386dd667",
+   "scores": {
+    "raw": {
+     "tp": 7,
+     "fp": 0,
+     "fn": 2,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "grounded": {
+     "tp": 7,
+     "fp": 0,
+     "fn": 2,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "verified": {
+     "tp": 7,
+     "fp": 1,
+     "fn": 2,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "final": {
+     "tp": 7,
+     "fp": 1,
+     "fn": 2,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "insecure-web-004",
+     "file": "app/app.py",
+     "line": 8,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "PASSWORD = \"password123\""
+    },
+    {
+     "class": "TP",
+     "gt": "insecure-web-009",
+     "file": "app/app.py",
+     "line": 25,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "@app.route(\"/login\", methods=[\"POST\"])\ndef login():"
+    },
+    {
+     "class": "TP",
+     "gt": "insecure-web-001",
+     "file": "app/app.py",
+     "line": 33,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "query = f\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\""
+    },
+    {
+     "class": "TP",
+     "gt": "insecure-web-007",
+     "file": "app/app.py",
+     "line": 38,
+     "cwe": "CWE-614",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "response.set_cookie(\"session\", username)"
+    },
+    {
+     "class": "TP",
+     "gt": "insecure-web-006",
+     "file": "app/app.py",
+     "line": 43,
+     "cwe": "CWE-306",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "@app.route(\"/dashboard\")\ndef dashboard():"
+    },
+    {
+     "class": "TP",
+     "gt": "insecure-web-002",
+     "file": "app/app.py",
+     "line": 47,
+     "cwe": "CWE-79",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return f\"<h1>Welcome, {user}!</h1> <script>alert('XSS Vulnerability!')</script>\""
+    },
+    {
+     "class": "TP",
+     "gt": "insecure-web-003",
+     "file": "app/app.py",
+     "line": 53,
+     "cwe": "CWE-79",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return f\"<h1>Search Results for {query}</h1>\""
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "app/app.py",
+     "line": 56,
+     "cwe": "CWE-605",
+     "sources": [
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "#app.run(host=\"0.0.0.0\", port=5000)"
+    },
+    {
+     "class": "FN",
+     "gt": "insecure-web-005",
+     "file": "app/app.py",
+     "line": 15,
+     "cwe": "CWE-256",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "insecure-web-008",
+     "file": "app/templates/index.html",
+     "line": 9,
+     "cwe": "CWE-352",
+     "vclass": "csrf"
+    },
+    {
+     "class": "TN",
+     "gt": "insecure-web-fp-001",
+     "file": "app/app.py",
+     "line": 14,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection"
+    },
+    {
+     "class": "TN",
+     "gt": "insecure-web-fp-002",
+     "file": "app/app.py",
+     "line": 41,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "app/app.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "evidence": "PASSWORD = \"password123\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 25,
+      "cwe": "CWE-307",
+      "evidence": "@app.route(\"/login\", methods=[\"POST\"])\ndef login():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 33,
+      "cwe": "CWE-89",
+      "evidence": "query = f\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 38,
+      "cwe": "CWE-614",
+      "evidence": "response.set_cookie(\"session\", username)"
+     },
+     {
+      "file": "app/app.py",
+      "line": 43,
+      "cwe": "CWE-306",
+      "evidence": "@app.route(\"/dashboard\")\ndef dashboard():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 47,
+      "cwe": "CWE-79",
+      "evidence": "return f\"<h1>Welcome, {user}!</h1> <script>alert('XSS Vulnerability!')</script>\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 53,
+      "cwe": "CWE-79",
+      "evidence": "return f\"<h1>Search Results for {query}</h1>\""
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app/app.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "PASSWORD = \"password123\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 25,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.route(\"/login\", methods=[\"POST\"])\ndef login():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 33,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "query = f\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 38,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "response.set_cookie(\"session\", username)"
+     },
+     {
+      "file": "app/app.py",
+      "line": 43,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.route(\"/dashboard\")\ndef dashboard():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 47,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return f\"<h1>Welcome, {user}!</h1> <script>alert('XSS Vulnerability!')</script>\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 53,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return f\"<h1>Search Results for {query}</h1>\""
+     }
+    ],
+    "verified": [
+     {
+      "file": "app/app.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "PASSWORD = \"password123\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 25,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.route(\"/login\", methods=[\"POST\"])\ndef login():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 33,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "query = f\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 38,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"session\", username)"
+     },
+     {
+      "file": "app/app.py",
+      "line": 43,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.route(\"/dashboard\")\ndef dashboard():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 47,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<h1>Welcome, {user}!</h1> <script>alert('XSS Vulnerability!')</script>\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 53,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<h1>Search Results for {query}</h1>\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 56,
+      "cwe": "CWE-605",
+      "sources": [
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "#app.run(host=\"0.0.0.0\", port=5000)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app/app.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "PASSWORD = \"password123\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 25,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.route(\"/login\", methods=[\"POST\"])\ndef login():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 33,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "query = f\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 38,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"session\", username)"
+     },
+     {
+      "file": "app/app.py",
+      "line": 43,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.route(\"/dashboard\")\ndef dashboard():"
+     },
+     {
+      "file": "app/app.py",
+      "line": 47,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<h1>Welcome, {user}!</h1> <script>alert('XSS Vulnerability!')</script>\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 53,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<h1>Search Results for {query}</h1>\""
+     },
+     {
+      "file": "app/app.py",
+      "line": 56,
+      "cwe": "CWE-605",
+      "sources": [
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "#app.run(host=\"0.0.0.0\", port=5000)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 9,
+    "prompt_tokens": 16235,
+    "gen_tokens": 1306,
+    "wall_s": 163.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "realvuln-intentionally-vulnerable-python-application",
+   "authorship": "human_authored",
+   "loc": 46,
+   "commit_sha": "3804a18ae666b296675f9a60bc617e527beae520",
+   "scores": {
+    "raw": {
+     "tp": 6,
+     "fp": 0,
+     "fn": 1,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "grounded": {
+     "tp": 6,
+     "fp": 0,
+     "fn": 1,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "verified": {
+     "tp": 6,
+     "fp": 0,
+     "fn": 1,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "final": {
+     "tp": 6,
+     "fp": 0,
+     "fn": 1,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 1
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "intentionally-vulnerable-python-app-001",
+     "file": "VulnerablePythonScript.py",
+     "line": 12,
+     "cwe": "CWE-78",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "result = subprocess.check_output(['ping', '-c', '4', ip])"
+    },
+    {
+     "class": "TP",
+     "gt": "intentionally-vulnerable-python-app-002",
+     "file": "VulnerablePythonScript.py",
+     "line": 17,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "PASSWORD = 'password123'"
+    },
+    {
+     "class": "TP",
+     "gt": "intentionally-vulnerable-python-app-006",
+     "file": "VulnerablePythonScript.py",
+     "line": 19,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "@app.route('/login', methods=['POST'])"
+    },
+    {
+     "class": "TP",
+     "gt": "intentionally-vulnerable-python-app-003",
+     "file": "VulnerablePythonScript.py",
+     "line": 33,
+     "cwe": "CWE-502",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "obj = pickle.loads(data)"
+    },
+    {
+     "class": "TP",
+     "gt": "intentionally-vulnerable-python-app-004",
+     "file": "VulnerablePythonScript.py",
+     "line": 46,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "query = \"SELECT * FROM users WHERE id = '\" + user_id + \"'\""
+    },
+    {
+     "class": "TP",
+     "gt": "intentionally-vulnerable-python-app-005",
+     "file": "VulnerablePythonScript.py",
+     "line": 55,
+     "cwe": "CWE-489",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "app.run(debug=True)"
+    },
+    {
+     "class": "FN",
+     "gt": "intentionally-vulnerable-python-app-007",
+     "file": "VulnerablePythonScript.py",
+     "line": 44,
+     "cwe": "CWE-79",
+     "vclass": "xss"
+    },
+    {
+     "class": "TN",
+     "gt": "intentionally-vulnerable-python-app-fp-001",
+     "file": "VulnerablePythonScript.py",
+     "line": 39,
+     "cwe": "CWE-918",
+     "vclass": "ssrf"
+    },
+    {
+     "class": "TN",
+     "gt": "intentionally-vulnerable-python-app-fp-002",
+     "file": "VulnerablePythonScript.py",
+     "line": 50,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 12,
+      "cwe": "CWE-78",
+      "evidence": "result = subprocess.check_output(['ping', '-c', '4', ip])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 17,
+      "cwe": "CWE-798",
+      "evidence": "PASSWORD = 'password123'"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 19,
+      "cwe": "CWE-307",
+      "evidence": "@app.route('/login', methods=['POST'])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 33,
+      "cwe": "CWE-502",
+      "evidence": "obj = pickle.loads(data)"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 46,
+      "cwe": "CWE-89",
+      "evidence": "query = \"SELECT * FROM users WHERE id = '\" + user_id + \"'\""
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 55,
+      "cwe": "CWE-489",
+      "evidence": "app.run(debug=True)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 12,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "result = subprocess.check_output(['ping', '-c', '4', ip])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 17,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "PASSWORD = 'password123'"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 19,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.route('/login', methods=['POST'])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 33,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "obj = pickle.loads(data)"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 46,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "query = \"SELECT * FROM users WHERE id = '\" + user_id + \"'\""
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 55,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "app.run(debug=True)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 12,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "result = subprocess.check_output(['ping', '-c', '4', ip])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 17,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "PASSWORD = 'password123'"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 19,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.route('/login', methods=['POST'])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 33,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "obj = pickle.loads(data)"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 46,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "query = \"SELECT * FROM users WHERE id = '\" + user_id + \"'\""
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 55,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.run(debug=True)"
+     }
+    ],
+    "final": [
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 12,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "result = subprocess.check_output(['ping', '-c', '4', ip])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 17,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "PASSWORD = 'password123'"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 19,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.route('/login', methods=['POST'])"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 33,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "obj = pickle.loads(data)"
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 46,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "query = \"SELECT * FROM users WHERE id = '\" + user_id + \"'\""
+     },
+     {
+      "file": "VulnerablePythonScript.py",
+      "line": 55,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.run(debug=True)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 7,
+    "prompt_tokens": 12374,
+    "gen_tokens": 1023,
+    "wall_s": 32.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "realvuln-python-insecure-app",
+   "authorship": "human_authored",
+   "loc": 79,
+   "commit_sha": "80b894a2f754590747a31c92b2088be086421953",
+   "scores": {
+    "raw": {
+     "tp": 4,
+     "fp": 0,
+     "fn": 4,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 3
+    },
+    "grounded": {
+     "tp": 4,
+     "fp": 0,
+     "fn": 4,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 3
+    },
+    "verified": {
+     "tp": 4,
+     "fp": 0,
+     "fn": 4,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 3
+    },
+    "final": {
+     "tp": 4,
+     "fp": 0,
+     "fn": 4,
+     "tn": 2,
+     "ns": 0,
+     "fn_py": 3
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "python-insecure-app-005",
+     "file": "app/config.py",
+     "line": 13,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "SUPER_SECRET_NAME = \"John Ripper\"  # FIXME: os.getenv(\"SUPER_SECRET_NAME\")"
+    },
+    {
+     "class": "TP",
+     "gt": "python-insecure-app-008",
+     "file": "app/config.py",
+     "line": 15,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "SUPER_SECRET_TOKEN = \"5u93R53Cr3tT0k3n\"  # FIXME: os.getenv(\"SUPER_SECRET_TOKEN\")"
+    },
+    {
+     "class": "TP",
+     "gt": "python-insecure-app-002",
+     "file": "app/main.py",
+     "line": 38,
+     "cwe": "CWE-79",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "content = f\"<h1>Hello, {name}!</h1><h2>Public IP: <code>{public_ip}</code></h2>\""
+    },
+    {
+     "class": "TP",
+     "gt": "python-insecure-app-001",
+     "file": "app/main.py",
+     "line": 41,
+     "cwe": "CWE-1336",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return Template(content).render()"
+    },
+    {
+     "class": "FN",
+     "gt": "python-insecure-app-003",
+     "file": "app/main.py",
+     "line": 38,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "python-insecure-app-004",
+     "file": "app/main.py",
+     "line": 31,
+     "cwe": "CWE-918",
+     "vclass": "ssrf"
+    },
+    {
+     "class": "FN",
+     "gt": "python-insecure-app-006",
+     "file": "app/main.py",
+     "line": 14,
+     "cwe": "CWE-200",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "python-insecure-app-007",
+     "file": "caddy/Caddyfile",
+     "line": 13,
+     "cwe": "CWE-16",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "TN",
+     "gt": "python-insecure-app-fp-001",
+     "file": "app/main.py",
+     "line": 19,
+     "cwe": "CWE-918",
+     "vclass": "ssrf"
+    },
+    {
+     "class": "TN",
+     "gt": "python-insecure-app-fp-002",
+     "file": "app/config.py",
+     "line": 9,
+     "cwe": "CWE-200",
+     "vclass": "sensitive_data_exposure"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "app/config.py",
+      "line": 13,
+      "cwe": "CWE-798",
+      "evidence": "SUPER_SECRET_NAME = \"John Ripper\"  # FIXME: os.getenv(\"SUPER_SECRET_NAME\")"
+     },
+     {
+      "file": "app/config.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "evidence": "SUPER_SECRET_TOKEN = \"5u93R53Cr3tT0k3n\"  # FIXME: os.getenv(\"SUPER_SECRET_TOKEN\")"
+     },
+     {
+      "file": "app/main.py",
+      "line": 38,
+      "cwe": "CWE-79",
+      "evidence": "content = f\"<h1>Hello, {name}!</h1><h2>Public IP: <code>{public_ip}</code></h2>\""
+     },
+     {
+      "file": "app/main.py",
+      "line": 41,
+      "cwe": "CWE-1336",
+      "evidence": "return Template(content).render()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app/config.py",
+      "line": 13,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "SUPER_SECRET_NAME = \"John Ripper\"  # FIXME: os.getenv(\"SUPER_SECRET_NAME\")"
+     },
+     {
+      "file": "app/config.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "SUPER_SECRET_TOKEN = \"5u93R53Cr3tT0k3n\"  # FIXME: os.getenv(\"SUPER_SECRET_TOKEN\")"
+     },
+     {
+      "file": "app/main.py",
+      "line": 38,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "content = f\"<h1>Hello, {name}!</h1><h2>Public IP: <code>{public_ip}</code></h2>\""
+     },
+     {
+      "file": "app/main.py",
+      "line": 41,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return Template(content).render()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app/config.py",
+      "line": 13,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "SUPER_SECRET_NAME = \"John Ripper\"  # FIXME: os.getenv(\"SUPER_SECRET_NAME\")"
+     },
+     {
+      "file": "app/config.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "SUPER_SECRET_TOKEN = \"5u93R53Cr3tT0k3n\"  # FIXME: os.getenv(\"SUPER_SECRET_TOKEN\")"
+     },
+     {
+      "file": "app/main.py",
+      "line": 38,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "content = f\"<h1>Hello, {name}!</h1><h2>Public IP: <code>{public_ip}</code></h2>\""
+     },
+     {
+      "file": "app/main.py",
+      "line": 41,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return Template(content).render()"
+     }
+    ],
+    "final": [
+     {
+      "file": "app/config.py",
+      "line": 13,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "SUPER_SECRET_NAME = \"John Ripper\"  # FIXME: os.getenv(\"SUPER_SECRET_NAME\")"
+     },
+     {
+      "file": "app/config.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "SUPER_SECRET_TOKEN = \"5u93R53Cr3tT0k3n\"  # FIXME: os.getenv(\"SUPER_SECRET_TOKEN\")"
+     },
+     {
+      "file": "app/main.py",
+      "line": 38,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "content = f\"<h1>Hello, {name}!</h1><h2>Public IP: <code>{public_ip}</code></h2>\""
+     },
+     {
+      "file": "app/main.py",
+      "line": 41,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return Template(content).render()"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 3,
+    "llm_calls": 7,
+    "prompt_tokens": 11716,
+    "gen_tokens": 824,
+    "wall_s": 25.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "realvuln-vulnerable-api",
+   "authorship": "human_authored",
+   "loc": 122,
+   "commit_sha": "f7797964e1cd63a1cbcc8ced721fa41db674c8e0",
+   "scores": {
+    "raw": {
+     "tp": 10,
+     "fp": 1,
+     "fn": 4,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 4
+    },
+    "grounded": {
+     "tp": 10,
+     "fp": 1,
+     "fn": 4,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 4
+    },
+    "verified": {
+     "tp": 9,
+     "fp": 0,
+     "fn": 5,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 5
+    },
+    "final": {
+     "tp": 9,
+     "fp": 0,
+     "fn": 5,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 5
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-010",
+     "file": "app.py",
+     "line": 24,
+     "cwe": "CWE-489",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "app.run(host=\"0.0.0.0\", port=8000, debug=True)"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-009",
+     "file": "hhi.py",
+     "line": 18,
+     "cwe": "CWE-79",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return {\"msg\": f\"response, <a href='{h}'>\"}, 200"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-004",
+     "file": "lfi.py",
+     "line": 13,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "filename = lfi.get(\"filename\", \"readme.txt\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-005",
+     "file": "lfi.py",
+     "line": 16,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return {\"msg\": f\"response, {fetchfile(filename)}\" }, 200"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-012",
+     "file": "rfi.py",
+     "line": 5,
+     "cwe": "CWE-16",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "file = requests.get(url=name, timeout=2, verify=False).text"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-006",
+     "file": "rfi.py",
+     "line": 15,
+     "cwe": "CWE-918",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "filename = rfi.get(\"imagelink\", \"http://google.com\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-001",
+     "file": "sqli.py",
+     "line": 16,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "cur.execute(f\"SELECT * FROM USERS WHERE USERNAME='{username}'\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-002",
+     "file": "sqli.py",
+     "line": 19,
+     "cwe": "CWE-209",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return {\"msg\": f\"{e}\"}, 200"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-api-008",
+     "file": "ssti.py",
+     "line": 10,
+     "cwe": "CWE-1336",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "test = Template(\"my temp: \" + exp)"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-api-003",
+     "file": "xss.py",
+     "line": 10,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-api-007",
+     "file": "rfi.py",
+     "line": 18,
+     "cwe": "CWE-918",
+     "vclass": "ssrf"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-api-011",
+     "file": "custom_db.py",
+     "line": 28,
+     "cwe": "CWE-798",
+     "vclass": "hardcoded_credentials"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-api-013",
+     "file": "sqli.py",
+     "line": 20,
+     "cwe": "CWE-200",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-api-014",
+     "file": "app.py",
+     "line": 16,
+     "cwe": "CWE-306",
+     "vclass": "missing_auth"
+    },
+    {
+     "class": "TN",
+     "gt": "vulnerable-api-fp-001",
+     "file": "lfi.py",
+     "line": 9,
+     "cwe": "CWE-22",
+     "vclass": "path_traversal"
+    },
+    {
+     "class": "TN",
+     "gt": "vulnerable-api-fp-002",
+     "file": "ssti.py",
+     "line": 5,
+     "cwe": "CWE-1336",
+     "vclass": "ssti"
+    },
+    {
+     "class": "TN",
+     "gt": "vulnerable-api-fp-003",
+     "file": "sqli.py",
+     "line": 5,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 24,
+      "cwe": "CWE-489",
+      "evidence": "app.run(host=\"0.0.0.0\", port=8000, debug=True)"
+     },
+     {
+      "file": "custom_db.py",
+      "line": 22,
+      "cwe": "CWE-89",
+      "evidence": "ins = f\"INSERT INTO vulns VALUES ({vuln})\""
+     },
+     {
+      "file": "hhi.py",
+      "line": 18,
+      "cwe": "CWE-79",
+      "evidence": "return {\"msg\": f\"response, <a href='{h}'>\"}, 200"
+     },
+     {
+      "file": "lfi.py",
+      "line": 13,
+      "cwe": "CWE-22",
+      "evidence": "filename = lfi.get(\"filename\", \"readme.txt\")"
+     },
+     {
+      "file": "lfi.py",
+      "line": 16,
+      "cwe": "CWE-22",
+      "evidence": "return {\"msg\": f\"response, {fetchfile(filename)}\" }, 200"
+     },
+     {
+      "file": "rfi.py",
+      "line": 5,
+      "cwe": "CWE-16",
+      "evidence": "file = requests.get(url=name, timeout=2, verify=False).text"
+     },
+     {
+      "file": "rfi.py",
+      "line": 15,
+      "cwe": "CWE-918",
+      "evidence": "filename = rfi.get(\"imagelink\", \"http://google.com\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 16,
+      "cwe": "CWE-89",
+      "evidence": "cur.execute(f\"SELECT * FROM USERS WHERE USERNAME='{username}'\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 18,
+      "cwe": "CWE-209",
+      "evidence": "return {\"msg\": f\"{e}\"}, 200"
+     },
+     {
+      "file": "ssti.py",
+      "line": 10,
+      "cwe": "CWE-1336",
+      "evidence": "test = Template(\"my temp: \" + exp)"
+     },
+     {
+      "file": "xss.py",
+      "line": 10,
+      "cwe": "CWE-79",
+      "evidence": "return {\"msg\": f\"Hello, {username}\"}, 200"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 24,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "app.run(host=\"0.0.0.0\", port=8000, debug=True)"
+     },
+     {
+      "file": "custom_db.py",
+      "line": 22,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "ins = f\"INSERT INTO vulns VALUES ({vuln})\""
+     },
+     {
+      "file": "hhi.py",
+      "line": 18,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return {\"msg\": f\"response, <a href='{h}'>\"}, 200"
+     },
+     {
+      "file": "lfi.py",
+      "line": 13,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "filename = lfi.get(\"filename\", \"readme.txt\")"
+     },
+     {
+      "file": "lfi.py",
+      "line": 16,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return {\"msg\": f\"response, {fetchfile(filename)}\" }, 200"
+     },
+     {
+      "file": "rfi.py",
+      "line": 5,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "file = requests.get(url=name, timeout=2, verify=False).text"
+     },
+     {
+      "file": "rfi.py",
+      "line": 15,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "filename = rfi.get(\"imagelink\", \"http://google.com\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 16,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "cur.execute(f\"SELECT * FROM USERS WHERE USERNAME='{username}'\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 19,
+      "cwe": "CWE-209",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "return {\"msg\": f\"{e}\"}, 200"
+     },
+     {
+      "file": "ssti.py",
+      "line": 10,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "test = Template(\"my temp: \" + exp)"
+     },
+     {
+      "file": "xss.py",
+      "line": 10,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return {\"msg\": f\"Hello, {username}\"}, 200"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 24,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.run(host=\"0.0.0.0\", port=8000, debug=True)"
+     },
+     {
+      "file": "hhi.py",
+      "line": 18,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"msg\": f\"response, <a href='{h}'>\"}, 200"
+     },
+     {
+      "file": "lfi.py",
+      "line": 13,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "filename = lfi.get(\"filename\", \"readme.txt\")"
+     },
+     {
+      "file": "lfi.py",
+      "line": 16,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"msg\": f\"response, {fetchfile(filename)}\" }, 200"
+     },
+     {
+      "file": "rfi.py",
+      "line": 5,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "file = requests.get(url=name, timeout=2, verify=False).text"
+     },
+     {
+      "file": "rfi.py",
+      "line": 15,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "filename = rfi.get(\"imagelink\", \"http://google.com\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 16,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cur.execute(f\"SELECT * FROM USERS WHERE USERNAME='{username}'\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 19,
+      "cwe": "CWE-209",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"msg\": f\"{e}\"}, 200"
+     },
+     {
+      "file": "ssti.py",
+      "line": 10,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "test = Template(\"my temp: \" + exp)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 24,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.run(host=\"0.0.0.0\", port=8000, debug=True)"
+     },
+     {
+      "file": "hhi.py",
+      "line": 18,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"msg\": f\"response, <a href='{h}'>\"}, 200"
+     },
+     {
+      "file": "lfi.py",
+      "line": 13,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "filename = lfi.get(\"filename\", \"readme.txt\")"
+     },
+     {
+      "file": "lfi.py",
+      "line": 16,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"msg\": f\"response, {fetchfile(filename)}\" }, 200"
+     },
+     {
+      "file": "rfi.py",
+      "line": 5,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "file = requests.get(url=name, timeout=2, verify=False).text"
+     },
+     {
+      "file": "rfi.py",
+      "line": 15,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "filename = rfi.get(\"imagelink\", \"http://google.com\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 16,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cur.execute(f\"SELECT * FROM USERS WHERE USERNAME='{username}'\")"
+     },
+     {
+      "file": "sqli.py",
+      "line": 19,
+      "cwe": "CWE-209",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"msg\": f\"{e}\"}, 200"
+     },
+     {
+      "file": "ssti.py",
+      "line": 10,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "test = Template(\"my temp: \" + exp)"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "custom_db.py",
+     "line": 22,
+     "cwe": "CWE-89",
+     "reason": "refuted_by_verifier: The 'vuln' variable is derived from a hardcoded list in the source code, not from user-supplied input. Therefore, there is no risk of SQL injection from an external attacker."
+    },
+    {
+     "file": "xss.py",
+     "line": 10,
+     "cwe": "CWE-79",
+     "reason": "refuted_by_verifier: The application returns a JSON object with a content-type of application/json, which prevents the browser from interpreting the response as HTML. Furthermore, modern frontend frameworks automatically escape values rendered from JSON data."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 8,
+    "llm_calls": 19,
+    "prompt_tokens": 29863,
+    "gen_tokens": 2181,
+    "wall_s": 74.5,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "realvuln-vulnerable-tornado-app",
+   "authorship": "human_authored",
+   "loc": 130,
+   "commit_sha": "7aca8b78ba948c841d6cb1cc2a244922a27e842b",
+   "scores": {
+    "raw": {
+     "tp": 8,
+     "fp": 2,
+     "fn": 6,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 6
+    },
+    "grounded": {
+     "tp": 8,
+     "fp": 2,
+     "fn": 6,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 6
+    },
+    "verified": {
+     "tp": 7,
+     "fp": 2,
+     "fn": 7,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 7
+    },
+    "final": {
+     "tp": 7,
+     "fp": 2,
+     "fn": 7,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 7
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-006",
+     "file": "server.py",
+     "line": 31,
+     "cwe": "CWE-489",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "\"debug\": True"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-004",
+     "file": "server.py",
+     "line": 42,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "static_file = os.path.join(base, path)"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-003",
+     "file": "server.py",
+     "line": 77,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "read_file = io.open(\"read/\" + file_name, 'rb')"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-005",
+     "file": "server.py",
+     "line": 88,
+     "cwe": "CWE-79",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "self.set_header('X-XSS-Protection', '0')"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "server.py",
+     "line": 89,
+     "cwe": "CWE-79",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "self.render(\"search.html\", query=query, link=query)"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-014",
+     "file": "server.py",
+     "line": 98,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def post(self):"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-001",
+     "file": "server.py",
+     "line": 106,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "cur.execute(\"SELECT * FROM Users WHERE User='\" + uname + \"' AND Password='\" + pwd + \"'\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vulnerable-tornado-app-002",
+     "file": "server.py",
+     "line": 122,
+     "cwe": "CWE-306",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def post(self):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "server.py",
+     "line": 125,
+     "cwe": "CWE-78",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "process = os.popen('ping -c 3 ' + server)"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-007",
+     "file": "server.py",
+     "line": 140,
+     "cwe": "CWE-798",
+     "vclass": "hardcoded_credentials"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-008",
+     "file": "server.py",
+     "line": 139,
+     "cwe": "CWE-256",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-009",
+     "file": "server.py",
+     "line": 29,
+     "cwe": "CWE-352",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-010",
+     "file": "server.py",
+     "line": 60,
+     "cwe": "CWE-434",
+     "vclass": "unrestricted_file_upload"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-011",
+     "file": "server.py",
+     "line": 99,
+     "cwe": "CWE-532",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-012",
+     "file": "server.py",
+     "line": 88,
+     "cwe": "CWE-1021",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "FN",
+     "gt": "vulnerable-tornado-app-013",
+     "file": "server.py",
+     "line": 83,
+     "cwe": "CWE-306",
+     "vclass": "missing_authentication"
+    },
+    {
+     "class": "TN",
+     "gt": "vulnerable-tornado-app-fp-001",
+     "file": "templates/login.html",
+     "line": 110,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "TN",
+     "gt": "vulnerable-tornado-app-fp-002",
+     "file": "templates/server.html",
+     "line": 105,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "TN",
+     "gt": "vulnerable-tornado-app-fp-003",
+     "file": "templates/server.html",
+     "line": 111,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "server.py",
+      "line": 31,
+      "cwe": "CWE-489",
+      "evidence": "\"debug\": True"
+     },
+     {
+      "file": "server.py",
+      "line": 42,
+      "cwe": "CWE-22",
+      "evidence": "static_file = os.path.join(base, path)"
+     },
+     {
+      "file": "server.py",
+      "line": 66,
+      "cwe": "CWE-434",
+      "evidence": "output_file = io.open(\"/tmp/\" + final_filename, 'wb')"
+     },
+     {
+      "file": "server.py",
+      "line": 77,
+      "cwe": "CWE-22",
+      "evidence": "read_file = io.open(\"read/\" + file_name, 'rb')"
+     },
+     {
+      "file": "server.py",
+      "line": 88,
+      "cwe": "CWE-79",
+      "evidence": "self.set_header('X-XSS-Protection', '0')"
+     },
+     {
+      "file": "server.py",
+      "line": 89,
+      "cwe": "CWE-79",
+      "evidence": "self.render(\"search.html\", query=query, link=query)"
+     },
+     {
+      "file": "server.py",
+      "line": 98,
+      "cwe": "CWE-307",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 106,
+      "cwe": "CWE-89",
+      "evidence": "cur.execute(\"SELECT * FROM Users WHERE User='\" + uname + \"' AND Password='\" + pwd + \"'\")"
+     },
+     {
+      "file": "server.py",
+      "line": 122,
+      "cwe": "CWE-306",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 125,
+      "cwe": "CWE-78",
+      "evidence": "process = os.popen('ping -c 3 ' + server)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "server.py",
+      "line": 31,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "\"debug\": True"
+     },
+     {
+      "file": "server.py",
+      "line": 42,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "static_file = os.path.join(base, path)"
+     },
+     {
+      "file": "server.py",
+      "line": 66,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "output_file = io.open(\"/tmp/\" + final_filename, 'wb')"
+     },
+     {
+      "file": "server.py",
+      "line": 77,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "read_file = io.open(\"read/\" + file_name, 'rb')"
+     },
+     {
+      "file": "server.py",
+      "line": 88,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "self.set_header('X-XSS-Protection', '0')"
+     },
+     {
+      "file": "server.py",
+      "line": 89,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "self.render(\"search.html\", query=query, link=query)"
+     },
+     {
+      "file": "server.py",
+      "line": 98,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 106,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "cur.execute(\"SELECT * FROM Users WHERE User='\" + uname + \"' AND Password='\" + pwd + \"'\")"
+     },
+     {
+      "file": "server.py",
+      "line": 122,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 125,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "process = os.popen('ping -c 3 ' + server)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "server.py",
+      "line": 31,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "\"debug\": True"
+     },
+     {
+      "file": "server.py",
+      "line": 42,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "static_file = os.path.join(base, path)"
+     },
+     {
+      "file": "server.py",
+      "line": 77,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "read_file = io.open(\"read/\" + file_name, 'rb')"
+     },
+     {
+      "file": "server.py",
+      "line": 88,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "self.set_header('X-XSS-Protection', '0')"
+     },
+     {
+      "file": "server.py",
+      "line": 89,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "self.render(\"search.html\", query=query, link=query)"
+     },
+     {
+      "file": "server.py",
+      "line": 98,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 106,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cur.execute(\"SELECT * FROM Users WHERE User='\" + uname + \"' AND Password='\" + pwd + \"'\")"
+     },
+     {
+      "file": "server.py",
+      "line": 122,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 125,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "process = os.popen('ping -c 3 ' + server)"
+     }
+    ],
+    "final": [
+     {
+      "file": "server.py",
+      "line": 31,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "\"debug\": True"
+     },
+     {
+      "file": "server.py",
+      "line": 42,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "static_file = os.path.join(base, path)"
+     },
+     {
+      "file": "server.py",
+      "line": 77,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "read_file = io.open(\"read/\" + file_name, 'rb')"
+     },
+     {
+      "file": "server.py",
+      "line": 88,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "self.set_header('X-XSS-Protection', '0')"
+     },
+     {
+      "file": "server.py",
+      "line": 89,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "self.render(\"search.html\", query=query, link=query)"
+     },
+     {
+      "file": "server.py",
+      "line": 98,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 106,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cur.execute(\"SELECT * FROM Users WHERE User='\" + uname + \"' AND Password='\" + pwd + \"'\")"
+     },
+     {
+      "file": "server.py",
+      "line": 122,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def post(self):"
+     },
+     {
+      "file": "server.py",
+      "line": 125,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "process = os.popen('ping -c 3 ' + server)"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "server.py",
+     "line": 66,
+     "cwe": "CWE-434",
+     "reason": "refuted_by_verifier: The application generates a random 6-character filename and appends the extension, effectively neutralizing path traversal or arbitrary file naming from the user. While it doesn't validate content type, the claim focuses on the lack of validation leading to arbitrary file write, which is mitigated's"
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 11,
+    "prompt_tokens": 28350,
+    "gen_tokens": 1691,
+    "wall_s": 61.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "vc-codex-seeded-v2-hr-payroll-django",
+   "authorship": "llm_generated",
+   "loc": 1336,
+   "commit_sha": "5726053dc9825b59c7a7dd91c3d13b788e2860c5",
+   "scores": {
+    "raw": {
+     "tp": 20,
+     "fp": 15,
+     "fn": 19,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 19
+    },
+    "grounded": {
+     "tp": 20,
+     "fp": 15,
+     "fn": 19,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 19
+    },
+    "verified": {
+     "tp": 20,
+     "fp": 8,
+     "fn": 19,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 19
+    },
+    "final": {
+     "tp": 20,
+     "fp": 8,
+     "fn": 19,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 19
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-1-043",
+     "file": "config/payroll_operations.py",
+     "line": 35,
+     "cwe": "CWE-209",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return JsonResponse({\"status\": \"failed\", \"error\": str(exc), \"debug_type\": exc.__class__.__name__}, status=500)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-1-045",
+     "file": "config/payroll_operations.py",
+     "line": 50,
+     "cwe": "CWE-601",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return redirect(next_url)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-2-176",
+     "file": "config/payroll_operations.py",
+     "line": 75,
+     "cwe": "CWE-502",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "bundle = pickle.loads(raw)"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-020",
+     "file": "config/payroll_operations.py",
+     "line": 82,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-2-257",
+     "file": "config/payroll_operations.py",
+     "line": 91,
+     "cwe": "CWE-94",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "result = eval(expr, {\"__builtins__\": {}}, {\"amount\": 42, \"fee\": 7})"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-2-294",
+     "file": "config/payroll_operations.py",
+     "line": 99,
+     "cwe": "CWE-614",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-2-355",
+     "file": "config/payroll_operations.py",
+     "line": 106,
+     "cwe": "CWE-918",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "with urllib.request.urlopen(endpoint, timeout=3) as response:"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-470",
+     "file": "config/payroll_operations.py",
+     "line": 127,
+     "cwe": "CWE-942",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "response[\"Access-Control-Allow-Origin\"] = origin"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-491",
+     "file": "config/payroll_operations.py",
+     "line": 144,
+     "cwe": "CWE-1336",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "body = Template(\"Result: \" + fragment).render()"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-497",
+     "file": "config/payroll_operations.py",
+     "line": 151,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "target = BASE_EXPORT_DIR / name"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-510",
+     "file": "config/payroll_operations.py",
+     "line": 159,
+     "cwe": "CWE-330",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "import random"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-521",
+     "file": "config/payroll_operations.py",
+     "line": 169,
+     "cwe": "CWE-611",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-540",
+     "file": "config/payroll_operations.py",
+     "line": 187,
+     "cwe": "CWE-943",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "doc = MongoClient(os.environ.get(\"MONGO_URL\", \"mongodb://localhost:27017\")).ops.records.find_one(query)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-550",
+     "file": "config/payroll_operations.py",
+     "line": 195,
+     "cwe": "CWE-16",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "ctx = ssl._create_unverified_context()"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-001",
+     "file": "config/settings.py",
+     "line": 8,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "SECRET_KEY = os.environ.get(\"DJANGO_SECRET_KEY\", \"dev-only-change-me\")"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "config/settings.py",
+     "line": 53,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "default_db = \"postgres://postgres:postgres@localhost:5432/generated_hr_payroll_django\""
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-017",
+     "file": "payroll/forms.py",
+     "line": 169,
+     "cwe": "CWE-400",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "csv_file = forms.FileField(help_text=\"CSV columns: username,first_name,last_name,email,employee_id,department,cost_cente"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/management/commands/seed_demo.py",
+     "line": 27,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "DEMO_PASSWORD = \"DemoPass123!\""
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/management/commands/seed_demo.py",
+     "line": 47,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "u = User.objects.create_user(username=username, first_name=first, last_name=last, email=email, password=DEMO_PASSWORD)"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/management/commands/seed_demo.py",
+     "line": 107,
+     "cwe": "CWE-532",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "self.stdout.write(self.style.SUCCESS(\"Seeded demo data. Password for all demo users: DemoPass123!\"))"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-014",
+     "file": "payroll/models.py",
+     "line": 98,
+     "cwe": "CWE-434",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "evidence = models.FileField(upload_to=\"onboarding_evidence/\", blank=True)"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-015",
+     "file": "payroll/models.py",
+     "line": 113,
+     "cwe": "CWE-434",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "document = models.FileField(upload_to=\"hr_documents/\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-013",
+     "file": "payroll/views.py",
+     "line": 155,
+     "cwe": "CWE-200",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "messages.success(request, f\"Employee invited. Temporary local password: {password}\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-008",
+     "file": "payroll/views.py",
+     "line": 239,
+     "cwe": "CWE-639",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "comp = get_object_or_404(CompensationRequest, pk=pk)"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/views.py",
+     "line": 260,
+     "cwe": "CWE-306",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "@login_required\ndef onboarding_queue(request):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/views.py",
+     "line": 352,
+     "cwe": "CWE-306",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "@login_required\ndef hr_request_list(request):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/views.py",
+     "line": 410,
+     "cwe": "CWE-306",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "@login_required\ndef policy_list(request):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "payroll/views.py",
+     "line": 465,
+     "cwe": "CWE-312",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "user.set_password(\"ChangeMe123!\")"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-1-044",
+     "file": "config/payroll_operations.py",
+     "line": 38,
+     "cwe": "CWE-532",
+     "vclass": "sensitive_data_in_logs"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-2-130",
+     "file": "config/payroll_operations.py",
+     "line": 52,
+     "cwe": "CWE-840",
+     "vclass": "business_logic_validation_gap"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-2-236",
+     "file": "config/payroll_operations.py",
+     "line": 78,
+     "cwe": "CWE-312",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-3-460",
+     "file": "config/payroll_operations.py",
+     "line": 110,
+     "cwe": "CWE-204",
+     "vclass": "user_enumeration"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-3-480",
+     "file": "config/payroll_operations.py",
+     "line": 131,
+     "cwe": "CWE-1021",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-3-530",
+     "file": "config/payroll_operations.py",
+     "line": 173,
+     "cwe": "CWE-807",
+     "vclass": "broken_access_control"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-fp-001",
+     "file": "config/payroll_operations.py",
+     "line": 19,
+     "cwe": "CWE-862",
+     "vclass": "missing_authentication_false_positive"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-fp-002",
+     "file": "payroll/views.py",
+     "line": 123,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection_false_positive"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-fp-003",
+     "file": "payroll/views.py",
+     "line": 138,
+     "cwe": "CWE-330",
+     "vclass": "weak_prng_false_positive"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-fp-004",
+     "file": "payroll/views.py",
+     "line": 549,
+     "cwe": "CWE-862",
+     "vclass": "broken_access_control_false_positive"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-002",
+     "file": "config/settings.py",
+     "line": 9,
+     "cwe": "CWE-215",
+     "vclass": "debug_mode_enabled_by_default"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-003",
+     "file": "config/urls.py",
+     "line": 26,
+     "cwe": "CWE-862",
+     "vclass": "debug_media_route_bypasses_hr_document_authorization"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-004",
+     "file": "config/settings.py",
+     "line": 80,
+     "cwe": "CWE-614",
+     "vclass": "session_and_csrf_cookie_secure_flags_missing"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-005",
+     "file": "config/urls.py",
+     "line": 9,
+     "cwe": "CWE-307",
+     "vclass": "login_missing_rate_limit"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-006",
+     "file": "config/urls.py",
+     "line": 11,
+     "cwe": "CWE-307",
+     "vclass": "password_reset_request_missing_rate_limit"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-007",
+     "file": "payroll/views.py",
+     "line": 454,
+     "cwe": "CWE-798",
+     "vclass": "employee_import_fixed_default_password"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-009",
+     "file": "payroll/views.py",
+     "line": 227,
+     "cwe": "CWE-862",
+     "vclass": "payroll_can_view_unapproved_compensation_by_direct_id"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-010",
+     "file": "payroll/views.py",
+     "line": 379,
+     "cwe": "CWE-863",
+     "vclass": "payroll_role_can_administer_all_hr_requests"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-011",
+     "file": "payroll/views.py",
+     "line": 403,
+     "cwe": "CWE-200",
+     "vclass": "internal_hr_comments_visible_to_non_hr_roles"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-012",
+     "file": "payroll/views.py",
+     "line": 409,
+     "cwe": "CWE-862",
+     "vclass": "policy_audience_not_enforced"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-016",
+     "file": "payroll/views.py",
+     "line": 478,
+     "cwe": "CWE-1236",
+     "vclass": "hr_exports_csv_formula_injection"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-018",
+     "file": "payroll/models.py",
+     "line": 107,
+     "cwe": "CWE-312",
+     "vclass": "plaintext_hr_payroll_document_storage"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-hr-payroll-django-enrich-019",
+     "file": "payroll/models.py",
+     "line": 203,
+     "cwe": "CWE-312",
+     "vclass": "plaintext_api_key_storage_and_display"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "config/payroll_operations.py",
+      "line": 35,
+      "cwe": "CWE-209",
+      "evidence": "return JsonResponse({\"status\": \"failed\", \"error\": str(exc), \"debug_type\": exc.__class__.__name__}, status=500)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 50,
+      "cwe": "CWE-601",
+      "evidence": "return redirect(next_url)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 75,
+      "cwe": "CWE-502",
+      "evidence": "bundle = pickle.loads(raw)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 82,
+      "cwe": "CWE-22",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 91,
+      "cwe": "CWE-94",
+      "evidence": "result = eval(expr, {\"__builtins__\": {}}, {\"amount\": 42, \"fee\": 7})"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 99,
+      "cwe": "CWE-614",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 106,
+      "cwe": "CWE-918",
+      "evidence": "with urllib.request.urlopen(endpoint, timeout=3) as response:"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 127,
+      "cwe": "CWE-942",
+      "evidence": "response[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 144,
+      "cwe": "CWE-1336",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 151,
+      "cwe": "CWE-22",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 160,
+      "cwe": "CWE-330",
+      "evidence": "import random"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 169,
+      "cwe": "CWE-611",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 187,
+      "cwe": "CWE-943",
+      "evidence": "doc = MongoClient(os.environ.get(\"MONGO_URL\", \"mongodb://localhost:27017\")).ops.records.find_one(query)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 195,
+      "cwe": "CWE-16",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "evidence": "SECRET_KEY = os.environ.get(\"DJANGO_SECRET_KEY\", \"dev-only-change-me\")"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 53,
+      "cwe": "CWE-798",
+      "evidence": "default_db = \"postgres://postgres:postgres@localhost:5432/generated_hr_payroll_django\""
+     },
+     {
+      "file": "payroll/forms.py",
+      "line": 169,
+      "cwe": "CWE-400",
+      "evidence": "csv_file = forms.FileField(help_text=\"CSV columns: username,first_name,last_name,email,employee_id,department,cost_cente"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "evidence": "DEMO_PASSWORD = \"DemoPass123!\""
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 47,
+      "cwe": "CWE-798",
+      "evidence": "u = User.objects.create_user(username=username, first_name=first, last_name=last, email=email, password=DEMO_PASSWORD)"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 107,
+      "cwe": "CWE-532",
+      "evidence": "self.stdout.write(self.style.SUCCESS(\"Seeded demo data. Password for all demo users: DemoPass123!\"))"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 98,
+      "cwe": "CWE-434",
+      "evidence": "evidence = models.FileField(upload_to=\"onboarding_evidence/\", blank=True)"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 113,
+      "cwe": "CWE-434",
+      "evidence": "document = models.FileField(upload_to=\"hr_documents/\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 134,
+      "cwe": "CWE-352",
+      "evidence": "def employee_invite(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 155,
+      "cwe": "CWE-200",
+      "evidence": "messages.success(request, f\"Employee invited. Temporary local password: {password}\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 227,
+      "cwe": "CWE-639",
+      "evidence": "comp = get_object_or_404(CompensationRequest.objects.select_related(\"employee__user\", \"requested_by\"), pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 238,
+      "cwe": "CWE-639",
+      "evidence": "comp = get_object_or_404(CompensationRequest, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 260,
+      "cwe": "CWE-306",
+      "evidence": "@login_required\ndef onboarding_queue(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 276,
+      "cwe": "CWE-639",
+      "evidence": "task = get_object_or_404(OnboardingTask.objects.select_related(\"employee__user\"), pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 291,
+      "cwe": "CWE-639",
+      "evidence": "task = get_object_or_404(OnboardingTask, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 343,
+      "cwe": "CWE-639",
+      "evidence": "doc = get_object_or_404(HRDocument, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 351,
+      "cwe": "CWE-306",
+      "evidence": "@login_required\ndef hr_request_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 379,
+      "cwe": "CWE-639",
+      "evidence": "req = get_object_or_404(HRRequest.objects.select_related(\"employee__user\"), pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 410,
+      "cwe": "CWE-306",
+      "evidence": "@login_required\ndef policy_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 465,
+      "cwe": "CWE-312",
+      "evidence": "user.set_password(\"ChangeMe123!\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 513,
+      "cwe": "CWE-943",
+      "evidence": "qs = qs.filter(action__icontains=action)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "config/payroll_operations.py",
+      "line": 35,
+      "cwe": "CWE-209",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return JsonResponse({\"status\": \"failed\", \"error\": str(exc), \"debug_type\": exc.__class__.__name__}, status=500)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 50,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return redirect(next_url)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 75,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "bundle = pickle.loads(raw)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 82,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 91,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "result = eval(expr, {\"__builtins__\": {}}, {\"amount\": 42, \"fee\": 7})"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 99,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 106,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "with urllib.request.urlopen(endpoint, timeout=3) as response:"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 127,
+      "cwe": "CWE-942",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "response[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 144,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 151,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 159,
+      "cwe": "CWE-330",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "import random"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 169,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 187,
+      "cwe": "CWE-943",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "doc = MongoClient(os.environ.get(\"MONGO_URL\", \"mongodb://localhost:27017\")).ops.records.find_one(query)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 195,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "SECRET_KEY = os.environ.get(\"DJANGO_SECRET_KEY\", \"dev-only-change-me\")"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 53,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "default_db = \"postgres://postgres:postgres@localhost:5432/generated_hr_payroll_django\""
+     },
+     {
+      "file": "payroll/forms.py",
+      "line": 169,
+      "cwe": "CWE-400",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "csv_file = forms.FileField(help_text=\"CSV columns: username,first_name,last_name,email,employee_id,department,cost_cente"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "DEMO_PASSWORD = \"DemoPass123!\""
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 47,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "u = User.objects.create_user(username=username, first_name=first, last_name=last, email=email, password=DEMO_PASSWORD)"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 107,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "self.stdout.write(self.style.SUCCESS(\"Seeded demo data. Password for all demo users: DemoPass123!\"))"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 98,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "evidence = models.FileField(upload_to=\"onboarding_evidence/\", blank=True)"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 113,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "document = models.FileField(upload_to=\"hr_documents/\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 134,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def employee_invite(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 155,
+      "cwe": "CWE-200",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "messages.success(request, f\"Employee invited. Temporary local password: {password}\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 228,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "comp = get_object_or_404(CompensationRequest.objects.select_related(\"employee__user\", \"requested_by\"), pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 239,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "comp = get_object_or_404(CompensationRequest, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 260,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@login_required\ndef onboarding_queue(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 277,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "task = get_object_or_404(OnboardingTask.objects.select_related(\"employee__user\"), pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 294,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "task = get_object_or_404(OnboardingTask, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 344,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "doc = get_object_or_404(HRDocument, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 352,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@login_required\ndef hr_request_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 380,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "req = get_object_or_404(HRRequest.objects.select_related(\"employee__user\"), pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 410,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@login_required\ndef policy_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 465,
+      "cwe": "CWE-312",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "user.set_password(\"ChangeMe123!\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 515,
+      "cwe": "CWE-943",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "qs = qs.filter(action__icontains=action)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "config/payroll_operations.py",
+      "line": 35,
+      "cwe": "CWE-209",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return JsonResponse({\"status\": \"failed\", \"error\": str(exc), \"debug_type\": exc.__class__.__name__}, status=500)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 50,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return redirect(next_url)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 75,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "bundle = pickle.loads(raw)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 82,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 91,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "result = eval(expr, {\"__builtins__\": {}}, {\"amount\": 42, \"fee\": 7})"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 99,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 106,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "with urllib.request.urlopen(endpoint, timeout=3) as response:"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 127,
+      "cwe": "CWE-942",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 144,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 151,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 159,
+      "cwe": "CWE-330",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "import random"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 169,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 187,
+      "cwe": "CWE-943",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "doc = MongoClient(os.environ.get(\"MONGO_URL\", \"mongodb://localhost:27017\")).ops.records.find_one(query)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 195,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "SECRET_KEY = os.environ.get(\"DJANGO_SECRET_KEY\", \"dev-only-change-me\")"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 53,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "default_db = \"postgres://postgres:postgres@localhost:5432/generated_hr_payroll_django\""
+     },
+     {
+      "file": "payroll/forms.py",
+      "line": 169,
+      "cwe": "CWE-400",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "csv_file = forms.FileField(help_text=\"CSV columns: username,first_name,last_name,email,employee_id,department,cost_cente"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "DEMO_PASSWORD = \"DemoPass123!\""
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 47,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "u = User.objects.create_user(username=username, first_name=first, last_name=last, email=email, password=DEMO_PASSWORD)"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 107,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "self.stdout.write(self.style.SUCCESS(\"Seeded demo data. Password for all demo users: DemoPass123!\"))"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 98,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "evidence = models.FileField(upload_to=\"onboarding_evidence/\", blank=True)"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 113,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "document = models.FileField(upload_to=\"hr_documents/\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 155,
+      "cwe": "CWE-200",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "messages.success(request, f\"Employee invited. Temporary local password: {password}\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 239,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "comp = get_object_or_404(CompensationRequest, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 260,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@login_required\ndef onboarding_queue(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 352,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@login_required\ndef hr_request_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 410,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@login_required\ndef policy_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 465,
+      "cwe": "CWE-312",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "user.set_password(\"ChangeMe123!\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "config/payroll_operations.py",
+      "line": 35,
+      "cwe": "CWE-209",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return JsonResponse({\"status\": \"failed\", \"error\": str(exc), \"debug_type\": exc.__class__.__name__}, status=500)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 50,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return redirect(next_url)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 75,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "bundle = pickle.loads(raw)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 82,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 91,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "result = eval(expr, {\"__builtins__\": {}}, {\"amount\": 42, \"fee\": 7})"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 99,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 106,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "with urllib.request.urlopen(endpoint, timeout=3) as response:"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 127,
+      "cwe": "CWE-942",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 144,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 151,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 159,
+      "cwe": "CWE-330",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "import random"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 169,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 187,
+      "cwe": "CWE-943",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "doc = MongoClient(os.environ.get(\"MONGO_URL\", \"mongodb://localhost:27017\")).ops.records.find_one(query)"
+     },
+     {
+      "file": "config/payroll_operations.py",
+      "line": 195,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 8,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "SECRET_KEY = os.environ.get(\"DJANGO_SECRET_KEY\", \"dev-only-change-me\")"
+     },
+     {
+      "file": "config/settings.py",
+      "line": 53,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "default_db = \"postgres://postgres:postgres@localhost:5432/generated_hr_payroll_django\""
+     },
+     {
+      "file": "payroll/forms.py",
+      "line": 169,
+      "cwe": "CWE-400",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "csv_file = forms.FileField(help_text=\"CSV columns: username,first_name,last_name,email,employee_id,department,cost_cente"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "DEMO_PASSWORD = \"DemoPass123!\""
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 47,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "u = User.objects.create_user(username=username, first_name=first, last_name=last, email=email, password=DEMO_PASSWORD)"
+     },
+     {
+      "file": "payroll/management/commands/seed_demo.py",
+      "line": 107,
+      "cwe": "CWE-532",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "self.stdout.write(self.style.SUCCESS(\"Seeded demo data. Password for all demo users: DemoPass123!\"))"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 98,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "evidence = models.FileField(upload_to=\"onboarding_evidence/\", blank=True)"
+     },
+     {
+      "file": "payroll/models.py",
+      "line": 113,
+      "cwe": "CWE-434",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "document = models.FileField(upload_to=\"hr_documents/\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 155,
+      "cwe": "CWE-200",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "messages.success(request, f\"Employee invited. Temporary local password: {password}\")"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 239,
+      "cwe": "CWE-639",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "comp = get_object_or_404(CompensationRequest, pk=pk)"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 260,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@login_required\ndef onboarding_queue(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 352,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@login_required\ndef hr_request_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 410,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@login_required\ndef policy_list(request):"
+     },
+     {
+      "file": "payroll/views.py",
+      "line": 465,
+      "cwe": "CWE-312",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "user.set_password(\"ChangeMe123!\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "payroll/views.py",
+     "line": 134,
+     "cwe": "CWE-352",
+     "reason": "refuted_by_verifier: The endpoint is protected by a role check (`require_role(request.user, HR_ADMIN)`) on line 135, which restricts access to authorized administrators only."
+    },
+    {
+     "file": "payroll/views.py",
+     "line": 228,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code performs a permission check immediately after the object fetch at line 229, using `can_view_sensitive_comp` and a role check for `PAYROLL`. This effectively guards the access to the record."
+    },
+    {
+     "file": "payroll/views.py",
+     "line": 277,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code includes an explicit ownership/permission check on line 278 (`can_view_employee`) immediately after fetching the object, which prevents unauthorized access."
+    },
+    {
+     "file": "payroll/views.py",
+     "line": 294,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code performs an ownership/authorization check immediately after the fetch by verifying the user's role and relationship to the task's employee (lines 295-298)."
+    },
+    {
+     "file": "payroll/views.py",
+     "line": 344,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code performs a permission check via `can_view_document(request.user, doc)` immediately after fetching the object. This ensures that only authorized users can access the data, even if the object is fetched by ID first."
+    },
+    {
+     "file": "payroll/views.py",
+     "line": 380,
+     "cwe": "CWE-639",
+     "reason": "refuted_by_verifier: The code performs an authorization check on line 381 using `can_view_employee(request.user, req.employee)` immediately after fetching the object."
+    },
+    {
+     "file": "payroll/views.py",
+     "line": 515,
+     "cwe": "CWE-943",
+     "reason": "refuted_by_verifier: Django's ORM handles 'icontains' by using parameterized queries, which prevents SQL injection. The input is treated as a literal string value, not as part of the SQL command structure."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 19,
+    "llm_calls": 57,
+    "prompt_tokens": 164032,
+    "gen_tokens": 6297,
+    "wall_s": 262.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  }
+ ]
+}

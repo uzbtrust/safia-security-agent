@@ -1,0 +1,24 @@
+{
+ "rule": "higher RealVuln-dev final F3 (3 decimals); tie undecided",
+ "r1": {
+  "tp": 37,
+  "fp": 9,
+  "fn": 54,
+  "precision": 0.8043,
+  "recall": 0.4066,
+  "f3": 0.4277,
+  "split": "dev",
+  "examples": true
+ },
+ "r2": {
+  "tp": 53,
+  "fp": 11,
+  "fn": 38,
+  "precision": 0.8281,
+  "recall": 0.5824,
+  "f3": 0.6002,
+  "split": "dev",
+  "examples": true
+ },
+ "winner": "r2"
+}

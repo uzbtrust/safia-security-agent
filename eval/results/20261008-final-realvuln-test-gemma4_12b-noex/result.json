@@ -1,0 +1,2970 @@
+{
+ "model": "gemma4:12b",
+ "benchmark_commit": "7a710251f55c17d32d3adcb13d37468e2e3b9e4a",
+ "split": "test",
+ "seed": 1,
+ "settings": {
+  "verify": true,
+  "use_bandit": true,
+  "use_examples": false,
+  "include_tests": false
+ },
+ "repos": [
+  {
+   "id": "realvuln-pythonssti",
+   "authorship": "human_authored",
+   "loc": 13,
+   "commit_sha": "76339c27d5a870c0a81bad6aee5f9bd516592145",
+   "scores": {
+    "raw": {
+     "tp": 1,
+     "fp": 0,
+     "fn": 1,
+     "tn": 1,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "grounded": {
+     "tp": 1,
+     "fp": 0,
+     "fn": 1,
+     "tn": 1,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "verified": {
+     "tp": 1,
+     "fp": 0,
+     "fn": 1,
+     "tn": 1,
+     "ns": 0,
+     "fn_py": 1
+    },
+    "final": {
+     "tp": 1,
+     "fp": 0,
+     "fn": 1,
+     "tn": 1,
+     "ns": 0,
+     "fn_py": 1
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "python-ssti-001",
+     "file": "main.py",
+     "line": 14,
+     "cwe": "CWE-1336",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "output = Jinja2.from_string(\"Welcome \" + username + \"!\").render()"
+    },
+    {
+     "class": "FN",
+     "gt": "python-ssti-002",
+     "file": "main.py",
+     "line": 14,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "TN",
+     "gt": "python-ssti-fp-001",
+     "file": "main.py",
+     "line": 17,
+     "cwe": "CWE-1336",
+     "vclass": "server_side_template_injection"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "main.py",
+      "line": 14,
+      "cwe": "CWE-1336",
+      "evidence": "output = Jinja2.from_string(\"Welcome \" + username + \"!\").render()"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "main.py",
+      "line": 14,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "output = Jinja2.from_string(\"Welcome \" + username + \"!\").render()"
+     }
+    ],
+    "verified": [
+     {
+      "file": "main.py",
+      "line": 14,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "output = Jinja2.from_string(\"Welcome \" + username + \"!\").render()"
+     }
+    ],
+    "final": [
+     {
+      "file": "main.py",
+      "line": 14,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "output = Jinja2.from_string(\"Welcome \" + username + \"!\").render()"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 1697,
+    "gen_tokens": 180,
+    "wall_s": 6.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": false,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "realvuln-dsvw",
+   "authorship": "human_authored",
+   "loc": 93,
+   "commit_sha": "7d40f4b7939c901610ed9b85724552d60e7d63fa",
+   "scores": {
+    "raw": {
+     "tp": 8,
+     "fp": 0,
+     "fn": 19,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 19
+    },
+    "grounded": {
+     "tp": 7,
+     "fp": 0,
+     "fn": 20,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 20
+    },
+    "verified": {
+     "tp": 7,
+     "fp": 0,
+     "fn": 20,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 20
+    },
+    "final": {
+     "tp": 7,
+     "fp": 0,
+     "fn": 20,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 20
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "dsvw-001",
+     "file": "dsvw.py",
+     "line": 30,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "cursor.execute(\"SELECT id, username, name, surname FROM users WHERE id=\" + params[\"id\"])"
+    },
+    {
+     "class": "TP",
+     "gt": "dsvw-003",
+     "file": "dsvw.py",
+     "line": 35,
+     "cwe": "CWE-502",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "content = str(pickle.loads(params[\"object\"].encode()))"
+    },
+    {
+     "class": "TP",
+     "gt": "dsvw-004",
+     "file": "dsvw.py",
+     "line": 37,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "content = (open(os.path.abspath(params[\"path\"]), \"rb\") if not \"://\" in params[\"path\"] else urllib.request.urlopen(params"
+    },
+    {
+     "class": "TP",
+     "gt": "dsvw-007",
+     "file": "dsvw.py",
+     "line": 41,
+     "cwe": "CWE-611",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "lxml.etree.parse(io.BytesIO(params[\"xml\"].encode()), lxml.etree.XMLParser(load_dtd=True, resolve_entities=True, no_netwo"
+    },
+    {
+     "class": "TP",
+     "gt": "dsvw-010",
+     "file": "dsvw.py",
+     "line": 50,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "cursor.execute(\"INSERT INTO comments VALUES(NULL, '%s', '%s')\" % (params[\"comment\"], time.ctime()))"
+    },
+    {
+     "class": "TP",
+     "gt": "dsvw-012",
+     "file": "dsvw.py",
+     "line": 57,
+     "cwe": "CWE-94",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "exec(program, envs)"
+    },
+    {
+     "class": "TP",
+     "gt": "dsvw-015",
+     "file": "dsvw.py",
+     "line": 67,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "cursor.execute(\"SELECT * FROM users WHERE username='\" + re.sub(r\"[^\\w]\", \"\", params.get(\"username\", \"\")) + \"' AND passwo"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-002",
+     "file": "dsvw.py",
+     "line": 33,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-005",
+     "file": "dsvw.py",
+     "line": 37,
+     "cwe": "CWE-918",
+     "vclass": "ssrf"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-006",
+     "file": "dsvw.py",
+     "line": 39,
+     "cwe": "CWE-78",
+     "vclass": "command_injection"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-008",
+     "file": "dsvw.py",
+     "line": 43,
+     "cwe": "CWE-643",
+     "vclass": "xpath_injection"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-009",
+     "file": "dsvw.py",
+     "line": 46,
+     "cwe": "CWE-400",
+     "vclass": "denial_of_service"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-011",
+     "file": "dsvw.py",
+     "line": 54,
+     "cwe": "CWE-79",
+     "vclass": "stored_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-013",
+     "file": "dsvw.py",
+     "line": 61,
+     "cwe": "CWE-601",
+     "vclass": "open_redirect"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-014",
+     "file": "dsvw.py",
+     "line": 65,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-016",
+     "file": "dsvw.py",
+     "line": 78,
+     "cwe": "CWE-113",
+     "vclass": "http_header_injection"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-017",
+     "file": "dsvw.py",
+     "line": 11,
+     "cwe": "CWE-798",
+     "vclass": "hardcoded_credentials"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-018",
+     "file": "dsvw.py",
+     "line": 72,
+     "cwe": "CWE-209",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-019",
+     "file": "dsvw.py",
+     "line": 10,
+     "cwe": "CWE-79",
+     "vclass": "dom_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-020",
+     "file": "dsvw.py",
+     "line": 50,
+     "cwe": "CWE-352",
+     "vclass": "csrf"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-021",
+     "file": "dsvw.py",
+     "line": 66,
+     "cwe": "CWE-307",
+     "vclass": "missing_rate_limiting"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-022",
+     "file": "dsvw.py",
+     "line": 19,
+     "cwe": "CWE-312",
+     "vclass": "plaintext_password_storage"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-023",
+     "file": "dsvw.py",
+     "line": 68,
+     "cwe": "CWE-330",
+     "vclass": "weak_prng"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-024",
+     "file": "dsvw.py",
+     "line": 26,
+     "cwe": "CWE-235",
+     "vclass": "http_parameter_pollution"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-025",
+     "file": "dsvw.py",
+     "line": 68,
+     "cwe": "CWE-1004",
+     "vclass": "insecure_cookie"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-026",
+     "file": "dsvw.py",
+     "line": 77,
+     "cwe": "CWE-16",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "FN",
+     "gt": "dsvw-027",
+     "file": "dsvw.py",
+     "line": 65,
+     "cwe": "CWE-200",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "TN",
+     "gt": "dsvw-fp-001",
+     "file": "dsvw.py",
+     "line": 67,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection"
+    },
+    {
+     "class": "TN",
+     "gt": "dsvw-fp-002",
+     "file": "dsvw.py",
+     "line": 20,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection"
+    },
+    {
+     "class": "TN",
+     "gt": "dsvw-fp-003",
+     "file": "dsvw.py",
+     "line": 10,
+     "cwe": "CWE-79",
+     "vclass": "xss"
+    },
+    {
+     "class": "TN",
+     "gt": "dsvw-fp-004",
+     "file": "dsvw.py",
+     "line": 19,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "dsvw.py",
+      "line": 30,
+      "cwe": "CWE-89",
+      "evidence": "cursor.execute(\"SELECT id, username, name, surname FROM users WHERE id=\" + params[\"id\"])"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 35,
+      "cwe": "CWE-502",
+      "evidence": "content = str(pickle.loads(params[\"object\"].encode()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 37,
+      "cwe": "CWE-22",
+      "evidence": "content = (open(os.path.abspath(params[\"path\"]), \"rb\") if not \"://\" in params[\"path\"] else urllib.request.urlopen(params"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 39,
+      "cwe": "CWE-78",
+      "evidence": "content = subprocess.run(\"nslookup \" + params[\"domain\"], shell=True, ...)"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 41,
+      "cwe": "CWE-611",
+      "evidence": "lxml.etree.parse(io.BytesIO(params[\"xml\"].encode()), lxml.etree.XMLParser(load_dtd=True, resolve_entities=True, no_netwo"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "evidence": "cursor.execute(\"INSERT INTO comments VALUES(NULL, '%s', '%s')\" % (params[\"comment\"], time.ctime()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 56,
+      "cwe": "CWE-94",
+      "evidence": "exec(program, envs)"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 67,
+      "cwe": "CWE-89",
+      "evidence": "cursor.execute(\"SELECT * FROM users WHERE username='\" + re.sub(r\"[^\\w]\", \"\", params.get(\"username\", \"\")) + \"' AND passwo"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "dsvw.py",
+      "line": 30,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "cursor.execute(\"SELECT id, username, name, surname FROM users WHERE id=\" + params[\"id\"])"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 35,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "content = str(pickle.loads(params[\"object\"].encode()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 37,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "content = (open(os.path.abspath(params[\"path\"]), \"rb\") if not \"://\" in params[\"path\"] else urllib.request.urlopen(params"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 41,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "lxml.etree.parse(io.BytesIO(params[\"xml\"].encode()), lxml.etree.XMLParser(load_dtd=True, resolve_entities=True, no_netwo"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "cursor.execute(\"INSERT INTO comments VALUES(NULL, '%s', '%s')\" % (params[\"comment\"], time.ctime()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 57,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "exec(program, envs)"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 67,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "cursor.execute(\"SELECT * FROM users WHERE username='\" + re.sub(r\"[^\\w]\", \"\", params.get(\"username\", \"\")) + \"' AND passwo"
+     }
+    ],
+    "verified": [
+     {
+      "file": "dsvw.py",
+      "line": 30,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cursor.execute(\"SELECT id, username, name, surname FROM users WHERE id=\" + params[\"id\"])"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 35,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "content = str(pickle.loads(params[\"object\"].encode()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 37,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "content = (open(os.path.abspath(params[\"path\"]), \"rb\") if not \"://\" in params[\"path\"] else urllib.request.urlopen(params"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 41,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "lxml.etree.parse(io.BytesIO(params[\"xml\"].encode()), lxml.etree.XMLParser(load_dtd=True, resolve_entities=True, no_netwo"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cursor.execute(\"INSERT INTO comments VALUES(NULL, '%s', '%s')\" % (params[\"comment\"], time.ctime()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 57,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "exec(program, envs)"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 67,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cursor.execute(\"SELECT * FROM users WHERE username='\" + re.sub(r\"[^\\w]\", \"\", params.get(\"username\", \"\")) + \"' AND passwo"
+     }
+    ],
+    "final": [
+     {
+      "file": "dsvw.py",
+      "line": 30,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cursor.execute(\"SELECT id, username, name, surname FROM users WHERE id=\" + params[\"id\"])"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 35,
+      "cwe": "CWE-502",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "content = str(pickle.loads(params[\"object\"].encode()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 37,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "content = (open(os.path.abspath(params[\"path\"]), \"rb\") if not \"://\" in params[\"path\"] else urllib.request.urlopen(params"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 41,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "lxml.etree.parse(io.BytesIO(params[\"xml\"].encode()), lxml.etree.XMLParser(load_dtd=True, resolve_entities=True, no_netwo"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cursor.execute(\"INSERT INTO comments VALUES(NULL, '%s', '%s')\" % (params[\"comment\"], time.ctime()))"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 57,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "exec(program, envs)"
+     },
+     {
+      "file": "dsvw.py",
+      "line": 67,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "cursor.execute(\"SELECT * FROM users WHERE username='\" + re.sub(r\"[^\\w]\", \"\", params.get(\"username\", \"\")) + \"' AND passwo"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "dsvw.py",
+     "line": 39,
+     "cwe": "CWE-78",
+     "reason": "evidence_not_in_source"
+    },
+    {
+     "file": "dsvw.py",
+     "line": 11,
+     "cwe": "CWE-20",
+     "reason": "refuted_by_verifier: The variable USERS_XML is a hardcoded constant within the source code, not data provided by an external user. Therefore, parsing it with xml.etree.ElementTree does not pose a security risk as the content is trusted."
+    },
+    {
+     "file": "dsvw.py",
+     "line": 19,
+     "cwe": "CWE-20",
+     "reason": "refuted_by_verifier: The `xml.etree.ElementTree.fromstring` call on line 20 uses `USERS_XML`, which is a hardcoded constant string on line 11, not attacker-controlled input."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 10,
+    "prompt_tokens": 73811,
+    "gen_tokens": 1498,
+    "wall_s": 67.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": false,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "realvuln-damn-vulnerable-flask-application",
+   "authorship": "human_authored",
+   "loc": 224,
+   "commit_sha": "55f63201c85190e760a8fa34a580a9bf918dbf36",
+   "scores": {
+    "raw": {
+     "tp": 5,
+     "fp": 3,
+     "fn": 9,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 9
+    },
+    "grounded": {
+     "tp": 5,
+     "fp": 3,
+     "fn": 9,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 9
+    },
+    "verified": {
+     "tp": 5,
+     "fp": 3,
+     "fn": 9,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 9
+    },
+    "final": {
+     "tp": 5,
+     "fp": 3,
+     "fn": 9,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 9
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "damn-vulnerable-flask-app-009",
+     "file": "app.py",
+     "line": 15,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "app.secret_key = 'Harry Potter And The Deathly Hallows'"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "app.py",
+     "line": 43,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def login():"
+    },
+    {
+     "class": "FP",
+     "gt": "damn-vulnerable-flask-app-fp-001",
+     "file": "app.py",
+     "line": 50,
+     "cwe": "CWE-89",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "user = User.query.filter_by(username=name, password=passw).first()"
+    },
+    {
+     "class": "TP",
+     "gt": "damn-vulnerable-flask-app-001",
+     "file": "app.py",
+     "line": 120,
+     "cwe": "CWE-94",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "str(eval(expression)).replace('\\n', '\\n<br>')"
+    },
+    {
+     "class": "FP",
+     "gt": "damn-vulnerable-flask-app-003",
+     "file": "app.py",
+     "line": 140,
+     "cwe": "CWE-78",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "rp(\"nslookup \" + address).replace('\\n', '\\n<br>')"
+    },
+    {
+     "class": "TP",
+     "gt": "damn-vulnerable-flask-app-005",
+     "file": "app.py",
+     "line": 157,
+     "cwe": "CWE-611",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "parser = etree.XMLParser(no_network=False, dtd_validation=True)"
+    },
+    {
+     "class": "TP",
+     "gt": "damn-vulnerable-flask-app-007",
+     "file": "app.py",
+     "line": 205,
+     "cwe": "CWE-1336",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return render_template_string(template)"
+    },
+    {
+     "class": "TP",
+     "gt": "damn-vulnerable-flask-app-011",
+     "file": "app.py",
+     "line": 208,
+     "cwe": "CWE-489",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "app.debug = True"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-002",
+     "file": "app.py",
+     "line": 120,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-004",
+     "file": "app.py",
+     "line": 140,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-006",
+     "file": "app.py",
+     "line": 169,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-008",
+     "file": "app.py",
+     "line": 189,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-010",
+     "file": "app.py",
+     "line": 62,
+     "cwe": "CWE-256",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-012",
+     "file": "app.py",
+     "line": 111,
+     "cwe": "CWE-306",
+     "vclass": "missing_authentication"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-013",
+     "file": "app.py",
+     "line": 132,
+     "cwe": "CWE-306",
+     "vclass": "missing_authentication"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-014",
+     "file": "app.py",
+     "line": 152,
+     "cwe": "CWE-306",
+     "vclass": "missing_authentication"
+    },
+    {
+     "class": "FN",
+     "gt": "damn-vulnerable-flask-app-015",
+     "file": "app.py",
+     "line": 185,
+     "cwe": "CWE-306",
+     "vclass": "missing_authentication"
+    },
+    {
+     "class": "TN",
+     "gt": "damn-vulnerable-flask-app-fp-002",
+     "file": "templates/error.html",
+     "line": 20,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "TN",
+     "gt": "damn-vulnerable-flask-app-fp-003",
+     "file": "templates/index.html",
+     "line": 9,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "TN",
+     "gt": "damn-vulnerable-flask-app-fp-004",
+     "file": "app.py",
+     "line": 19,
+     "cwe": "CWE-798",
+     "vclass": "hardcoded_credentials"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "evidence": "app.secret_key = 'Harry Potter And The Deathly Hallows'"
+     },
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-307",
+      "evidence": "def login():"
+     },
+     {
+      "file": "app.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "evidence": "user = User.query.filter_by(username=name, password=passw).first()"
+     },
+     {
+      "file": "app.py",
+      "line": 120,
+      "cwe": "CWE-94",
+      "evidence": "str(eval(expression)).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 140,
+      "cwe": "CWE-78",
+      "evidence": "rp(\"nslookup \" + address).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 157,
+      "cwe": "CWE-611",
+      "evidence": "parser = etree.XMLParser(no_network=False, dtd_validation=True)"
+     },
+     {
+      "file": "app.py",
+      "line": 205,
+      "cwe": "CWE-1336",
+      "evidence": "return render_template_string(template)"
+     },
+     {
+      "file": "app.py",
+      "line": 208,
+      "cwe": "CWE-489",
+      "evidence": "app.debug = True"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "app.secret_key = 'Harry Potter And The Deathly Hallows'"
+     },
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def login():"
+     },
+     {
+      "file": "app.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "user = User.query.filter_by(username=name, password=passw).first()"
+     },
+     {
+      "file": "app.py",
+      "line": 120,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "str(eval(expression)).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 140,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "rp(\"nslookup \" + address).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 157,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "parser = etree.XMLParser(no_network=False, dtd_validation=True)"
+     },
+     {
+      "file": "app.py",
+      "line": 205,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return render_template_string(template)"
+     },
+     {
+      "file": "app.py",
+      "line": 208,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "app.debug = True"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.secret_key = 'Harry Potter And The Deathly Hallows'"
+     },
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def login():"
+     },
+     {
+      "file": "app.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "user = User.query.filter_by(username=name, password=passw).first()"
+     },
+     {
+      "file": "app.py",
+      "line": 120,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "str(eval(expression)).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 140,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "rp(\"nslookup \" + address).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 157,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parser = etree.XMLParser(no_network=False, dtd_validation=True)"
+     },
+     {
+      "file": "app.py",
+      "line": 205,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return render_template_string(template)"
+     },
+     {
+      "file": "app.py",
+      "line": 208,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.debug = True"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 15,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.secret_key = 'Harry Potter And The Deathly Hallows'"
+     },
+     {
+      "file": "app.py",
+      "line": 43,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def login():"
+     },
+     {
+      "file": "app.py",
+      "line": 50,
+      "cwe": "CWE-89",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "user = User.query.filter_by(username=name, password=passw).first()"
+     },
+     {
+      "file": "app.py",
+      "line": 120,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "str(eval(expression)).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 140,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "rp(\"nslookup \" + address).replace('\\n', '\\n<br>')"
+     },
+     {
+      "file": "app.py",
+      "line": 157,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parser = etree.XMLParser(no_network=False, dtd_validation=True)"
+     },
+     {
+      "file": "app.py",
+      "line": 205,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return render_template_string(template)"
+     },
+     {
+      "file": "app.py",
+      "line": 208,
+      "cwe": "CWE-489",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app.debug = True"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 2,
+    "llm_calls": 10,
+    "prompt_tokens": 18420,
+    "gen_tokens": 1339,
+    "wall_s": 43.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": false,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "id": "vc-codex-seeded-v2-fintech-lending-fastapi",
+   "authorship": "llm_generated",
+   "loc": 928,
+   "commit_sha": "0c90e57a9f436aab02184b6f056bb4d66cde34f0",
+   "scores": {
+    "raw": {
+     "tp": 17,
+     "fp": 13,
+     "fn": 20,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 20
+    },
+    "grounded": {
+     "tp": 17,
+     "fp": 12,
+     "fn": 20,
+     "tn": 3,
+     "ns": 0,
+     "fn_py": 20
+    },
+    "verified": {
+     "tp": 17,
+     "fp": 10,
+     "fn": 20,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 20
+    },
+    "final": {
+     "tp": 17,
+     "fp": 10,
+     "fn": 20,
+     "tn": 4,
+     "ns": 0,
+     "fn_py": 20
+    }
+   },
+   "items": [
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-1-038",
+     "file": "backend/app/loan_operations.py",
+     "line": 30,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "parcel_path = BASE_EXPORT_DIR / packet_ref"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-1-039",
+     "file": "backend/app/loan_operations.py",
+     "line": 40,
+     "cwe": "CWE-918",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "with urllib.request.urlopen(url, timeout=3) as response:"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-2-154",
+     "file": "backend/app/loan_operations.py",
+     "line": 55,
+     "cwe": "CWE-601",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return RedirectResponse(lane)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-2-199",
+     "file": "backend/app/loan_operations.py",
+     "line": 61,
+     "cwe": "CWE-915",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "workset.update(payload)"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-018",
+     "file": "backend/app/loan_operations.py",
+     "line": 69,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/loan_operations.py",
+     "line": 77,
+     "cwe": "CWE-113",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/loan_operations.py",
+     "line": 83,
+     "cwe": "CWE-1336",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "body = Template(\"{{ card|safe }}\").render(card=card)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-468",
+     "file": "backend/app/loan_operations.py",
+     "line": 99,
+     "cwe": "CWE-942",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "response.headers[\"Access-Control-Allow-Origin\"] = origin"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-486",
+     "file": "backend/app/loan_operations.py",
+     "line": 113,
+     "cwe": "CWE-94",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "body = Template(\"Result: \" + fragment).render()"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-495",
+     "file": "backend/app/loan_operations.py",
+     "line": 119,
+     "cwe": "CWE-22",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "target = BASE_EXPORT_DIR / name"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-507",
+     "file": "backend/app/loan_operations.py",
+     "line": 127,
+     "cwe": "CWE-78",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "status = _os.system(\"ping -c 1 \" + host)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-517",
+     "file": "backend/app/loan_operations.py",
+     "line": 133,
+     "cwe": "CWE-611",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-528",
+     "file": "backend/app/loan_operations.py",
+     "line": 139,
+     "cwe": "CWE-862",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "badge = request.cookies.get(\"ops_badge\") or request.headers.get(\"x-ops-badge\", \"\")"
+    },
+    {
+     "class": "TP",
+     "gt": "seeded-v2-campaign-3-538",
+     "file": "backend/app/loan_operations.py",
+     "line": 153,
+     "cwe": "CWE-16",
+     "sources": [
+      "llm",
+      "bandit"
+     ],
+     "verdict": "confirmed",
+     "evidence": "ctx = ssl._create_unverified_context()"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-001",
+     "file": "backend/app/main.py",
+     "line": 27,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "database_url: str = \"postgresql+psycopg://postgres:postgres@localhost:56543/loan_portal\""
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 28,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "session_secret: str = \"dev-only-change-me\""
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-002",
+     "file": "backend/app/main.py",
+     "line": 424,
+     "cwe": "CWE-614",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "response.set_cookie(\"lp_session\", create_token(user), httponly=True, secure=False, samesite=\"lax\")"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-004",
+     "file": "backend/app/main.py",
+     "line": 414,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def register(payload: RegisterIn, response: Response, db: Db, request: Request):"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-005",
+     "file": "backend/app/main.py",
+     "line": 429,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def login(payload: LoginIn, response: Response, db: Db, request: Request):"
+    },
+    {
+     "class": "TP",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-006",
+     "file": "backend/app/main.py",
+     "line": 446,
+     "cwe": "CWE-307",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def password_reset(email: EmailStr, db: Db):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 451,
+     "cwe": "CWE-204",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "return {\"message\": \"If the account exists, a local reset token was generated.\", \"reset_token\": user.reset_token if user "
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 694,
+     "cwe": "CWE-352",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def download_document(doc_id: int, user: CurrentUser, db: Db, request: Request):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 733,
+     "cwe": "CWE-352",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def update_user(user_id: int, payload: UserUpdate, user: CurrentUser, db: Db, request: Request):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 758,
+     "cwe": "CWE-352",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "def import_leads(user: CurrentUser, db: Db, request: Request, file: UploadFile = File(...)):"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 847,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "admin = User(email=\"admin@example.com\", full_name=\"Avery Admin\", role=Role.admin, password_hash=pwd.hash(\"Password123!\")"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 849,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "support = User(email=\"support@example.com\", full_name=\"Sam Support\", role=Role.support_specialist, password_hash=pwd.has"
+    },
+    {
+     "class": "FP",
+     "gt": null,
+     "file": "backend/app/main.py",
+     "line": 850,
+     "cwe": "CWE-798",
+     "sources": [
+      "llm"
+     ],
+     "verdict": "confirmed",
+     "evidence": "borrower_user = User(email=\"borrower@example.com\", full_name=\"Blake Borrower\", role=Role.borrower, password_hash=pwd.has"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-1-037",
+     "file": "backend/app/loan_operations.py",
+     "line": 23,
+     "cwe": "CWE-639",
+     "vclass": "idor"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-2-128",
+     "file": "backend/app/loan_operations.py",
+     "line": 45,
+     "cwe": "CWE-840",
+     "vclass": "business_logic_validation_gap"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-2-240",
+     "file": "backend/app/loan_operations.py",
+     "line": 65,
+     "cwe": "CWE-312",
+     "vclass": "sensitive_data_exposure"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-2-292",
+     "file": "backend/app/loan_operations.py",
+     "line": 75,
+     "cwe": "CWE-1004",
+     "vclass": "insecure_cookie_flags"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-2-322",
+     "file": "backend/app/loan_operations.py",
+     "line": 81,
+     "cwe": "CWE-79",
+     "vclass": "reflected_xss"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-3-458",
+     "file": "backend/app/loan_operations.py",
+     "line": 87,
+     "cwe": "CWE-204",
+     "vclass": "user_enumeration"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-3-478",
+     "file": "backend/app/loan_operations.py",
+     "line": 104,
+     "cwe": "CWE-1021",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "FN",
+     "gt": "seeded-v2-campaign-3-548",
+     "file": "backend/app/loan_operations.py",
+     "line": 150,
+     "cwe": "CWE-16",
+     "vclass": "security_misconfiguration"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-fp-001",
+     "file": "backend/app/loan_operations.py",
+     "line": 16,
+     "cwe": "CWE-862",
+     "vclass": "missing_authentication_false_positive"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-fp-002",
+     "file": "backend/app/main.py",
+     "line": 536,
+     "cwe": "CWE-89",
+     "vclass": "sql_injection_false_positive"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-fp-003",
+     "file": "backend/app/main.py",
+     "line": 305,
+     "cwe": "CWE-639",
+     "vclass": "idor_false_positive"
+    },
+    {
+     "class": "TN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-fp-004",
+     "file": "backend/app/main.py",
+     "line": 378,
+     "cwe": "CWE-942",
+     "vclass": "permissive_cors_false_positive"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-003",
+     "file": "backend/app/main.py",
+     "line": 252,
+     "cwe": "CWE-613",
+     "vclass": "session_tokens_without_expiry_or_server_revocation"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-007",
+     "file": "backend/app/main.py",
+     "line": 445,
+     "cwe": "CWE-640",
+     "vclass": "password_reset_token_and_account_existence_disclosed"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-008",
+     "file": "backend/app/main.py",
+     "line": 289,
+     "cwe": "CWE-639",
+     "vclass": "underwriter_can_view_other_assigned_applications"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-009",
+     "file": "backend/app/main.py",
+     "line": 812,
+     "cwe": "CWE-613",
+     "vclass": "disabled_admin_api_key_remains_valid"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-010",
+     "file": "backend/app/main.py",
+     "line": 668,
+     "cwe": "CWE-434",
+     "vclass": "document_upload_trusts_client_content_type"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-011",
+     "file": "backend/app/main.py",
+     "line": 679,
+     "cwe": "CWE-400",
+     "vclass": "document_upload_unbounded_disk_consumption"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-012",
+     "file": "backend/app/main.py",
+     "line": 757,
+     "cwe": "CWE-400",
+     "vclass": "lead_import_unbounded_memory_and_rows"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-013",
+     "file": "backend/app/main.py",
+     "line": 773,
+     "cwe": "CWE-400",
+     "vclass": "admin_export_unbounded_memory_buffer"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-014",
+     "file": "backend/app/main.py",
+     "line": 773,
+     "cwe": "CWE-1236",
+     "vclass": "loan_export_csv_formula_injection"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-015",
+     "file": "backend/app/main.py",
+     "line": 151,
+     "cwe": "CWE-312",
+     "vclass": "plaintext_loan_document_storage"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-016",
+     "file": "backend/app/main.py",
+     "line": 668,
+     "cwe": "CWE-840",
+     "vclass": "borrower_can_replace_reviewed_or_final_documents"
+    },
+    {
+     "class": "FN",
+     "gt": "vc-codex-seeded-v2-fintech-lending-fastapi-enrich-017",
+     "file": "backend/app/main.py",
+     "line": 646,
+     "cwe": "CWE-840",
+     "vclass": "loan_decision_allows_unreviewed_uploaded_documents"
+    }
+   ],
+   "stages": {
+    "raw": [
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 29,
+      "cwe": "CWE-22",
+      "evidence": "parcel_path = BASE_EXPORT_DIR / packet_ref"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 39,
+      "cwe": "CWE-918",
+      "evidence": "with urllib.request.urlopen(url, timeout=3) as response:"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 54,
+      "cwe": "CWE-601",
+      "evidence": "return RedirectResponse(lane)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 58,
+      "cwe": "CWE-915",
+      "evidence": "workset.update(payload)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 68,
+      "cwe": "CWE-22",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 77,
+      "cwe": "CWE-113",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 83,
+      "cwe": "CWE-1336",
+      "evidence": "body = Template(\"{{ card|safe }}\").render(card=card)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 99,
+      "cwe": "CWE-942",
+      "evidence": "response.headers[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 113,
+      "cwe": "CWE-94",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 119,
+      "cwe": "CWE-22",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 127,
+      "cwe": "CWE-78",
+      "evidence": "status = _os.system(\"ping -c 1 \" + host)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 133,
+      "cwe": "CWE-611",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 139,
+      "cwe": "CWE-862",
+      "evidence": "badge = request.cookies.get(\"ops_badge\") or request.headers.get(\"x-ops-badge\", \"\")"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 153,
+      "cwe": "CWE-16",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "evidence": "database_url: str = \"postgresql+psycopg://postgres:postgres@localhost:56543/loan_portal\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 28,
+      "cwe": "CWE-798",
+      "evidence": "session_secret: str = \"dev-only-change-me\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 244,
+      "cwe": "CWE-614",
+      "evidence": "response.set_cookie(\"lp_session\", create_token(user), httponly=True, secure=False, samesite=\"lax\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 413,
+      "cwe": "CWE-307",
+      "evidence": "def register(payload: RegisterIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 428,
+      "cwe": "CWE-307",
+      "evidence": "def login(payload: LoginIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 435,
+      "cwe": "CWE-614",
+      "evidence": "response.set_cookie(\"lp_session\", create_token(user), httponly=True, secure=False, samesite=\"lax\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 445,
+      "cwe": "CWE-307",
+      "evidence": "def password_reset(email: EmailStr, db: Db):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 451,
+      "cwe": "CWE-204",
+      "evidence": "return {\"message\": \"If the account exists, a local reset token was generated.\", \"reset_token\": user.reset_token if user "
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 523,
+      "cwe": "CWE-943",
+      "evidence": "stmt = stmt.where(or_(BorrowerProfile.business_name.ilike(f\"%{q}%\"), LoanApplication.purpose.ilike(f\"%{q}%\")))"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 693,
+      "cwe": "CWE-352",
+      "evidence": "def download_document(doc_id: int, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 732,
+      "cwe": "CWE-352",
+      "evidence": "def update_user(user_id: int, payload: UserUpdate, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 757,
+      "cwe": "CWE-352",
+      "evidence": "def import_leads(user: CurrentUser, db: Db, request: Request, file: UploadFile = File(...)):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 847,
+      "cwe": "CWE-798",
+      "evidence": "admin = User(email=\"admin@example.com\", full_name=\"Avery Admin\", role=Role.admin, password_hash=pwd.hash(\"Password123!\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 848,
+      "cwe": "CWE-798",
+      "evidence": "uw = User(email=\"underwriter@example.com\", full_name=\"Uma Underwriter\", role=Role.underwriter, password_hash=pwd.hash(\"P"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 849,
+      "cwe": "CWE-798",
+      "evidence": "support = User(email=\"support@example.com\", full_name=\"Sam Support\", role=Role.support_specialist, password_hash=pwd.has"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 850,
+      "cwe": "CWE-798",
+      "evidence": "borrower_user = User(email=\"borrower@example.com\", full_name=\"Blake Borrower\", role=Role.borrower, password_hash=pwd.has"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 30,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "parcel_path = BASE_EXPORT_DIR / packet_ref"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 40,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "with urllib.request.urlopen(url, timeout=3) as response:"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 55,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return RedirectResponse(lane)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 61,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "workset.update(payload)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 69,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 77,
+      "cwe": "CWE-113",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 83,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "body = Template(\"{{ card|safe }}\").render(card=card)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 99,
+      "cwe": "CWE-942",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "response.headers[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 113,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 119,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 127,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "status = _os.system(\"ping -c 1 \" + host)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 133,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 139,
+      "cwe": "CWE-862",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "badge = request.cookies.get(\"ops_badge\") or request.headers.get(\"x-ops-badge\", \"\")"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 153,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "database_url: str = \"postgresql+psycopg://postgres:postgres@localhost:56543/loan_portal\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 28,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "session_secret: str = \"dev-only-change-me\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 424,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "response.set_cookie(\"lp_session\", create_token(user), httponly=True, secure=False, samesite=\"lax\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 414,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def register(payload: RegisterIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 429,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def login(payload: LoginIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 446,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def password_reset(email: EmailStr, db: Db):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 451,
+      "cwe": "CWE-204",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return {\"message\": \"If the account exists, a local reset token was generated.\", \"reset_token\": user.reset_token if user "
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 536,
+      "cwe": "CWE-943",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "stmt = stmt.where(or_(BorrowerProfile.business_name.ilike(f\"%{q}%\"), LoanApplication.purpose.ilike(f\"%{q}%\")))"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 694,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def download_document(doc_id: int, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 733,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def update_user(user_id: int, payload: UserUpdate, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 758,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "def import_leads(user: CurrentUser, db: Db, request: Request, file: UploadFile = File(...)):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 847,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "admin = User(email=\"admin@example.com\", full_name=\"Avery Admin\", role=Role.admin, password_hash=pwd.hash(\"Password123!\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 848,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "uw = User(email=\"underwriter@example.com\", full_name=\"Uma Underwriter\", role=Role.underwriter, password_hash=pwd.hash(\"P"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 849,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "support = User(email=\"support@example.com\", full_name=\"Sam Support\", role=Role.support_specialist, password_hash=pwd.has"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 850,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "borrower_user = User(email=\"borrower@example.com\", full_name=\"Blake Borrower\", role=Role.borrower, password_hash=pwd.has"
+     }
+    ],
+    "verified": [
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 30,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parcel_path = BASE_EXPORT_DIR / packet_ref"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 40,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "with urllib.request.urlopen(url, timeout=3) as response:"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 55,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return RedirectResponse(lane)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 61,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "workset.update(payload)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 69,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 77,
+      "cwe": "CWE-113",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 83,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "body = Template(\"{{ card|safe }}\").render(card=card)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 99,
+      "cwe": "CWE-942",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.headers[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 113,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 119,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 127,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "status = _os.system(\"ping -c 1 \" + host)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 133,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 139,
+      "cwe": "CWE-862",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "badge = request.cookies.get(\"ops_badge\") or request.headers.get(\"x-ops-badge\", \"\")"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 153,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "database_url: str = \"postgresql+psycopg://postgres:postgres@localhost:56543/loan_portal\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 28,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "session_secret: str = \"dev-only-change-me\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 424,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"lp_session\", create_token(user), httponly=True, secure=False, samesite=\"lax\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 414,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def register(payload: RegisterIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 429,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def login(payload: LoginIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 446,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def password_reset(email: EmailStr, db: Db):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 451,
+      "cwe": "CWE-204",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"message\": \"If the account exists, a local reset token was generated.\", \"reset_token\": user.reset_token if user "
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 694,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def download_document(doc_id: int, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 733,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def update_user(user_id: int, payload: UserUpdate, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 758,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def import_leads(user: CurrentUser, db: Db, request: Request, file: UploadFile = File(...)):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 847,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "admin = User(email=\"admin@example.com\", full_name=\"Avery Admin\", role=Role.admin, password_hash=pwd.hash(\"Password123!\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 849,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "support = User(email=\"support@example.com\", full_name=\"Sam Support\", role=Role.support_specialist, password_hash=pwd.has"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 850,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "borrower_user = User(email=\"borrower@example.com\", full_name=\"Blake Borrower\", role=Role.borrower, password_hash=pwd.has"
+     }
+    ],
+    "final": [
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 30,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parcel_path = BASE_EXPORT_DIR / packet_ref"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 40,
+      "cwe": "CWE-918",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "with urllib.request.urlopen(url, timeout=3) as response:"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 55,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return RedirectResponse(lane)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 61,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "workset.update(payload)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 69,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / f\"{ref}.json\""
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 77,
+      "cwe": "CWE-113",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"portal_crumb\", marker)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 83,
+      "cwe": "CWE-1336",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "body = Template(\"{{ card|safe }}\").render(card=card)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 99,
+      "cwe": "CWE-942",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.headers[\"Access-Control-Allow-Origin\"] = origin"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 113,
+      "cwe": "CWE-94",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "body = Template(\"Result: \" + fragment).render()"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 119,
+      "cwe": "CWE-22",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "target = BASE_EXPORT_DIR / name"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 127,
+      "cwe": "CWE-78",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "status = _os.system(\"ping -c 1 \" + host)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 133,
+      "cwe": "CWE-611",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "parser = etree.XMLParser(load_dtd=True, resolve_entities=True, no_network=False)"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 139,
+      "cwe": "CWE-862",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "badge = request.cookies.get(\"ops_badge\") or request.headers.get(\"x-ops-badge\", \"\")"
+     },
+     {
+      "file": "backend/app/loan_operations.py",
+      "line": 153,
+      "cwe": "CWE-16",
+      "sources": [
+       "llm",
+       "bandit"
+      ],
+      "verdict": "confirmed",
+      "evidence": "ctx = ssl._create_unverified_context()"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 27,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "database_url: str = \"postgresql+psycopg://postgres:postgres@localhost:56543/loan_portal\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 28,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "session_secret: str = \"dev-only-change-me\""
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 424,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "response.set_cookie(\"lp_session\", create_token(user), httponly=True, secure=False, samesite=\"lax\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 414,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def register(payload: RegisterIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 429,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def login(payload: LoginIn, response: Response, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 446,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def password_reset(email: EmailStr, db: Db):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 451,
+      "cwe": "CWE-204",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return {\"message\": \"If the account exists, a local reset token was generated.\", \"reset_token\": user.reset_token if user "
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 694,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def download_document(doc_id: int, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 733,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def update_user(user_id: int, payload: UserUpdate, user: CurrentUser, db: Db, request: Request):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 758,
+      "cwe": "CWE-352",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "def import_leads(user: CurrentUser, db: Db, request: Request, file: UploadFile = File(...)):"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 847,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "admin = User(email=\"admin@example.com\", full_name=\"Avery Admin\", role=Role.admin, password_hash=pwd.hash(\"Password123!\")"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 849,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "support = User(email=\"support@example.com\", full_name=\"Sam Support\", role=Role.support_specialist, password_hash=pwd.has"
+     },
+     {
+      "file": "backend/app/main.py",
+      "line": 850,
+      "cwe": "CWE-798",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "borrower_user = User(email=\"borrower@example.com\", full_name=\"Blake Borrower\", role=Role.borrower, password_hash=pwd.has"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "backend/app/main.py",
+     "line": 536,
+     "cwe": "CWE-943",
+     "reason": "refuted_by_verifier: The code uses SQLAlchemy's `.ilike()` method, which handles parameter binding automatically and protects against SQL injection. The f-string is only used to wrap the value in percentage signs for the pattern match, not to concatenate raw SQL commands."
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 848,
+     "cwe": "CWE-798",
+     "reason": "refuted_by_verifier: The hardcoded password is located within a database seeding function (`seed_db`), which is used only for initializing a local development or testing environment. This is not a production vulnerability as it does not affect the live application's security."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 5,
+    "llm_calls": 38,
+    "prompt_tokens": 99076,
+    "gen_tokens": 5557,
+    "wall_s": 175.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": false,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  }
+ ]
+}

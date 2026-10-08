@@ -1,0 +1,6 @@
+model gemma4:12b digest 6114515d63c1 (Mac runs: 6114515d63c1)
+gpus 2
+NVIDIA GeForce RTX 3090, 580.159.03, 24576 MiB
+NVIDIA GeForce RTX 3090, 580.159.03, 24576 MiB
+ollama ollama version is 0.40.1
+repo 0a3580cf6ba3ec30c92cf484f456c1ba77b32580

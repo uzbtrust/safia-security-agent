@@ -1,0 +1,1927 @@
+{
+ "model": "gemma4:12b",
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "verify": true,
+ "bandit": true,
+ "examples": true,
+ "notes": "Users are identified by the X-User header in this toy app; do not report that as a finding. Routes that never read X-User are public by design. This toy app omits rate limiting, CSRF protection, security headers and logging, and its seed data holds plaintext demo passwords, all by design: do not report those.",
+ "cases": [
+  "blog/clean",
+  "blog/CWE-79",
+  "blog/CWE-915",
+  "blog/CWE-330",
+  "blog/CWE-601"
+ ],
+ "runs": [
+  {
+   "case": "blog/clean",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 3,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "final": {
+     "n_findings": 2,
+     "false_signal": true
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/request\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/request\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/request\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/request\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code implements a guard that checks if the target starts with a single slash and prevents double-slash bypasses (e.g., //evil.com)."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 4,
+    "prompt_tokens": 9443,
+    "gen_tokens": 451,
+    "wall_s": 21.2,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/clean",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "final": {
+     "n_findings": 1,
+     "false_signal": true
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code explicitly checks that the target starts with a single slash and not a double slash, which prevents common open redirect bypasses by ensuring the path is local."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7258,
+    "gen_tokens": 284,
+    "wall_s": 17.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/clean",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "grounded": {
+     "n_findings": 2,
+     "false_signal": true
+    },
+    "verified": {
+     "n_findings": 1,
+     "false_signal": true
+    },
+    "final": {
+     "n_findings": 1,
+     "false_signal": true
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code implements a guard against open redirects by ensuring the target starts with a single forward slash and preventing double-slash bypasses. This effectively restricts redirects to the local domain."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7257,
+    "gen_tokens": 311,
+    "wall_s": 15.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-79",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code includes a guard that validates the target URL, ensuring it starts with a single forward slash and preventing protocol-relative URLs (//)."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7300,
+    "gen_tokens": 329,
+    "wall_s": 15.9,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-79",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7313,
+    "gen_tokens": 423,
+    "wall_s": 17.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-79",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 31,
+      "cwe": "CWE-79",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return f\"<html><body><h1>Results for {q}</h1><p>No posts found.</p></body></html>\""
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code includes a check that ensures the target URL starts with a single forward slash and prevents protocol-relative URLs (starting with //)."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7304,
+    "gen_tokens": 327,
+    "wall_s": 16.5,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-915",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 4,
+     "strict": false,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 4
+    },
+    "grounded": {
+     "n_findings": 4,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 3
+    },
+    "verified": {
+     "n_findings": 3,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 2
+    },
+    "final": {
+     "n_findings": 3,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 2
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 33,
+      "cwe": "CWE-915",
+      "evidence": "data.get(\"is_admin\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-306",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "return redirect(target)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "data.get(\"is_admin\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-306",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 80,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "return redirect(target)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "data.get(\"is_admin\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 80,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return redirect(target)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "data.get(\"is_admin\")"
+     },
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 80,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "return redirect(target)"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 65,
+     "cwe": "CWE-306",
+     "reason": "refuted_by_verifier: The endpoint validates that the provided token matches the one stored in the `resets` dictionary for the specific username. Since tokens are generated using `secrets.token_hex(16)` and delivered out of band, an attacker cannot reset a password without obtaining the unique token."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 5,
+    "prompt_tokens": 11586,
+    "gen_tokens": 611,
+    "wall_s": 28.5,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-915",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "evidence": "(username, password, 1 if data.get(\"is_admin\") else 0)"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "(username, password, 1 if data.get(\"is_admin\") else 0)"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "(username, password, 1 if data.get(\"is_admin\") else 0)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 42,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "(username, password, 1 if data.get(\"is_admin\") else 0)"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code implements a guard that ensures the target URL starts with a single forward slash and prevents double-slash bypasses (//)."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7364,
+    "gen_tokens": 349,
+    "wall_s": 13.1,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-915",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 3,
+     "strict": false,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 3
+    },
+    "grounded": {
+     "n_findings": 3,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 2
+    },
+    "verified": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 2,
+     "strict": true,
+     "function": true,
+     "cwe_only": true,
+     "located": true,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 33,
+      "cwe": "CWE-915",
+      "evidence": "data = request.get_json(silent=True) or {}\nusername, password = data.get(\"username\"), data.get(\"password\")"
+     },
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/request\")\ndef reset_request():"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "target = request.args.get(\"next\", \"/\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "data = request.get_json(silent=True) or {}\nusername, password = data.get(\"username\"), data.get(\"password\")"
+     },
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/request\")\ndef reset_request():"
+     },
+     {
+      "file": "app.py",
+      "line": 77,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "target = request.args.get(\"next\", \"/\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "data = request.get_json(silent=True) or {}\nusername, password = data.get(\"username\"), data.get(\"password\")"
+     },
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/request\")\ndef reset_request():"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 36,
+      "cwe": "CWE-915",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "data = request.get_json(silent=True) or {}\nusername, password = data.get(\"username\"), data.get(\"password\")"
+     },
+     {
+      "file": "app.py",
+      "line": 56,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/request\")\ndef reset_request():"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 77,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code includes a guard that validates the 'next' parameter, ensuring it starts with a single forward slash and preventing protocol-relative URLs (e.g., //attacker.com)."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 4,
+    "prompt_tokens": 9521,
+    "gen_tokens": 493,
+    "wall_s": 15.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-330",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 2
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 2
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code implements a guard that checks if the target starts with a single slash and prevents double-slash bypasses (e.g., //evil.com)."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7241,
+    "gen_tokens": 289,
+    "wall_s": 10.7,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-330",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 2
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 2
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 77,
+      "cwe": "CWE-601",
+      "evidence": "target = request.args.get(\"next\", \"/\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 77,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "target = request.args.get(\"next\", \"/\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 77,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code explicitly checks that the target starts with a single forward slash and does not start with double forward slashes, effectively enforcing a relative path redirect."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7188,
+    "gen_tokens": 301,
+    "wall_s": 10.6,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-330",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 2
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 2
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": false,
+     "function": false,
+     "cwe_only": false,
+     "located": false,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     },
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 65,
+      "cwe": "CWE-307",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.post(\"/reset/confirm\")"
+     }
+    ]
+   },
+   "dropped": [
+    {
+     "file": "app.py",
+     "line": 75,
+     "cwe": "CWE-601",
+     "reason": "refuted_by_verifier: The code includes a check that ensures the target URL starts with a single forward slash and prevents double-slash bypasses, effectively restricting redirects to local paths."
+    }
+   ],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7237,
+    "gen_tokens": 282,
+    "wall_s": 13.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-601",
+   "seed": 1,
+   "scores": {
+    "raw": {
+     "n_findings": 2,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 1
+    },
+    "grounded": {
+     "n_findings": 2,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 1
+    },
+    "verified": {
+     "n_findings": 2,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 1
+    },
+    "final": {
+     "n_findings": 2,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 1
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     },
+     {
+      "file": "app.py",
+      "line": 10,
+      "cwe": "CWE-614",
+      "evidence": "app = Flask(__name__)"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     },
+     {
+      "file": "app.py",
+      "line": 10,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "app = Flask(__name__)"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     },
+     {
+      "file": "app.py",
+      "line": 10,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app = Flask(__name__)"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     },
+     {
+      "file": "app.py",
+      "line": 10,
+      "cwe": "CWE-614",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "app = Flask(__name__)"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 3,
+    "prompt_tokens": 7100,
+    "gen_tokens": 328,
+    "wall_s": 12.8,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-601",
+   "seed": 2,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 5039,
+    "gen_tokens": 144,
+    "wall_s": 8.4,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  },
+  {
+   "case": "blog/CWE-601",
+   "seed": 3,
+   "scores": {
+    "raw": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    },
+    "grounded": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    },
+    "verified": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    },
+    "final": {
+     "n_findings": 1,
+     "strict": true,
+     "function": false,
+     "cwe_only": true,
+     "located": false,
+     "extras": 0
+    }
+   },
+   "stages": {
+    "raw": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "grounded": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "verified": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ],
+    "final": [
+     {
+      "file": "app.py",
+      "line": 75,
+      "cwe": "CWE-601",
+      "sources": [
+       "llm"
+      ],
+      "verdict": "confirmed",
+      "evidence": "@app.get(\"/go\")"
+     }
+    ]
+   },
+   "dropped": [],
+   "meta": {
+    "model": "gemma4:12b",
+    "files": 1,
+    "llm_calls": 2,
+    "prompt_tokens": 5044,
+    "gen_tokens": 175,
+    "wall_s": 9.0,
+    "errors": [],
+    "verify": true,
+    "bandit": true,
+    "examples": true,
+    "include_tests": false,
+    "prompt_sha": "62516da8c875"
+   }
+  }
+ ]
+}
