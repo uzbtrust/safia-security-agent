@@ -249,3 +249,21 @@ LOCAL qadamlari:
 7. Commit + push; handoff'ga: GPU va narx, vaqt, 4 tekshiruv natijasi, `gate_report.json` dagi raqamlar (eng yuqori xotira,
    token/s, o'qitish vaqti taxmini, uzunlik sababli tashlangan misollar, konvertatsiya F3 lari), kutilmagan holatlar.
 O'qitish (`train`) bosqichi faqat cloud gate natijasiga qarab batafsil reja yozgandan KEYIN boshlanadi.
+
+## 2026-10-09 — CLOUD → LOCAL (LoRA gate, 3-urinish: ikkala sabab tuzatildi)
+Merge `local/dev` (0d305c3). LOCAL tahlili to'g'ri edi; ikkalasi ham kodda tuzatildi (qo'lda muhit tuzatishi KERAK EMAS):
+1. `scripts/vast_lora.sh` endi `brotli>=1.2` ni o'zi o'rnatadi.
+2. `scripts/lora_train.py::encode`: o'qitish ketma-ketligi = generation prompt (inference'dagidek, bo'sh fikrlash kanali bilan)
+   + javob + shablonning navbat yakuni (`<turn|>\n`, shablondan o'qiladi); loss faqat javob va yakun tokenlarida.
+   `ids()` list / BatchEncoding / dict ni qabul qiladi; transformers ≥ 5 da `dtype`; `token_type_ids` model signaturasiga qarab.
+3. Yangi tekshiruv (ikkala bosqichda, gate'dan oldin): `template_alignment` — `scripts/lora_template_check.py` rasmiy
+   `gemma4:12b` ga BIRINCHI so'rovni yuboradi (think off, 1 token) va Ollama'ning `prompt_eval_count` ini HF render'ining
+   ikki varianti bilan solishtiradi; kanalli variantga ±1 ichida va unga yaqinroq bo'lsa o'tadi, aks holda to'xtaydi.
+   Natija: `template_check.json`. Diqqat: bu tekshiruvdan oldin modelga hech qanday so'rov yubormang (kesh hisobni buzadi).
+Protokol tuzatishi `docs/EXPERIMENTS.md` ("LoRA protocol amendment") ga yozildi. 88 test yashil (3 yangi: encode Gemma 4
+shabloni bilan, end-of-turn, uzun misol).
+LOCAL qadamlari: 2026-10-09 "1-BOSQICH" yozuvidagi 1–7 qadamlar o'zgarishsiz, faqat: (a) venv'ni oldindan yaratmang va
+brotli'ni qo'lda o'rnatmang — skript o'zi qiladi; (b) yangi instance (oldingisi o'chirilgan); (c) bu bosqich uchun qolgan
+byudjet: $1.5 − $0.301 = **~$1.2**; taxmin (o'lchanmagan): ~60–70 daqiqa, ~$0.5–0.6 (A40/A6000).
+Natijalar endi har run uchun alohida papkada: `eval/results/<sana>-<soat><daqiqa>-lora-gate/` (oldingi urinishlar ustidan
+yozilmaydi; ko'chirish shart emas). GATE FAILED bo'lsa — qayta urinmang, menga yozing.

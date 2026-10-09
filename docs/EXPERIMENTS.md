@@ -278,3 +278,19 @@ rest of that repo, since hubs were left out of training.
 **Known caveats.** Training and test labels come from one benchmark (its labelling style can be learned); the
 LLM-generated training repos share generators with the test LLM repo; the merged adapter also changes the
 verifier's behaviour. Budget: at most $5 for the GPU session.
+
+### LoRA protocol amendment (2026-10-09, after two gate attempts, before any training)
+- Gate attempt 1 stopped at check (a) on an install-environment fault (Brotli 1.1 vs the HF client); attempt 2
+  passed (a) and stopped at (b) on a code assumption: the Gemma 4 chat template ends the generation prompt with
+  an empty thinking channel, while a rendered finished conversation omits it, so "prompt is a prefix of the full
+  rendering" is false (`eval/results/20261009-lora-gate*/`). Neither attempt trained anything.
+- **Training sequence, amended:** generation prompt (exactly as the model receives it at inference with
+  thinking off) + answer + the template's end-of-turn marker; loss on the answer and the marker only. A unit
+  test pins this construction with a Gemma-like template.
+- **New check in both phases (template alignment):** the first query of the official Ollama model must report a
+  prompt token count within 1 of the generation-prompt rendering and closer to it than to the rendering without
+  the channel (`scripts/lora_template_check.py`); otherwise stop.
+- Measured with the real tokenizer (LOCAL, attempt 2): the training set is 1,341,793 tokens in this
+  construction (the pre-registered 1.16M was a characters/3.9 estimate); 1 record exceeds 8192 tokens and is
+  dropped by the existing rule; the loss covers 42,788 answer tokens (about 3%).
+- Brotli >= 1.2 is now installed by the script.

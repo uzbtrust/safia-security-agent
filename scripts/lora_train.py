@@ -23,8 +23,10 @@ PROJ = ("q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_pr
 
 def load_model(base: str, quant: bool):
     import torch
+    import transformers
     from transformers import AutoModelForCausalLM, BitsAndBytesConfig
-    kw = {"torch_dtype": torch.bfloat16, "device_map": {"": 0}}
+    dtype_key = "dtype" if int(transformers.__version__.split(".")[0]) >= 5 else "torch_dtype"
+    kw = {dtype_key: torch.bfloat16, "device_map": {"": 0}}
     if quant:
         kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
                                                        bnb_4bit_use_double_quant=True,
@@ -45,15 +47,32 @@ def text_targets(model) -> list[str]:
     return keep
 
 
-def encode(tok, rec: dict, max_len: int):
+def ids(x) -> list[int]:
+    """Token ids from a list, a BatchEncoding or a plain dict (tokenizers return any of these)."""
+    if hasattr(x, "keys") and "input_ids" in x:
+        x = x["input_ids"]
+    return list(x)
+
+
+def end_of_turn(tok, rec: dict) -> str:
+    """Text the chat template puts after a finished assistant answer (Gemma 4: '<turn|>\\n')."""
     msgs = rec["messages"]
-    prompt = tok.apply_chat_template(msgs[:1], add_generation_prompt=True, tokenize=True)
-    full = tok.apply_chat_template(msgs, tokenize=True)
-    prompt, full = list(getattr(prompt, "input_ids", prompt)), list(getattr(full, "input_ids", full))
-    assert full[: len(prompt)] == prompt, "chat template: the prompt is not a prefix of the full conversation"
-    if len(full) > max_len:
+    full, answer = tok.apply_chat_template(msgs, tokenize=False), msgs[1]["content"]
+    at = full.rfind(answer)
+    assert at >= 0, "chat template: the answer text is not in the rendered conversation"
+    return full[at + len(answer):]
+
+
+def encode(tok, rec: dict, max_len: int, eot: str):
+    """Inference-aligned sequence: the generation prompt exactly as the model gets it at inference (Gemma 4 ends it
+    with an empty thinking channel when thinking is off), then the answer and the end-of-turn marker. A rendered
+    finished conversation would drop that channel, so it is not used (gate attempt 2, 2026-10-09)."""
+    msgs = rec["messages"]
+    prompt = ids(tok.apply_chat_template(msgs[:1], add_generation_prompt=True, tokenize=True))
+    answer = ids(tok(msgs[1]["content"] + eot, add_special_tokens=False))
+    if len(prompt) + len(answer) > max_len:
         return None
-    return full, [-100] * len(prompt) + full[len(prompt):]
+    return prompt + answer, [-100] * len(prompt) + answer
 
 
 def train(args) -> None:
@@ -69,9 +88,10 @@ def train(args) -> None:
     raw = Path(args.data).read_bytes()
     rows = [json.loads(line) for line in raw.decode().splitlines()]
     tok = AutoTokenizer.from_pretrained(args.base)
+    eot = end_of_turn(tok, rows[0])
     data, dropped = [], 0
     for rec in rows:
-        enc = encode(tok, rec, max_len)
+        enc = encode(tok, rec, max_len, eot)
         if enc is None:
             dropped += 1
         else:
@@ -87,7 +107,8 @@ def train(args) -> None:
     model = get_peft_model(model, LoraConfig(r=HP["r"], lora_alpha=HP["alpha"], lora_dropout=HP["dropout"],
                                              target_modules=targets, task_type="CAUSAL_LM"))
     model.print_trainable_parameters()
-    multimodal = "ConditionalGeneration" in type(model.get_base_model()).__name__
+    import inspect
+    needs_types = "token_type_ids" in inspect.signature(model.get_base_model().forward).parameters
     params = [p for p in model.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=HP["lr"], weight_decay=0.0)
     total = SMOKE["steps"] if args.smoke else math.ceil(len(data) * HP["epochs"] / HP["grad_accum"])
@@ -104,7 +125,7 @@ def train(args) -> None:
         for i, idx in enumerate(order):
             ids, labels = data[idx]
             x = torch.tensor([ids], device="cuda")
-            kw = {"token_type_ids": torch.zeros_like(x)} if multimodal else {}
+            kw = {"token_type_ids": torch.zeros_like(x)} if needs_types else {}  # text only: all zeros
             loss = model(input_ids=x, labels=torch.tensor([labels], device="cuda"), **kw).loss
             (loss / HP["grad_accum"]).backward()
             acc.append(loss.item())
@@ -132,7 +153,7 @@ def train(args) -> None:
         "hyperparameters": HP, "smoke": args.smoke, "examples": len(data), "dropped_too_long": dropped,
         "steps": step, "seconds": round(seconds), "tokens_seen": seen_tokens, "tokens_per_second": round(tps, 1),
         "peak_gpu_memory_gb": round(torch.cuda.max_memory_allocated() / 2**30, 1),
-        "full_set_tokens": full_tokens,
+        "full_set_tokens": full_tokens, "end_of_turn": eot,
         "estimated_full_training_hours": round(full_tokens * HP["epochs"] / tps / 3600, 2) if args.smoke else None,
         "data_sha256": hashlib.sha256(raw).hexdigest(),
         "trainable_targets": len(targets), "torch": torch.__version__, "transformers": transformers.__version__,

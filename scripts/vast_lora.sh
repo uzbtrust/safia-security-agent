@@ -5,6 +5,7 @@
 #   HF_TOKEN=<read-only token> BASE_HF=<official repo id> nohup bash scripts/vast_lora.sh train > lora_train.log 2>&1 &
 # The token lives only in the environment; it is never printed or written to disk.
 #
+# both  : template alignment: the training prompt has Ollama's token count for the same message (see the script).
 # gate  (feasibility, no training): (a) base weights download, (b) 8 QLoRA steps on the 8 longest examples at the
 #       full length (peak memory, tokens/s, estimated training time), (c) a merged smoke adapter imports into Ollama
 #       and the scanner gets valid JSON from it, (d) conversion check: the base model taken through the same import
@@ -19,8 +20,8 @@ PHASE=${1:-}
 ROOT=$(pwd)
 MODEL=gemma4:12b
 DATA_SHA=3055e51df8973c1b12d6c920f39e03d923b79d954f1c79d3e7172315f34a9161   # pre-registered training set
-DAY=$(date +%Y%m%d)
-OUT=$ROOT/eval/results/$DAY-lora-$PHASE
+RUN=$(date +%Y%m%d-%H%M)-lora-$PHASE   # unique per run: never writes into an earlier attempt's folder
+OUT=$ROOT/eval/results/$RUN
 W=$ROOT/.cache/lora
 PY=$ROOT/.venv/bin/python
 RV=$ROOT/.cache/realvuln
@@ -34,7 +35,7 @@ check() {  # check <name> <command...>: records pass/fail; stops the run on fail
   else echo "{\"check\": \"$name\", \"pass\": false}" >> "$OUT/gate.jsonl"; say "GATE FAILED: $name"; finish 4; fi
 }
 finish() {  # pack whatever exists, then exit with the given code
-  tar czf "$ROOT/lora_$PHASE.tgz" -C "$ROOT" "eval/results/$DAY-lora-$PHASE" 2>/dev/null || true
+  tar czf "$ROOT/lora_$PHASE.tgz" -C "$ROOT" "eval/results/$RUN" 2>/dev/null || true
   exit "$1"
 }
 cli() { PYTHONPATH=src "$PY" -m safia_sec.cli "$@"; }
@@ -55,8 +56,9 @@ git config --global --add safe.directory '*'
 command -v git >/dev/null && command -v curl >/dev/null && python3 -c "import venv" 2>/dev/null \
   || { apt-get update -qq && apt-get install -y -qq git curl python3-venv >/dev/null; }
 [ -x "$PY" ] || python3 -m venv --system-site-packages .venv   # reuse the image's CUDA build of torch
+# brotli>=1.2: huggingface_hub's HTTP client passes a keyword that Brotli 1.1 rejects (gate attempt 1, 2026-10-09)
 "$PY" -m pip install -q "flask>=3" "pytest>=8" "bandit>=1.7" transformers peft bitsandbytes accelerate \
-  huggingface_hub safetensors sentencepiece
+  huggingface_hub safetensors sentencepiece "brotli>=1.2"
 "$PY" -c "import torch; assert torch.cuda.is_available(), 'no CUDA'"
 PYTHONPATH=src "$PY" -m pytest -q -x 2>&1 | tail -2
 command -v ollama >/dev/null || curl -fsSL https://ollama.com/install.sh | sh
@@ -80,6 +82,9 @@ check base_weights "$PY" -c "
 import os; from huggingface_hub import snapshot_download
 snapshot_download('$BASE_HF', local_dir='$W/base', token=os.environ['HF_TOKEN'])"
 PYTHONPATH=src "$PY" scripts/realvuln_fetch.py --split dev --dest "$RV"
+say "template alignment: training prompt vs the prompt Ollama renders (first query of the model)"
+check template_alignment env PYTHONPATH=src "$PY" scripts/lora_template_check.py --base "$W/base" \
+  --data "$W/train.jsonl" --out "$OUT/template_check.json"
 
 # ---------------------------------------------------------------- gate
 if [ "$PHASE" = gate ]; then
@@ -121,7 +126,7 @@ report = {"checks": [json.loads(l) for l in (out / "gate.jsonl").read_text().spl
 print(json.dumps({k: v for k, v in report.items() if k != "machine"}, indent=1))
 EOF
   say "gate passed: write the training plan before running 'train'"
-  tar czf "$ROOT/lora_gate.tgz" -C "$ROOT" "eval/results/$DAY-lora-gate"
+  tar czf "$ROOT/lora_gate.tgz" -C "$ROOT" "eval/results/$RUN"
   echo "GATE DONE"
   exit 0
 fi
@@ -146,5 +151,5 @@ for m in safia-base-conv safia-lora; do
   cli eval-realvuln --split test --final --data "$RV" --model "$m" --out "$OUT/realvuln-test-$m"
   cli eval-gym --apps blog --seeds 1 2 3 --model "$m" --out "$OUT/gym-blog-$m"
 done
-tar czf "$ROOT/lora_train.tgz" -C "$ROOT" "eval/results/$DAY-lora-train"
+tar czf "$ROOT/lora_train.tgz" -C "$ROOT" "eval/results/$RUN"
 echo "ALL DONE"

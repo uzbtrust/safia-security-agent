@@ -17,7 +17,7 @@
 | 4 | Few-shot yaxshilash, 2 raund. GPU'da bir mashinada: r1 F3 0.428, r2 F3 0.600 → **r2 muzlatildi** (`step4-freeze` = 0a3580c) | CLOUD kod, LOCAL run | 7–8-okt | [x] |
 | 5 | Begona benchmark: **RealVuln** (Python, Apache-2.0), repo bo'yicha mexanik bo'linish (`targets/realvuln/split.json`); adapter tayyor (`safia-sec eval-realvuln`); test qismi `--final`siz ochilmaydi | CLOUD (tayyor) | 7-okt | [x] |
 | 6 | Yakuniy baholash (bir marta): RealVuln test F3 0.41 (P 0.78, R 0.39; `--no-examples` 0.39), Bandit 0.14–0.16; blog function 6/12 (`--no-examples` 11/12) | LOCAL (Vast GPU) | 8-okt | [x] |
-| 6b | LoRA tajribasi (H7): protokol va ma'lumot tayyor (402 misol, sha 3055e51d). **1-bosqich: gate** (`scripts/vast_lora.sh gate`, o'qitishsiz: og'irliklar, xotira/tezlik, Ollama import, konvertatsiya) → natijaga qarab batafsil reja → **2-bosqich: train** | CLOUD kod, LOCAL run | 9–11-okt | [~] ← **hozir: gate** |
+| 6b | LoRA tajribasi (H7): gate 1-urinish (Brotli muhit xatosi) va 2-urinish (Gemma 4 chat-shabloni farazi) o'qitishsiz to'xtadi; ikkalasi tuzatildi, shablon mosligi tekshiruvi qo'shildi → **gate 3-urinish** → reja → train | CLOUD kod, LOCAL run | 9–11-okt | [~] ← **hozir: gate #3** |
 | 7 | README, EXPERIMENTS (yakuniy), LIMITATIONS, ARCHITECTURE, THREAT_MODEL, DECISIONS — CLOUD yozdi; siz o'qib tasdiqlaysiz; demo video, topshirish xati | SIZ + CLOUD | 8–14-okt | [~] |
 
 Muddat 15-okt, topshirish maqsadi 14-okt.
