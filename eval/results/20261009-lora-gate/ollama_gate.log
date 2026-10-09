@@ -1,0 +1,26 @@
+Couldn't find '/root/.ollama/id_ed25519'. Generating new private key.
+Your new public key is: 
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOUWdgp8L9+SGDvTtaHc1mSm7IBQflTA73CHag8GH7ST
+
+time=2026-10-09T13:05:34.022Z level=INFO source=routes.go:2373 msg="server config" env="map[CUDA_VISIBLE_DEVICES: GGML_VK_VISIBLE_DEVICES: GPU_DEVICE_ORDINAL: HIP_VISIBLE_DEVICES: HSA_OVERRIDE_GFX_VERSION: HTTPS_PROXY: HTTP_PROXY: LLAMA_ARG_FIT: LLAMA_ARG_FIT_TARGET: NO_PROXY: OLLAMA_CONTEXT_LENGTH:0 OLLAMA_CREATE_REMOTE:false OLLAMA_DEBUG:INFO OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GO_TEMPLATE:true OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:11434 OLLAMA_IGPU_ENABLE: OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MAX_TRANSFER_STREAMS:4 OLLAMA_MODELS:/root/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NO_CLOUD:false OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false OLLAMA_VULKAN:true ROCR_VISIBLE_DEVICES: http_proxy: https_proxy: no_proxy:]"
+time=2026-10-09T13:05:34.023Z level=INFO source=routes.go:2375 msg="Ollama cloud disabled: false"
+time=2026-10-09T13:05:34.023Z level=INFO source=images.go:989 msg="total blobs: 0"
+time=2026-10-09T13:05:34.023Z level=INFO source=images.go:998 msg="total unused blobs removed: 0"
+time=2026-10-09T13:05:34.023Z level=INFO source=routes.go:2435 msg="Listening on 127.0.0.1:11434 (version 0.40.2)"
+time=2026-10-09T13:05:34.024Z level=INFO source=runner.go:60 msg="discovering available GPUs..."
+time=2026-10-09T13:05:34.474Z level=INFO source=model_recommendations.go:177 msg="model recommendations cache sleep scheduled" wait=3h31m35.235573299s consecutive_failures=0
+time=2026-10-09T13:05:37.124Z level=INFO source=types.go:32 msg="inference compute" id=0 filter_id=0 library=CUDA compute=8.6 name=CUDA0 description="NVIDIA RTX A6000" libdirs=ollama,cuda_v12 driver=12.8 pci_id=0000:0c:00.0 type=discrete total="47.4 GiB" available="47.2 GiB"
+time=2026-10-09T13:05:37.124Z level=INFO source=routes.go:2485 msg="vram-based default context" total_vram="47.4 GiB" default_num_ctx=262144
+[GIN] 2026/10/09 - 13:05:37 | 200 |      132.88µs |       127.0.0.1 | GET      "/api/version"
+[GIN] 2026/10/09 - 13:05:37 | 200 |      52.661µs |       127.0.0.1 | HEAD     "/"
+time=2026-10-09T13:05:38.187Z level=INFO source=download.go:182 msg="downloading 0cb0cd0a5c49 in 2 100 MB part(s)"
+time=2026-10-09T13:05:40.505Z level=INFO source=download.go:182 msg="downloading bb722270d543 in 16 461 MB part(s)"
+time=2026-10-09T13:06:43.874Z level=INFO source=download.go:182 msg="downloading 7008a656050b in 5 100 MB part(s)"
+time=2026-10-09T13:06:51.697Z level=INFO source=download.go:182 msg="downloading b507b9c2f6ca in 1 13 B part(s)"
+time=2026-10-09T13:06:52.021Z level=INFO source=download.go:182 msg="downloading 0d542e0c8804 in 1 10 KB part(s)"
+time=2026-10-09T13:06:52.445Z level=INFO source=download.go:182 msg="downloading 2365fbb6d97b in 1 64 B part(s)"
+[GIN] 2026/10/09 - 13:07:21 | 200 |         1m44s |       127.0.0.1 | POST     "/api/pull"
+[GIN] 2026/10/09 - 13:07:21 | 200 |      31.166µs |       127.0.0.1 | HEAD     "/"
+[GIN] 2026/10/09 - 13:07:22 | 200 |  833.840044ms |       127.0.0.1 | GET      "/api/tags"
+[GIN] 2026/10/09 - 13:07:22 | 200 |      66.684µs |       127.0.0.1 | GET      "/api/version"

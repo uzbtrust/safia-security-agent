@@ -1,0 +1,73 @@
+[13:03:00] setup (gate)
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+s............                                                            [100%]
+84 passed, 1 skipped in 65.83s (0:01:05)
+>>> Installing ollama to /usr/local
+>>> Creating ollama user...
+>>> Adding ollama user to video group...
+>>> Adding current user to ollama group...
+>>> Creating ollama systemd service...
+WARNING: systemd is not running
+WARNING: Unable to detect NVIDIA/AMD GPU. Install lspci or lshw to automatically detect and install GPU dependencies.
+>>> The Ollama API is now available at 127.0.0.1:11434.
+>>> Install complete. Run "ollama" from the command line.
+success
+phase gate
+model gemma4:12b 6114515d63c1
+base google/gemma-4-12B-it
+NVIDIA RTX A6000, 570.133.20, 49140 MiB
+ollama ollama version is 0.40.2
+repo 5e238914a7150f597d6250cf87ac121aecb669c0
+torch 2.8.0+cu126 transformers 5.19.0 peft 0.21.2 bitsandbytes 0.50.2
+[13:07:39] training data (must equal the pre-registered set)
+402 examples (201 positive, 50 trap, 151 negative), 442 target findings, ~1.16M tokens, sha256 3055e51df897
+[13:08:16] base weights
+Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 276, in _inner
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/_snapshot_download.py", line 541, in snapshot_download
+    hf_thread_map(
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/utils/tqdm.py", line 441, in hf_thread_map
+    results[future_to_index[future]] = future.result()
+                                       ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/_snapshot_download.py", line 521, in _inner_hf_hub_download
+    hf_hub_download(  # type: ignore
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 276, in _inner
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1026, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1505, in _hf_hub_download_to_local_dir
+    _download_to_tmp_and_move(
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 2032, in _download_to_tmp_and_move
+    http_get(
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 459, in http_get
+    for chunk in response.iter_bytes(chunk_size=constants.DOWNLOAD_CHUNK_SIZE):
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/httpx2/_models.py", line 893, in iter_bytes
+    for decoded in decoder.decode(raw_bytes):
+  File "/workspace/safia/.venv/lib/python3.11/site-packages/httpx2/_decoders.py", line 191, in decode
+    decompressed = self._decompress(data, output_buffer_limit=output_buffer_limit)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: process() takes no keyword arguments
+[13:11:18] GATE FAILED: base_weights

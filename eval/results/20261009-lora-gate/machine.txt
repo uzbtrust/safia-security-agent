@@ -1,0 +1,7 @@
+phase gate
+model gemma4:12b 6114515d63c1
+base google/gemma-4-12B-it
+NVIDIA RTX A6000, 570.133.20, 49140 MiB
+ollama ollama version is 0.40.2
+repo 5e238914a7150f597d6250cf87ac121aecb669c0
+torch 2.8.0+cu126 transformers 5.19.0 peft 0.21.2 bitsandbytes 0.50.2
