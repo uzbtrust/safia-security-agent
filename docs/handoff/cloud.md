@@ -194,7 +194,7 @@ muzlatishdan keyin, Blue'ga tegilmagan). Yozildi: `README.md`, `docs/EXPERIMENTS
 `docs/LIMITATIONS.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/DECISIONS.md`. Har raqam `eval/` fayllaridan.
 LOCAL uchun ish yo'q. Keyingi: foydalanuvchi bilan LoRA muhokamasi; demo va topshirish.
 
-## 2026-10-08 — CLOUD → LOCAL (LoRA tajribasi, H7: bitta Vast sessiyasi)
+## 2026-10-08 — CLOUD → LOCAL (LoRA tajribasi, H7) — ESKIRGAN: 2026-10-09 yozuviga qarang
 Protokol o'qitishdan OLDIN `docs/EXPERIMENTS.md` ("LoRA experiment") ga yozildi. Tayyor: `src/safia_sec/lora/data.py`,
 `scripts/lora_split.py` (→ `targets/realvuln/lora_train.json`, 28 repo, test bilan kod o'xshashligi ≤ 8.2%),
 `scripts/lora_build_data.py` (402 misol, 442 maqsad topilma, ~1.16M token, sha256 3055e51df897…; cloud'da qurildi),
@@ -221,3 +221,31 @@ LOCAL qadamlari:
 7. Foydalanuvchi HF tokenni bekor qiladi (revoke). Adapter og'irliklari repo'ga commit qilinmaydi.
 8. Natijalarni commit + push; handoff'ga: GPU, vaqt, narx, gate natijalari, o'qitish (qadam, oxirgi loss, vaqt),
    konvertatsiya tekshiruvi, dev (3 qo'l) va test (2 qo'l) raqamlari — faqat fayllardan.
+
+## 2026-10-09 — CLOUD → LOCAL (LoRA: 1-BOSQICH — faqat tekshirish (gate), o'qitish YO'Q)
+Foydalanuvchi qarori: tekshirish va o'qitish ikki alohida ijara. Hozir faqat `bash scripts/vast_lora.sh gate`.
+Gate 4 ta tekshiruv: (a) asl og'irliklar yuklanadimi; (b) eng uzun 8 misolda to'liq 8192 token bilan 8 QLoRA qadam —
+eng yuqori GPU xotirasi, token/s va to'liq o'qitish vaqti taxmini o'lchanadi; (c) birlashtirilgan sinov modeli
+Ollama'ga import bo'lib skanerdan to'g'ri JSON oladimi; (d) konvertatsiya: bizning import yo'lidan o'tgan asl model
+RealVuln dev'da rasmiy `gemma4:12b` dan F3 bo'yicha ≤ 0.05 farq qiladimi. Natija: `eval/results/<sana>-lora-gate/gate_report.json`.
+Test qismi va o'qitish bu bosqichda ishlatilmaydi.
+**Foydalanuvchidan oldin kerak:** HF akkaunt; Gemma 4 litsenziyasini qabul qilish (fine-tune ruxsatini o'qish); faqat
+o'qish huquqli token; `gemma4:12b` (Ollama) ga mos RASMIY instruction-tuned 12B checkpoint'ning HF repo id'si (taxmin
+qilmang; Ollama kutubxona sahifasi va HF'dagi rasmiy Google sahifasidan tekshiring, foydalanuvchiga tasdiqlating).
+LOCAL qadamlari:
+1. Merge; `pytest -q` (85; macOS'da 84 + 1 skip).
+2. Vast: **1× 48 GB GPU** (RTX A6000 / A40 / L40S / RTX 6000 Ada), on-demand, disk ≥ 150 GB, RAM ≥ 64 GB,
+   internet ≥ 500 Mbps, CUDA ≥ 12.2, image: rasmiy `pytorch/pytorch` CUDA 12 runtime, SSH; narx ≤ ~$0.6/soat.
+   Taxmin (o'lchanmagan): ~1 soat, ~$0.4–0.7. **Bu bosqich uchun qat'iy chegara $1.5.**
+3. Kodni `rsync` bilan yuboring (`.git` bilan; `.venv`, `.cache`, `__pycache__` siz).
+4. `ssh ... "cd /workspace/safia && HF_TOKEN='<token>' BASE_HF='<repo id>' nohup bash scripts/vast_lora.sh gate > lora_gate.log 2>&1 &"`
+   (token faqat muhitda; hech qayerda chop etilmaydi, diskka yozilmaydi).
+5. Har ~10 daqiqada `tail -5 lora_gate.log` va balans. `GATE DONE` = hammasi o'tdi; `GATE FAILED: <nom>` + chiqish kodi 4 =
+   shu tekshiruv o'tmadi (qayta urinmang, skriptni o'zgartirmang); 5 = ma'lumot xeshi mos emas. Infratuzilma xatosi
+   (tarmoq, o'rnatish) bo'lsa — tuzatib qayta ishga tushirish mumkin.
+6. `lora_gate.tgz`, `lora_gate.log`, `ollama_gate.log` ni oling; repo ichida oching; **instance'ni o'chiring**
+   (`vastai destroy instance <ID> -y`; `vastai show instances` bo'sh). HF token o'qitish bosqichi uchun saqlanadi
+   (foydalanuvchi oxirida bekor qiladi).
+7. Commit + push; handoff'ga: GPU va narx, vaqt, 4 tekshiruv natijasi, `gate_report.json` dagi raqamlar (eng yuqori xotira,
+   token/s, o'qitish vaqti taxmini, uzunlik sababli tashlangan misollar, konvertatsiya F3 lari), kutilmagan holatlar.
+O'qitish (`train`) bosqichi faqat cloud gate natijasiga qarab batafsil reja yozgandan KEYIN boshlanadi.

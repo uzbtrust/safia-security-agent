@@ -17,7 +17,7 @@ from pathlib import Path
 
 HP = {"r": 16, "alpha": 32, "dropout": 0.05, "lr": 1e-4, "epochs": 2, "grad_accum": 8, "warmup_steps": 10,
       "max_len": 8192, "seed": 1, "quant": "nf4, double quant, bf16 compute"}
-SMOKE = {"examples": 8, "steps": 4, "max_len": 2048}
+SMOKE = {"examples": 8, "steps": 8}  # one step per example, the 8 longest at the full max length: memory and speed
 PROJ = ("q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj")
 
 
@@ -65,11 +65,9 @@ def train(args) -> None:
 
     random.seed(HP["seed"])
     torch.manual_seed(HP["seed"])
-    max_len = SMOKE["max_len"] if args.smoke else HP["max_len"]
+    max_len = HP["max_len"]
     raw = Path(args.data).read_bytes()
     rows = [json.loads(line) for line in raw.decode().splitlines()]
-    if args.smoke:
-        rows = rows[: SMOKE["examples"]]
     tok = AutoTokenizer.from_pretrained(args.base)
     data, dropped = [], 0
     for rec in rows:
@@ -78,7 +76,10 @@ def train(args) -> None:
             dropped += 1
         else:
             data.append(enc)
-    print(f"{len(data)} examples, {dropped} longer than {max_len} tokens dropped", flush=True)
+    full_tokens = sum(len(ids) for ids, _ in data)
+    print(f"{len(data)} examples, {full_tokens} tokens, {dropped} longer than {max_len} tokens dropped", flush=True)
+    if args.smoke:
+        data = sorted(data, key=lambda d: -len(d[0]))[: SMOKE["examples"]]
 
     model = load_model(args.base, quant=True)
     model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
@@ -95,7 +96,8 @@ def train(args) -> None:
     out.mkdir(parents=True, exist_ok=True)
     log = (out / "loss.jsonl").open("w")
     model.train()
-    step, t0, acc = 0, time.time(), []
+    torch.cuda.reset_peak_memory_stats()
+    step, t0, acc, seen_tokens = 0, time.time(), [], 0
     order = list(range(len(data)))
     for epoch in range(1 if args.smoke else HP["epochs"]):
         random.shuffle(order)
@@ -106,6 +108,7 @@ def train(args) -> None:
             loss = model(input_ids=x, labels=torch.tensor([labels], device="cuda"), **kw).loss
             (loss / HP["grad_accum"]).backward()
             acc.append(loss.item())
+            seen_tokens += len(ids)
             if (i + 1) % HP["grad_accum"] == 0 or i == len(order) - 1 or args.smoke:
                 torch.nn.utils.clip_grad_norm_(params, 1.0)
                 opt.step()
@@ -122,10 +125,16 @@ def train(args) -> None:
                     break
         if step >= total:
             break
+    seconds = time.time() - t0
+    tps = seen_tokens / max(seconds, 1e-9)
     model.save_pretrained(out)
     (out / "train_meta.json").write_text(json.dumps({
         "hyperparameters": HP, "smoke": args.smoke, "examples": len(data), "dropped_too_long": dropped,
-        "steps": step, "seconds": round(time.time() - t0), "data_sha256": hashlib.sha256(raw).hexdigest(),
+        "steps": step, "seconds": round(seconds), "tokens_seen": seen_tokens, "tokens_per_second": round(tps, 1),
+        "peak_gpu_memory_gb": round(torch.cuda.max_memory_allocated() / 2**30, 1),
+        "full_set_tokens": full_tokens,
+        "estimated_full_training_hours": round(full_tokens * HP["epochs"] / tps / 3600, 2) if args.smoke else None,
+        "data_sha256": hashlib.sha256(raw).hexdigest(),
         "trainable_targets": len(targets), "torch": torch.__version__, "transformers": transformers.__version__,
         "peft": peft.__version__, "gpu": torch.cuda.get_device_name(0)}, indent=1) + "\n")
     print("adapter saved:", out, flush=True)
@@ -151,7 +160,8 @@ def main() -> int:
     t.add_argument("--base", required=True, help="local directory of the base checkpoint")
     t.add_argument("--data", required=True)
     t.add_argument("--out", required=True)
-    t.add_argument("--smoke", action="store_true", help=f"{SMOKE['steps']} steps on {SMOKE['examples']} examples")
+    t.add_argument("--smoke", action="store_true",
+                   help=f"{SMOKE['steps']} steps on the {SMOKE['examples']} longest examples (memory and speed probe)")
     m = sub.add_parser("merge")
     m.add_argument("--base", required=True)
     m.add_argument("--adapter", required=True)

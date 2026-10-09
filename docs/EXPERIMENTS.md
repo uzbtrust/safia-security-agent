@@ -257,16 +257,18 @@ instruction-tuned checkpoint that matches Ollama's `gemma4:12b` (repo id recorde
 dropout 0.05 on the language model's attention and MLP projections; lr 1e-4, cosine, 10 warm-up steps,
 2 epochs, effective batch 8, max length 8192 tokens, seed 1; loss on answer tokens only. No tuning on results.
 
-**Gate (stop and report "attempted, blocked" on any failure):** (a) the base weights download; (b) 4 QLoRA steps
-run; (c) a merged smoke adapter imports into Ollama and the scanner gets valid JSON from it.
-
-**Arms and runs** (`scripts/vast_lora.sh`, one 48 GB GPU): `safia-base-conv` (base, no adapter) and `safia-lora`
-(adapter merged) both go HF -> `ollama create --quantize q4_K_M` with the official template and parameters;
-the frozen pipeline (few-shot, verifier, Bandit), seed 1.
-1. Validation, RealVuln dev: official `gemma4:12b`, base-converted, LoRA.
-2. Conversion check: |F3(official) - F3(base-converted)| <= 0.05 on dev, else stop before the test half (the
-   conversion would not reproduce the product model).
-3. Test, once: RealVuln test and gym `blog` (3 seeds) for base-converted and LoRA.
+**Two phases** (`scripts/vast_lora.sh gate|train`, one 48 GB GPU, separate rentals):
+- **gate** (feasibility, no training; any failure = stop and report "attempted, blocked"): (a) the base weights
+  download; (b) 8 QLoRA steps on the 8 longest examples at the full 8192-token length (records peak GPU memory,
+  tokens/s and the estimated full training time); (c) a merged smoke adapter imports into Ollama and the scanner
+  gets valid JSON from it; (d) conversion check: the base model taken through the same import path
+  (`safia-base-conv`) scores within 0.05 F3 of the official Ollama `gemma4:12b` on RealVuln dev, i.e. our
+  conversion reproduces the product model. A detailed training plan (GPU, time, cost) is written from the gate
+  report before the second phase.
+- **train**: full training; `safia-base-conv` (base, no adapter) and `safia-lora` (adapter merged) both go
+  HF -> `ollama create --quantize q4_K_M` with the official template and parameters; frozen pipeline (few-shot,
+  verifier, Bandit), seed 1. RealVuln dev for both (same machine), then the test half once: RealVuln test and
+  gym `blog` (3 seeds) for both.
 
 **Reading the result.** Primary: RealVuln test F3, LoRA vs base-converted. A gain is claimed only if it is at
 least 0.05 F3 (above the 0.03 noise floor). Also reported: precision, recall, strata, blog function and
