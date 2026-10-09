@@ -1,0 +1,229 @@
+{
+ "examples": 402,
+ "positive": 201,
+ "trap": 50,
+ "negative": 151,
+ "findings": 442,
+ "chars": 4517241,
+ "candidate_chunks": 1041,
+ "seed": 1,
+ "sha256": "3055e51df8973c1b12d6c920f39e03d923b79d954f1c79d3e7172315f34a9161",
+ "per_repo": {
+  "realvuln-damn-vulnerable-graphql-application": {
+   "hub_files": [
+    "core/views.py"
+   ],
+   "labels_used": 15,
+   "labels_unquotable": 0,
+   "chunks": 19
+  },
+  "realvuln-djangoat": {
+   "hub_files": [],
+   "labels_used": 45,
+   "labels_unquotable": 0,
+   "chunks": 97
+  },
+  "realvuln-dsvpwa": {
+   "hub_files": [
+    "dsvpwa/attacks.py"
+   ],
+   "labels_used": 10,
+   "labels_unquotable": 0,
+   "chunks": 5
+  },
+  "realvuln-flask-xss": {
+   "hub_files": [],
+   "labels_used": 25,
+   "labels_unquotable": 0,
+   "chunks": 22
+  },
+  "realvuln-pygoat": {
+   "hub_files": [
+    "introduction/views.py"
+   ],
+   "labels_used": 35,
+   "labels_unquotable": 0,
+   "chunks": 50
+  },
+  "realvuln-vulnerable-python-apps": {
+   "hub_files": [],
+   "labels_used": 22,
+   "labels_unquotable": 0,
+   "chunks": 19
+  },
+  "realvuln-vulnpy": {
+   "hub_files": [],
+   "labels_used": 77,
+   "labels_unquotable": 3,
+   "chunks": 56
+  },
+  "vc-claude-code-seeded-v2-healthcare-clinic-django": {
+   "hub_files": [
+    "clinic_portal/patient_operations.py"
+   ],
+   "labels_used": 10,
+   "labels_unquotable": 0,
+   "chunks": 91
+  },
+  "vc-claude-code-seeded-v2-legal-case-django": {
+   "hub_files": [
+    "legal_firm/case_operations.py"
+   ],
+   "labels_used": 12,
+   "labels_unquotable": 0,
+   "chunks": 62
+  },
+  "vc-claude-code-seeded-v2-logistics-dispatch-fastapi": {
+   "hub_files": [
+    "backend/app/dispatch_operations.py"
+   ],
+   "labels_used": 13,
+   "labels_unquotable": 0,
+   "chunks": 38
+  },
+  "vc-claude-code-seeded-v2-support-desk-fastapi": {
+   "hub_files": [
+    "backend/app/support_operations.py"
+   ],
+   "labels_used": 16,
+   "labels_unquotable": 0,
+   "chunks": 40
+  },
+  "vc-codex-high-seeded-v2-crm-saas-django": {
+   "hub_files": [
+    "config/partner_console.py"
+   ],
+   "labels_used": 6,
+   "labels_unquotable": 0,
+   "chunks": 28
+  },
+  "vc-codex-high-seeded-v2-education-lms-django": {
+   "hub_files": [
+    "education_lms/course_operations.py"
+   ],
+   "labels_used": 6,
+   "labels_unquotable": 0,
+   "chunks": 30
+  },
+  "vc-codex-high-seeded-v2-healthcare-clinic-django": {
+   "hub_files": [
+    "clinic_portal/patient_operations.py"
+   ],
+   "labels_used": 7,
+   "labels_unquotable": 0,
+   "chunks": 27
+  },
+  "vc-codex-high-seeded-v2-hr-payroll-django": {
+   "hub_files": [
+    "hr_portal/payroll_operations.py"
+   ],
+   "labels_used": 6,
+   "labels_unquotable": 0,
+   "chunks": 29
+  },
+  "vc-codex-high-seeded-v2-logistics-dispatch-fastapi": {
+   "hub_files": [
+    "backend/app/dispatch_operations.py"
+   ],
+   "labels_used": 10,
+   "labels_unquotable": 0,
+   "chunks": 21
+  },
+  "vc-codex-high-seeded-v2-property-management-fastapi": {
+   "hub_files": [
+    "backend/app/tenant_operations.py"
+   ],
+   "labels_used": 8,
+   "labels_unquotable": 0,
+   "chunks": 34
+  },
+  "vc-codex-seeded-v2-legal-case-django": {
+   "hub_files": [
+    "legalcase/case_operations.py"
+   ],
+   "labels_used": 14,
+   "labels_unquotable": 0,
+   "chunks": 22
+  },
+  "vc-codex-seeded-v2-marketplace-commerce-fastapi": {
+   "hub_files": [
+    "app/seller_operations.py"
+   ],
+   "labels_used": 11,
+   "labels_unquotable": 0,
+   "chunks": 15
+  },
+  "vc-codex-seeded-v2-support-desk-fastapi": {
+   "hub_files": [
+    "backend/app/support_operations.py"
+   ],
+   "labels_used": 12,
+   "labels_unquotable": 0,
+   "chunks": 13
+  },
+  "vc-kimi-code-seeded-v2-crm-saas-django": {
+   "hub_files": [
+    "crm/core/partner_console.py"
+   ],
+   "labels_used": 8,
+   "labels_unquotable": 0,
+   "chunks": 32
+  },
+  "vc-kimi-code-seeded-v2-education-lms-django": {
+   "hub_files": [
+    "lms/course_operations.py"
+   ],
+   "labels_used": 9,
+   "labels_unquotable": 0,
+   "chunks": 24
+  },
+  "vc-kimi-code-seeded-v2-healthcare-clinic-django": {
+   "hub_files": [
+    "clinic_portal/patient_operations.py"
+   ],
+   "labels_used": 11,
+   "labels_unquotable": 0,
+   "chunks": 38
+  },
+  "vc-kimi-code-seeded-v2-hr-payroll-django": {
+   "hub_files": [
+    "hr_payroll/payroll_operations.py"
+   ],
+   "labels_used": 10,
+   "labels_unquotable": 0,
+   "chunks": 80
+  },
+  "vc-kimi-code-seeded-v2-logistics-dispatch-fastapi": {
+   "hub_files": [
+    "backend/app/dispatch_operations.py"
+   ],
+   "labels_used": 12,
+   "labels_unquotable": 0,
+   "chunks": 34
+  },
+  "vc-kimi-code-seeded-v2-marketplace-commerce-fastapi": {
+   "hub_files": [
+    "backend/app/seller_operations.py"
+   ],
+   "labels_used": 9,
+   "labels_unquotable": 0,
+   "chunks": 60
+  },
+  "vc-kimi-code-seeded-v2-property-management-fastapi": {
+   "hub_files": [
+    "backend/app/tenant_operations.py"
+   ],
+   "labels_used": 12,
+   "labels_unquotable": 0,
+   "chunks": 34
+  },
+  "vc-kimi-code-seeded-v2-support-desk-fastapi": {
+   "hub_files": [
+    "backend/app/support_operations.py"
+   ],
+   "labels_used": 11,
+   "labels_unquotable": 0,
+   "chunks": 21
+  }
+ }
+}

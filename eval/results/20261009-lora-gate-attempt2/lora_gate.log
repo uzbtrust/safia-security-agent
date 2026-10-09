@@ -1,0 +1,49 @@
+[13:34:30] setup (gate)
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+s............                                                            [100%]
+84 passed, 1 skipped in 52.99s
+>>> Installing ollama to /usr/local
+>>> Creating ollama user...
+>>> Adding ollama user to video group...
+>>> Adding current user to ollama group...
+>>> Creating ollama systemd service...
+WARNING: systemd is not running
+WARNING: Unable to detect NVIDIA/AMD GPU. Install lspci or lshw to automatically detect and install GPU dependencies.
+>>> The Ollama API is now available at 127.0.0.1:11434.
+>>> Install complete. Run "ollama" from the command line.
+success
+phase gate
+model gemma4:12b 6114515d63c1
+base google/gemma-4-12B-it
+NVIDIA A40, 595.91.07, 46068 MiB
+ollama ollama version is 0.40.2
+repo a92ab4478aca744b21389dcecb2bba5a22ede65f
+torch 2.8.0+cu126 transformers 5.19.0 peft 0.21.2 bitsandbytes 0.50.2
+[13:36:58] training data (must equal the pre-registered set)
+402 examples (201 positive, 50 trap, 151 negative), 442 target findings, ~1.16M tokens, sha256 3055e51df897
+[13:37:22] base weights
+[13:38:11] PASS base_weights
+benchmark ground truth at 7a710251f55c
+ok realvuln-insecure-web @ 5d1b791bb6c2
+ok realvuln-intentionally-vulnerable-python-application @ 3804a18ae666
+ok realvuln-python-insecure-app @ 80b894a2f754
+ok realvuln-vulnerable-api @ f7797964e1cd
+ok realvuln-vulnerable-tornado-app @ 7aca8b78ba94
+ok vc-codex-seeded-v2-hr-payroll-django @ 5726053dc982
+[13:38:17] gate b: 8 QLoRA steps on the longest examples
+Traceback (most recent call last):
+  File "/workspace/safia/scripts/lora_train.py", line 175, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/safia/scripts/lora_train.py", line 170, in main
+    train(args) if args.cmd == "train" else merge(args)
+    ^^^^^^^^^^^
+  File "/workspace/safia/scripts/lora_train.py", line 74, in train
+    enc = encode(tok, rec, max_len)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/safia/scripts/lora_train.py", line 53, in encode
+    assert full[: len(prompt)] == prompt, "chat template: the prompt is not a prefix of the full conversation"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: chat template: the prompt is not a prefix of the full conversation
+[13:38:29] GATE FAILED: smoke_training

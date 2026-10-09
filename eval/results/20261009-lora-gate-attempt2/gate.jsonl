@@ -1,0 +1,2 @@
+{"check": "base_weights", "pass": true}
+{"check": "smoke_training", "pass": false}
