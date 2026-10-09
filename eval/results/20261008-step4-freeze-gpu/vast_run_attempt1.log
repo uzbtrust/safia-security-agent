@@ -1,0 +1,6 @@
+[12:28:28] setup
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+......                                                                   [100%]
+77 passed, 1 skipped in 24.09s
+curl: (56) OpenSSL SSL_read: error:0A000126:SSL routines::unexpected eof while reading, errno 0
