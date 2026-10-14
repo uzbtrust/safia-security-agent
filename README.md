@@ -32,6 +32,10 @@ the benchmark's own matcher rules (file + accepted CWE + line +-10):
   without, inside the noise; gym test 6/12 with vs 11/12 without). The improvement that held up came from error
   analysis turned into instructions ("report every issue in a handler, including missing controls", a CWE menu)
   and from fixing pipeline bugs that silently dropped true findings.
+- **LoRA fine-tuning was prepared but not run.** The training set (402 examples from RealVuln-dev labels) and
+  scripts exist and the protocol was pre-registered, but two feasibility attempts stopped before training (an
+  install fault, then a Gemma 4 chat-template detail); the fixes were not run before the deadline. No claim is
+  made about LoRA.
 - **Self-verification can destroy recall:** qwen3.5:9b's verifier rejected 9 of its own 10 true findings with
   wrong reasons, which decided the model choice (gemma4:12b: 18/21 vs 1/21 on the gym dev split).
 
@@ -71,7 +75,7 @@ Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Security of the tool it
 
 ## Reproduce
 ```bash
-pytest -q                                                      # 78 tests, mock model
+pytest -q                                                      # 88 tests, mock model
 safia-sec eval-gym --model gemma4:12b --apps shop bank --seeds 1 2 3
 python scripts/realvuln_fetch.py --split dev && safia-sec eval-realvuln --model gemma4:12b --split dev
 bash scripts/vast_final.sh       # freeze decision + once-only final runs on one NVIDIA machine (see the script)
@@ -80,11 +84,12 @@ python scripts/bandit_realvuln.py --final                      # Bandit baseline
 LLM answers are cached by (model, options, prompt), so re-running an evaluation replays it.
 
 ## Cost
-Model runs: a MacBook Air M4 (16 GB) and one rented node with 2x RTX 3090 for 46 minutes ($0.36). Red data
+Model runs: a MacBook Air M4 (16 GB) and one rented node with 2x RTX 3090 for 46 minutes ($0.36); two LoRA
+feasibility attempts on a 48 GB GPU cost $0.30 more. Red data
 from API models cost cents (for example $0.022 on the day of the two 30-sample runs).
 
 ## Repository map
-`src/safia_sec/` agent, gym, evaluation · `src/safia_sec/prompts/` prompts · `gym_apps/` target apps ·
+`src/safia_sec/` agent, gym, evaluation (`lora/`: prepared LoRA data, experiment not run) · `src/safia_sec/prompts/` prompts · `gym_apps/` target apps ·
 `eval/results/` every run (`result.json` + `summary.md`) · `eval/baselines/` Bandit · `targets/realvuln/` split
 · `scripts/` runners · `docs/` plan, experiments, decisions, limitations, architecture, threat model, hand-off logs.
 

@@ -218,7 +218,7 @@ few-shot also CWE-601 on the guarded redirect and CWE-204.
 - **H5 (few-shot improves recall on held-out apps): not supported.** Blog: 6/12 with vs 11/12 without.
 - **H6 (gain transfers to the external benchmark): not supported.** RealVuln test F3 0.41 vs 0.39, recall 0.39
   vs 0.38: inside the noise (next item).
-- **H7 (LoRA): not run.**
+- **H7 (LoRA): not run.** Prepared and pre-registered; stopped at the feasibility gate (see "LoRA experiment: outcome").
 
 ### What the numbers say beyond the hypotheses
 - **Noise floor.** The same frozen-in-round-1 configuration scored F3 0.459 on the Mac and 0.428 on the GPU node
@@ -294,3 +294,15 @@ verifier's behaviour. Budget: at most $5 for the GPU session.
   construction (the pre-registered 1.16M was a characters/3.9 estimate); 1 record exceeds 8192 tokens and is
   dropped by the existing rule; the loss covers 42,788 answer tokens (about 3%).
 - Brotli >= 1.2 is now installed by the script.
+
+### LoRA experiment: outcome (2026-10-14)
+**Stopped before any training, by decision, for time and budget** (submission deadline 2026-10-15). What exists
+and what was verified:
+- The training data pipeline and set (402 examples, sha256 `3055e51df897...`), rebuilt on the GPU node with the
+  same hash; the byte-identical-prompt property is unit-tested.
+- Gate attempt 1: (a) failed on an install-environment fault (Brotli 1.1). Attempt 2: (a) passed (23.9 GB base
+  weights), (b) failed on the chat-template assumption described in the amendment. Both causes are fixed in code
+  and unit-tested, but the fixes were **never run on a GPU**; checks (b)-(d) and the template-alignment check have
+  no result. Cost of both attempts: $0.30.
+- Therefore there is no evidence either way on whether LoRA helps. The open risk that remains unmeasured is the
+  Ollama import of a fine-tuned Gemma 4 checkpoint (gate check c).

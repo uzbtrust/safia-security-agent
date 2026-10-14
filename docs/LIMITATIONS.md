@@ -46,4 +46,5 @@ What the results do and do not show, and where the agent falls short. Numbers co
   refuses to run model-written code.
 
 ## Not done
-LoRA fine-tuning (H7), cross-file analysis, other languages, several seeds on RealVuln, SARIF.
+LoRA fine-tuning (H7: data, scripts and protocol are ready; two feasibility attempts stopped before training and
+the fixes were not run in time), cross-file analysis, other languages, several seeds on RealVuln, SARIF.

@@ -32,7 +32,9 @@ The choices that shaped the project, why they were made, and what they cost.
 
 7. **Few-shot before fine-tuning.** Cheaper, reversible and measurable with an on/off switch. It turned out to
    add nothing measurable; the gains came from instructions (report every issue per handler, a CWE menu) and
-   pipeline fixes found by error analysis. LoRA was left for after the freeze.
+   pipeline fixes found by error analysis. LoRA was left for after the freeze; it was prepared (data, scripts,
+   pre-registration) and stopped at a two-attempt feasibility gate, and then dropped for time and budget rather
+   than rushed: an unfinished fine-tune would add a claim the evidence cannot carry.
 
 8. **Data rights.** Model output used to train weights must come from providers whose terms allow it
    (open-weight models with verified terms). Text written by the coding assistant (Claude) was used only as gym

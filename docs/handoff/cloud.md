@@ -267,3 +267,9 @@ brotli'ni qo'lda o'rnatmang — skript o'zi qiladi; (b) yangi instance (oldingis
 byudjet: $1.5 − $0.301 = **~$1.2**; taxmin (o'lchanmagan): ~60–70 daqiqa, ~$0.5–0.6 (A40/A6000).
 Natijalar endi har run uchun alohida papkada: `eval/results/<sana>-<soat><daqiqa>-lora-gate/` (oldingi urinishlar ustidan
 yozilmaydi; ko'chirish shart emas). GATE FAILED bo'lsa — qayta urinmang, menga yozing.
+
+## 2026-10-14 — CLOUD (LoRA to'xtatildi; loyiha topshirishga tayyor)
+Foydalanuvchi qarori: LoRA (H7) vaqt va byudjet sababli to'xtatildi; gate 3-urinish ISHGA TUSHIRILMAYDI. Natija hujjatlarda
+ochiq yozildi: `docs/EXPERIMENTS.md` ("LoRA experiment: outcome"), README, LIMITATIONS, DECISIONS. Mahsulot va yakuniy
+raqamlar o'zgarmagan (`step4-freeze`). LOCAL uchun ish yo'q; Vast'da ochiq instance qolmaganini bir marta tekshirish va
+HF tokenni bekor qilish (foydalanuvchi) kifoya. `main` ga yakuniy merge'ni foydalanuvchi qiladi.
